@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Sheet, BarChart3, ArrowRight } from 'lucide-react';
+import { Bot, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const containerVariants = {
@@ -25,7 +25,7 @@ const itemVariants = {
   },
 };
 
-export default function UploadIntroPage() {
+export default function MeetGabiPage() {
   return (
     <main className="flex min-h-screen flex-col justify-between p-6 bg-white text-black">
       <div className="flex-grow flex flex-col justify-center">
@@ -35,18 +35,18 @@ export default function UploadIntroPage() {
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={itemVariants} className="flex justify-center items-center gap-4 mb-8">
-             <Sheet className="h-16 w-16 text-gray-300" />
-             <ArrowRight className="h-8 w-8 text-gray-400" />
-             <BarChart3 className="h-16 w-16 text-primary" />
+          <motion.div variants={itemVariants} className="flex justify-center items-center mb-8">
+             <div className="p-4 bg-primary/10 rounded-full">
+                <Bot className="h-16 w-16 text-primary" />
+             </div>
           </motion.div>
 
           <motion.h1 variants={itemVariants} className="text-3xl font-bold mb-2">
-            From 'Gulo' to 'Gets'
+            Meet Gabi, Your Guide
           </motion.h1>
 
           <motion.p variants={itemVariants} className="text-gray-500 mb-8 max-w-xs mx-auto">
-            Easily upload your sales reports from Shopee, Lazada, and more. Kami na ang bahalang mag-ayos at mag-compute para sa'yo.
+            Gabi is your smart assistant. Magtanong ka lang tungkol sa sales, expenses, o kahit anong kailangan mo.
           </motion.p>
         </motion.div>
       </div>
@@ -58,8 +58,8 @@ export default function UploadIntroPage() {
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         <Button asChild className="w-full bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900">
-          <Link href="/meet-gabi">
-            Next
+          <Link href="/role-selection">
+            Let's Get Started!
             <ArrowRight className="ml-2" />
           </Link>
         </Button>
