@@ -138,7 +138,7 @@ function AnimatedNumber({ value, className, prefix = '' }: { value: number; clas
 export default function DashboardPage() {
   const [period, setPeriod] = useState<'week' | 'month' | 'quarter'>('month');
   const [data, setData] = useState<PeriodData>(mockData.month);
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(true);
 
   useEffect(() => {
     setData(mockData[period]);
@@ -222,7 +222,7 @@ export default function DashboardPage() {
                       >
                         <Card className="w-full h-full bg-background/40 backdrop-blur-lg border-border/10 rounded-3xl">
                             <CardContent className="p-6 flex flex-col items-center justify-center h-full relative">
-                                <Link href="/growth-path" onClick={(e) => e.stopPropagation()} className="flex flex-col items-center text-center">
+                                <div className="flex flex-col items-center text-center">
                                     <h2 className="text-lg font-bold mb-2">Your Financial Health</h2>
                                     <FinancialHealthGauge
                                         score={750}
@@ -230,12 +230,12 @@ export default function DashboardPage() {
                                         status="Healthy"
                                         trend="up"
                                     />
-                                    <p className="text-center text-xs text-muted-foreground mt-2 max-w-xs">
-                                        Tap to see your growth path!
-                                    </p>
-                                </Link>
-                                <div className="text-muted-foreground flex items-center gap-1 text-xs absolute bottom-4">
-                                  Flip Back <ArrowLeftRight className="w-3 h-3"/>
+                                </div>
+                                <Button asChild variant="outline" className="mt-4 rounded-full bg-background/50 backdrop-blur-md">
+                                    <Link href="/growth-path" onClick={(e) => e.stopPropagation()}>View Growth Path</Link>
+                                </Button>
+                                <div className="text-muted-foreground flex items-center gap-1 text-xs absolute bottom-4 right-4">
+                                  Flip <ArrowLeftRight className="w-3 h-3"/>
                                 </div>
                             </CardContent>
                         </Card>
