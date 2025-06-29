@@ -40,13 +40,26 @@ export default function DashboardPage() {
         </div>
 
         <Card className="w-full bg-gradient-to-b from-primary-dark to-primary text-primary-foreground border-none shadow-xl rounded-3xl">
-          <CardContent className="p-6 flex flex-col items-center">
-            <p className="text-sm font-medium text-primary-foreground/80 tracking-widest">NET PROFIT</p>
-            <p className="text-6xl font-bold my-2 tracking-tighter">
-              {formatCurrency(data.netProfit)}
-            </p>
+          <CardContent className="p-6 space-y-4">
+            <div className="flex justify-between items-center w-full">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-black/20 rounded-full flex items-center justify-center">
+                        <span className="font-bold text-xl text-white">₱</span>
+                    </div>
+                    <p className="font-semibold tracking-wider text-primary-foreground/80">NET PROFIT</p>
+                </div>
+                <Button variant="ghost" className="text-primary-foreground/80 hover:bg-white/10 hover:text-primary-foreground h-auto px-3 py-1 text-xs rounded-full">
+                    More Details
+                </Button>
+            </div>
             
-            <div className="w-full border-t border-primary-foreground/20 my-4"></div>
+            <div className="text-center">
+                <p className="text-6xl font-bold my-2 tracking-tighter">
+                  {formatCurrency(data.netProfit)}
+                </p>
+            </div>
+            
+            <div className="w-full border-t border-primary-foreground/20"></div>
 
             <div className="grid grid-cols-2 gap-4 w-full text-center">
               <div>
