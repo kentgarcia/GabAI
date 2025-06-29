@@ -1,13 +1,14 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Mic, Loader2, Bot, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 // Extend the window interface for the SpeechRecognition API
 declare global {
@@ -49,20 +50,34 @@ export default function TalkPage() {
   const [aiResponse, setAiResponse] = useState('');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const recognitionRef = useRef<any>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
 
   const statusText = {
-    idle: "Initializing...",
+    idle: "Tap the mic to speak.",
     listening: "I'm listening...",
     thinking: "Gabi is thinking...",
     speaking: "Gabi is speaking...",
   };
 
+  const handleListen = useCallback(() => {
+    if (status === 'idle' && recognitionRef.current) {
+        setTranscript('');
+        setAiResponse('');
+        try {
+            recognitionRef.current.start();
+        } catch(err) {
+            // This can happen if recognition is already starting.
+            // It's safe to ignore in this context.
+            console.error("Speech recognition already started.");
+        }
+    }
+  }, [status]);
+
+
   useEffect(() => {
+    // This effect runs only once to initialize Speech Recognition
     const initSpeechRecognition = async () => {
       try {
-        // Ensure microphone access before proceeding
         await navigator.mediaDevices.getUserMedia({ audio: true });
         setHasPermission(true);
 
@@ -78,61 +93,11 @@ export default function TalkPage() {
         }
 
         const recognition = new SpeechRecognition();
-        recognition.continuous = false; // Stop after first utterance
+        recognition.continuous = false;
         recognition.interimResults = true;
         recognition.lang = 'en-US';
         
-        let finalTranscript = '';
-
-        recognition.onstart = () => {
-          setStatus('listening');
-          setTranscript('');
-          setAiResponse('');
-          finalTranscript = '';
-        };
-
-        recognition.onresult = (event: any) => {
-          let interimTranscript = '';
-          for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-              finalTranscript += event.results[i][0].transcript;
-            } else {
-              interimTranscript += event.results[i][0].transcript;
-            }
-          }
-          setTranscript(interimTranscript || finalTranscript);
-        };
-        
-        recognition.onend = async () => {
-          if (finalTranscript.trim()) {
-            setStatus('thinking');
-            // Simulate thinking delay
-            await new Promise(res => setTimeout(res, 1500));
-            const gabiResponse = getGabiResponse(finalTranscript.trim());
-            setAiResponse(gabiResponse);
-          } else {
-            // No speech detected, restart listening if we are not speaking
-            if (status !== 'speaking') {
-                setStatus('idle');
-            }
-          }
-        };
-        
-        recognition.onerror = (event: any) => {
-            // "aborted" and "no-speech" are normal events, not errors to display.
-            if (event.error !== 'aborted' && event.error !== 'no-speech') {
-                 console.error('Speech recognition error:', event.error);
-                 toast({
-                    variant: "destructive",
-                    title: "Speech Error",
-                    description: `An error occurred: ${event.error}`,
-                });
-            }
-            setStatus('idle');
-        };
-
         recognitionRef.current = recognition;
-        recognition.start();
 
       } catch (error) {
         console.error('Error accessing microphone:', error);
@@ -145,30 +110,69 @@ export default function TalkPage() {
     return () => {
       speechSynthesis.cancel();
       if (recognitionRef.current) {
-        recognitionRef.current.onend = null;
-        recognitionRef.current.onerror = null;
-        recognitionRef.current.onstart = null;
-        recognitionRef.current.onresult = null;
-        recognitionRef.current.stop();
+        recognitionRef.current.abort();
       }
     };
-  }, [toast, status]);
+  }, [toast]);
 
   useEffect(() => {
+    // This effect manages the speech recognition event handlers
+    if (!hasPermission || !recognitionRef.current) return;
+
+    const recognition = recognitionRef.current;
+    let finalTranscript = '';
+
+    recognition.onstart = () => {
+        setStatus('listening');
+        finalTranscript = '';
+    };
+
+    recognition.onresult = (event: any) => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+              finalTranscript += event.results[i][0].transcript;
+          } else {
+              interimTranscript += event.results[i][0].transcript;
+          }
+        }
+        setTranscript(finalTranscript || interimTranscript);
+    };
+    
+    recognition.onend = async () => {
+        setStatus('idle'); // Go back to idle first
+        if (finalTranscript.trim()) {
+            setStatus('thinking');
+            await new Promise(res => setTimeout(res, 1500));
+            const gabiResponse = getGabiResponse(finalTranscript.trim());
+            setAiResponse(gabiResponse);
+        }
+    };
+    
+    recognition.onerror = (event: any) => {
+        if (event.error !== 'aborted' && event.error !== 'no-speech') {
+             toast({
+                variant: "destructive",
+                title: "Speech Error",
+                description: `An error occurred: ${event.error}`,
+            });
+        }
+        setStatus('idle');
+    };
+  }, [hasPermission, toast]);
+
+  useEffect(() => {
+    // This effect handles speaking the AI response
     if (aiResponse) {
       setStatus('speaking');
       const utterance = new SpeechSynthesisUtterance(aiResponse);
-      utteranceRef.current = utterance;
 
       utterance.onend = () => {
-        // Clear the text content from the screen
         setAiResponse('');
         setTranscript('');
-        // Wait for a moment before transitioning to idle, which will restart the listening loop
-        setTimeout(() => {
-          setStatus('idle');
-        }, 1200);
+        setStatus('idle');
       };
+      
       speechSynthesis.speak(utterance);
     }
   }, [aiResponse]);
@@ -184,29 +188,36 @@ export default function TalkPage() {
         </header>
 
         <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8">
-            <AnimatePresence mode="wait">
             <motion.div
-                key={status}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.3 }}
-                className="w-48 h-48 bg-primary/10 rounded-full flex items-center justify-center"
+                onClick={handleListen}
+                className={cn(
+                    "w-48 h-48 bg-primary/10 rounded-full flex items-center justify-center transition-transform",
+                    status === 'idle' && 'cursor-pointer active:scale-95'
+                )}
             >
+                <AnimatePresence mode="wait">
                 <motion.div
+                    key={status}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.3 }}
                     className="w-36 h-36 bg-primary/20 rounded-full flex items-center justify-center"
-                    animate={status === 'listening' ? { scale: [1, 1.1, 1] } : {}}
-                    transition={status === 'listening' ? { duration: 1.5, repeat: Infinity } : {}}
                 >
-                {status === 'thinking' && <Loader2 className="w-16 h-16 text-primary animate-spin" />}
-                {status === 'listening' && <Mic className="w-16 h-16 text-primary" />}
-                {status === 'speaking' && <Bot className="w-16 h-16 text-primary" />}
-                {(status === 'idle' && hasPermission !== false) && <Loader2 className="w-16 h-16 text-primary animate-spin" />}
-                {hasPermission === false && <Mic className="w-16 h-16 text-destructive" />}
-
+                    <motion.div
+                        className="flex items-center justify-center"
+                        animate={status === 'listening' ? { scale: [1, 1.1, 1] } : {}}
+                        transition={status === 'listening' ? { duration: 1.5, repeat: Infinity } : {}}
+                    >
+                        {status === 'thinking' && <Loader2 className="w-16 h-16 text-primary animate-spin" />}
+                        {status === 'speaking' && <Bot className="w-16 h-16 text-primary" />}
+                        {status === 'idle' && <Mic className="w-16 h-16 text-primary" />}
+                        {status === 'listening' && <Mic className="w-16 h-16 text-primary" />}
+                        {hasPermission === false && <Mic className="w-16 h-16 text-destructive" />}
+                    </motion.div>
                 </motion.div>
+                </AnimatePresence>
             </motion.div>
-            </AnimatePresence>
 
             <div className="h-24">
                 <p className="text-2xl font-semibold mb-2">{statusText[status]}</p>
