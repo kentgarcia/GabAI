@@ -35,19 +35,30 @@ export default function MeetGabiPage() {
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={itemVariants} className="flex justify-center items-center mb-8">
-             <div className="p-4 bg-accent/20 rounded-full">
-                <Bot className="h-16 w-16 text-accent" />
-             </div>
-          </motion.div>
-
-          <motion.h1 variants={itemVariants} className="text-3xl font-bold mb-2">
-            Meet Gabi, Your Guide
+          <motion.h1 variants={itemVariants} className="text-5xl font-bold tracking-tighter mb-16">
+            Meet <span className="text-primary">Gabi!</span>
           </motion.h1>
-
-          <motion.p variants={itemVariants} className="text-muted-foreground mb-8 max-w-xs mx-auto">
-            Gabi is your smart assistant. Magtanong ka lang tungkol sa sales, expenses, o kahit anong kailangan mo.
-          </motion.p>
+          
+          <div className="relative flex justify-center items-center my-10">
+            <motion.div 
+                variants={itemVariants}
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1, transition: { delay: 0.2, type: 'spring' } }}
+            >
+                <div className="p-4 bg-accent/20 rounded-full">
+                    <Bot className="h-48 w-48 text-accent" />
+                </div>
+            </motion.div>
+            
+            <motion.div 
+                variants={itemVariants}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1, transition: { delay: 0.5, type: 'spring', stiffness: 120 } }}
+                className="absolute -top-4 right-0 sm:right-4 bg-background/50 backdrop-blur-md py-3 px-5 rounded-2xl rounded-tr-none shadow-lg"
+            >
+                <p className="text-lg font-semibold text-foreground">Need our help now?</p>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
 
