@@ -142,32 +142,34 @@ export default function DashboardPage() {
             <div className="rounded-xl bg-gray-50 p-4">
                 <h3 className="text-base font-semibold mb-1">Product Categories</h3>
                 <p className="text-xs text-muted-foreground mb-4">Top categories by sales volume.</p>
-                <div className="grid grid-cols-2 items-center">
-                    <ChartContainer config={chartConfigPie} className="mx-auto aspect-square h-[150px]">
-                      <PieChart accessibilityLayer>
-                        <ChartTooltip
-                          cursor={false}
-                          content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Pie
-                          data={pieData}
-                          dataKey="value"
-                          nameKey="name"
-                          innerRadius={30}
-                          outerRadius={50}
-                          strokeWidth={2}
-                          paddingAngle={5}
-                        >
-                         {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.fill} />
-                          ))}
-                        </Pie>
-                      </PieChart>
-                    </ChartContainer>
+                <ChartContainer config={chartConfigPie} className="w-full h-[150px]">
+                  <PieChart accessibilityLayer>
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={30}
+                      outerRadius={50}
+                      strokeWidth={2}
+                      paddingAngle={5}
+                      cx="35%"
+                    >
+                     {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Pie>
                     <ChartLegend
-                        content={<ChartLegendContent nameKey="name" className="flex-col items-start space-y-1 text-xs" />}
-                      />
-                </div>
+                      content={<ChartLegendContent nameKey="name" className="flex-col items-start space-y-1 text-xs" />}
+                      layout="vertical"
+                      verticalAlign="middle"
+                      align="right"
+                    />
+                  </PieChart>
+                </ChartContainer>
             </div>
              <div className="rounded-xl bg-gray-50 p-4">
                 <h3 className="text-base font-semibold mb-1">Top 3 Products</h3>
