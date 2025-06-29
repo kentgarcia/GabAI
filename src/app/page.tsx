@@ -60,7 +60,7 @@ export default function OnboardingPage() {
     },
   };
 
-  const titleLines = ["Easy ways to", "manage your", "finances"];
+  const titleLines = ["Kumusta, ka-GabAI!", "Let’s grow", "your hustle."];
 
   return (
     <main className="bg-white text-black min-h-screen flex flex-col justify-end p-6 relative overflow-hidden">
