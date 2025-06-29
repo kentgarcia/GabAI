@@ -58,7 +58,7 @@ export default function TalkPage() {
   const statusText = {
     idle: "Tap the mic to speak.",
     listening: "I'm listening...",
-    thinking: "Gabi is thinking...",
+    thinking: "Thinking...",
     speaking: "Gabi is speaking...",
   };
 
@@ -138,10 +138,12 @@ export default function TalkPage() {
     };
     
     recognition.onend = async () => {
-        if (finalTranscript.trim()) {
+        const trimmedTranscript = finalTranscript.trim();
+        if (trimmedTranscript) {
+            setTranscript(trimmedTranscript);
             setStatus('thinking');
             await new Promise(res => setTimeout(res, 1500));
-            const gabiResponse = getGabiResponse(finalTranscript.trim());
+            const gabiResponse = getGabiResponse(trimmedTranscript);
             setAiResponse(gabiResponse);
         } else {
             setStatus('idle');
@@ -161,7 +163,7 @@ export default function TalkPage() {
   }, [hasPermission, toast]);
 
   useEffect(() => {
-    if (aiResponse) {
+    if (aiResponse && status === 'thinking') {
       setStatus('speaking');
 
       let i = 0;
@@ -172,21 +174,31 @@ export default function TalkPage() {
         i++;
         if (i >= aiResponse.length) {
           clearInterval(timer);
-          setStatus('idle');
+           setTimeout(() => setStatus('idle'), 1000); // Give a moment before resetting to idle
         }
       }, 40); // typing speed
 
       return () => clearInterval(timer);
     }
-  }, [aiResponse]);
+  }, [aiResponse, status]);
+  
+  const currentText = status === 'speaking' || (status === 'idle' && displayedResponse) ? displayedResponse : transcript;
 
   return (
-    <main className="relative flex flex-col h-screen bg-white text-foreground p-6 overflow-hidden">
+    <main className="relative flex flex-col h-screen bg-background text-foreground p-6 overflow-hidden">
+        
+        {/* Animated Gradient Blobs */}
+        <div className="absolute inset-0 -z-10">
+            <div className="absolute top-0 -left-40 w-96 h-96 bg-accent/30 rounded-full filter blur-2xl animate-blob opacity-50"></div>
+            <div className="absolute top-0 -right-40 w-96 h-96 bg-primary/30 rounded-full filter blur-2xl animate-blob animation-delay-2000 opacity-50"></div>
+            <div className="absolute -bottom-40 left-20 w-96 h-96 bg-accent/30 rounded-full filter blur-2xl animate-blob animation-delay-4000 opacity-50"></div>
+        </div>
+        
         <header className="relative z-10 flex items-center justify-start w-full">
-            <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2 text-foreground hover:bg-muted">
-            <div onClick={() => router.back()}>
-                <ArrowLeft />
-            </div>
+            <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2 text-foreground bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-full">
+                <div onClick={() => router.back()}>
+                    <ArrowLeft />
+                </div>
             </Button>
         </header>
 
@@ -194,7 +206,8 @@ export default function TalkPage() {
             <motion.div
                 onClick={handleListen}
                 className={cn(
-                    "w-48 h-48 bg-primary/20 rounded-full flex items-center justify-center transition-transform",
+                    "w-48 h-48 rounded-full flex items-center justify-center transition-transform",
+                    "bg-white/10 backdrop-blur-md border border-white/20 shadow-lg",
                     status === 'idle' && 'cursor-pointer active:scale-95'
                 )}
             >
@@ -205,7 +218,7 @@ export default function TalkPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.3 }}
-                    className="w-36 h-36 bg-primary/30 rounded-full flex items-center justify-center"
+                    className="w-36 h-36 rounded-full flex items-center justify-center bg-gradient-to-br from-white/40 to-white/10 shadow-inner"
                 >
                     <motion.div
                         className="flex items-center justify-center"
@@ -222,12 +235,10 @@ export default function TalkPage() {
                 </AnimatePresence>
             </motion.div>
 
-            <div className="h-24">
-                <p className="text-2xl font-semibold mb-2">{statusText[status]}</p>
-                <p className="text-muted-foreground min-h-[2.5em]">
-                  {status === 'speaking' || (status === 'idle' && displayedResponse)
-                    ? displayedResponse
-                    : transcript}
+            <div className="w-full max-w-sm h-32 flex flex-col justify-center items-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4">
+                <p className="text-xl font-semibold mb-2">{statusText[status]}</p>
+                <p className="text-muted-foreground min-h-[2.5em] text-lg">
+                  {currentText}
                 </p>
             </div>
         </div>
