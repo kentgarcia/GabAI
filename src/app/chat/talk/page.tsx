@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -49,6 +48,8 @@ export default function TalkPage() {
   const [aiResponse, setAiResponse] = useState('');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const recognitionRef = useRef<any>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+
 
   const statusText = {
     idle: "Initializing...",
@@ -58,9 +59,9 @@ export default function TalkPage() {
   };
 
   useEffect(() => {
-    // Request microphone permission and initialize SpeechRecognition
     const initSpeechRecognition = async () => {
       try {
+        // Ensure microphone access before proceeding
         await navigator.mediaDevices.getUserMedia({ audio: true });
         setHasPermission(true);
 
@@ -76,34 +77,57 @@ export default function TalkPage() {
         }
 
         const recognition = new SpeechRecognition();
-        recognition.continuous = false;
+        recognition.continuous = false; // Stop after first utterance
         recognition.interimResults = true;
         recognition.lang = 'en-US';
+        
+        let finalTranscript = '';
 
         recognition.onstart = () => {
           setStatus('listening');
           setTranscript('');
           setAiResponse('');
+          finalTranscript = '';
         };
 
         recognition.onresult = (event: any) => {
           let interimTranscript = '';
           for (let i = event.resultIndex; i < event.results.length; ++i) {
             if (event.results[i].isFinal) {
-              setTranscript(prev => prev + event.results[i][0].transcript);
+              finalTranscript += event.results[i][0].transcript;
             } else {
               interimTranscript += event.results[i][0].transcript;
             }
           }
-          setTranscript(interimTranscript);
+          setTranscript(interimTranscript || finalTranscript);
         };
-
-        recognition.onend = () => {
-          setStatus('idle');
+        
+        recognition.onend = async () => {
+          if (finalTranscript.trim()) {
+            setStatus('thinking');
+            // Simulate thinking delay
+            await new Promise(res => setTimeout(res, 1500));
+            const gabiResponse = getGabiResponse(finalTranscript.trim());
+            setAiResponse(gabiResponse);
+          } else {
+            // No speech detected, restart listening if we are not speaking
+            if (status !== 'speaking') {
+                setStatus('idle');
+                recognitionRef.current?.start();
+            }
+          }
         };
         
         recognition.onerror = (event: any) => {
-            console.error('Speech recognition error', event.error);
+            // "aborted" and "no-speech" are normal events, not errors to display.
+            if (event.error !== 'aborted' && event.error !== 'no-speech') {
+                 console.error('Speech recognition error:', event.error);
+                 toast({
+                    variant: "destructive",
+                    title: "Speech Error",
+                    description: `An error occurred: ${event.error}`,
+                });
+            }
             setStatus('idle');
         };
 
@@ -119,56 +143,29 @@ export default function TalkPage() {
     initSpeechRecognition();
 
     return () => {
+      speechSynthesis.cancel();
       if (recognitionRef.current) {
+        recognitionRef.current.onend = null;
+        recognitionRef.current.onerror = null;
+        recognitionRef.current.onstart = null;
+        recognitionRef.current.onresult = null;
         recognitionRef.current.stop();
       }
-      speechSynthesis.cancel();
     };
-  }, [toast]);
-  
-  // Effect to handle the end of a speech segment
-  useEffect(() => {
-    const recognition = recognitionRef.current;
-    if (!recognition) return;
+  }, [toast, status]);
 
-    const handleRecognitionEnd = async () => {
-      // Get the final transcript from the state after it has been updated
-      const finalTranscript = transcript.trim();
-      
-      if (finalTranscript && status === 'idle') {
-        setStatus('thinking');
-
-        // Simulate thinking delay
-        await new Promise(res => setTimeout(res, 1500));
-        
-        const gabiResponse = getGabiResponse(finalTranscript);
-        setAiResponse(gabiResponse);
-
-      } else if (status === 'idle') {
-          // If no speech was detected, restart listening
-          recognition.start();
-      }
-    };
-
-    // We can't use onend directly because we need the final state of transcript
-    if(status === 'idle' && recognitionRef.current.recognizing === false) {
-        handleRecognitionEnd();
-    }
-
-  }, [status, transcript]);
-
-
-  // Effect to handle speaking the AI response
   useEffect(() => {
     if (aiResponse) {
       setStatus('speaking');
       const utterance = new SpeechSynthesisUtterance(aiResponse);
+      utteranceRef.current = utterance;
+
       utterance.onend = () => {
         setAiResponse('');
         setTranscript('');
-        if (recognitionRef.current) {
-          recognitionRef.current.start();
-        }
+        setStatus('idle');
+        // Restart listening after speaking
+        recognitionRef.current?.start();
       };
       speechSynthesis.speak(utterance);
     }
