@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
-import { ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, ArrowLeftRight } from 'lucide-react';
+import { ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, ArrowLeftRight, Laptop } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -259,6 +259,23 @@ export default function DashboardPage() {
                       </div>
                     </motion.div>
                   </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                    <Link href="https://gab-ai-fawn.vercel.app/web" target="_blank" rel="noopener noreferrer">
+                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
+                            <CardContent className="p-4 flex items-center gap-4">
+                                <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
+                                    <Laptop className="w-6 h-6 text-primary-foreground" />
+                                </div>
+                                <div className="flex-grow">
+                                    <p className="font-semibold">Go Pro on Desktop</p>
+                                    <p className="text-sm text-muted-foreground">Manage invoices, view advanced reports, and more on the web.</p>
+                                </div>
+                                <ArrowRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                            </CardContent>
+                        </Card>
+                    </Link>
                 </motion.div>
                 
                 <motion.div variants={itemVariants} className="space-y-4">
