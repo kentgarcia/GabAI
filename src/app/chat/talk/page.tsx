@@ -21,8 +21,10 @@ declare global {
 // --- Response Types & Mock Data ---
 type AiResponse = {
   type: 'text' | 'dataCard' | 'barChart' | 'task';
+  spokenResponse: string;
   content: any;
   key: string;
+  followUps: string[];
 };
 
 const formatCurrency = (value: number) => {
@@ -41,13 +43,16 @@ const getGabiResponse = (message: string): AiResponse => {
     if (lowerCaseMessage.includes('profit')) {
         return {
             type: 'dataCard',
+            spokenResponse: "Here is your net profit for this month. It's looking healthy!",
             key,
-            content: { title: "This Month's Net Profit", value: 12345.67 }
+            content: { title: "This Month's Net Profit", value: 12345.67 },
+            followUps: ["How does this compare to last month?", "What were my income sources?"]
         };
     }
     if (lowerCaseMessage.includes('top expenses')) {
         return {
             type: 'barChart',
+            spokenResponse: "Here are your top expense categories. Your product costs are the highest.",
             key,
             content: {
                 title: "Top Expense Categories",
@@ -57,32 +62,39 @@ const getGabiResponse = (message: string): AiResponse => {
                     { label: 'Software', value: 1200 },
                 ],
                 maxValue: 8000
-            }
+            },
+            followUps: ["Show all my expenses.", "Which expense grew the most?"]
         };
     }
     if (lowerCaseMessage.includes('draft') && lowerCaseMessage.includes('reminder')) {
         return {
             type: 'task',
+            spokenResponse: "I've drafted that payment reminder for you. Would you like to send it?",
             key,
             content: {
                 title: "Drafted Reminder",
                 text: "Hi Client,\n\nJust a friendly reminder that Invoice #123 is due next week. Please let me know if you have any questions.\n\nThanks,\nJuan",
                 actionLabel: "Send Reminder"
-            }
+            },
+            followUps: ["Yes, send it.", "Make it sound more urgent."]
         };
     }
     if (lowerCaseMessage.includes('tax')) {
          return {
             type: 'text',
+            spokenResponse: `Based on your income this month and using the 8% tax rate, you should consider setting aside approximately ₱1,600 for your taxes. Remember, this is just an estimate!`,
             key,
-            content: `Based on your income this month and using the 8% tax rate, you should consider setting aside approximately ₱1,600 for your taxes. Remember, this is just an estimate!`,
+            content: null,
+            followUps: ["When is my next tax deadline?", "Explain the 8% tax rate again."]
         };
     }
 
     return {
         type: 'text',
         key,
-        content: "I'm sorry, I didn't quite catch that. Could you try asking about profit, top expenses, or drafting a reminder?",
+        spokenResponse: "I'm sorry, I didn't quite catch that. Could you try asking about profit, top expenses, or drafting a reminder?",
+        content: null,
+        followUps: []
     };
 };
 
@@ -175,21 +187,22 @@ export default function TalkPage() {
   const [transcript, setTranscript] = useState('');
   const [aiResponse, setAiResponse] = useState<AiResponse | null>(null);
   const [displayedText, setDisplayedText] = useState('');
+  const [suggestedFollowUps, setSuggestedFollowUps] = useState<string[]>([]);
+  const [isResponseVisible, setIsResponseVisible] = useState(false);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const recognitionRef = useRef<any>(null);
 
-  const statusText = {
-    idle: "Tap the mic to speak.",
-    listening: "Listening...",
-    thinking: "Thinking...",
-    speaking: aiResponse?.type === 'text' ? displayedText : "Gabi is responding...",
+  const startNewInteraction = () => {
+    setAiResponse(null);
+    setTranscript('');
+    setDisplayedText('');
+    setSuggestedFollowUps([]);
+    setIsResponseVisible(false);
   };
 
   const handleListen = useCallback(() => {
     if (status === 'idle' && recognitionRef.current) {
-        setTranscript('');
-        setAiResponse(null);
-        setDisplayedText('');
+        startNewInteraction();
         try {
             recognitionRef.current.start();
         } catch(err) {
@@ -198,8 +211,25 @@ export default function TalkPage() {
     }
   }, [status]);
 
+  const processRequest = (text: string) => {
+    setStatus('thinking');
+    setTimeout(() => {
+        const gabiResponse = getGabiResponse(text);
+        setAiResponse(gabiResponse);
+        setStatus('speaking');
+        setIsResponseVisible(gabiResponse.type !== 'text');
+    }, 1200);
+  };
+  
+  const handleFollowUpClick = (prompt: string) => {
+    if (status !== 'idle') return;
+    startNewInteraction();
+    setTranscript(prompt);
+    processRequest(prompt);
+  };
+
+
   useEffect(() => {
-    // Permission & speech recognition setup
     const initPermissionsAndRecognition = async () => {
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -224,7 +254,6 @@ export default function TalkPage() {
   }, [toast]);
 
   useEffect(() => {
-    // Speech recognition event listeners
     if (!hasPermission || !recognitionRef.current) return;
     const recognition = recognitionRef.current;
     let finalTranscript = '';
@@ -241,11 +270,7 @@ export default function TalkPage() {
         const trimmedTranscript = finalTranscript.trim();
         if (trimmedTranscript) {
             setTranscript(trimmedTranscript);
-            setStatus('thinking');
-            await new Promise(res => setTimeout(res, 1000));
-            const gabiResponse = getGabiResponse(trimmedTranscript);
-            setAiResponse(gabiResponse);
-            setStatus('speaking');
+            processRequest(trimmedTranscript);
         } else {
             setStatus('idle');
         }
@@ -254,42 +279,45 @@ export default function TalkPage() {
   }, [hasPermission, toast]);
 
   useEffect(() => {
-    // Typewriter effect for text responses, and auto-reset for rich cards
-    if (!aiResponse || status !== 'speaking') return;
+    if (status !== 'speaking' || !aiResponse) return;
 
-    if (aiResponse.type === 'text') {
-      let i = 0;
-      setDisplayedText('');
-      const timer = setInterval(() => {
-        setDisplayedText(aiResponse.content.slice(0, i + 1));
-        i++;
-        if (i >= aiResponse.content.length) {
-          clearInterval(timer);
-          setTimeout(() => setStatus('idle'), 2000);
-        }
-      }, 25);
-      return () => clearInterval(timer);
-    } else {
-      // For rich cards, just show them and then reset to idle after a delay
-      const timer = setTimeout(() => setStatus('idle'), 6000);
-      return () => clearTimeout(timer);
-    }
+    setDisplayedText('');
+    const textToType = aiResponse.spokenResponse;
+    let i = 0;
+    const timer = setInterval(() => {
+      setDisplayedText(textToType.slice(0, i + 1));
+      i++;
+      if (i >= textToType.length) {
+        clearInterval(timer);
+        setSuggestedFollowUps(aiResponse.followUps);
+        setStatus('idle');
+      }
+    }, 30);
+    return () => clearInterval(timer);
   }, [aiResponse, status]);
-
-  const currentText = (status === 'listening' || status === 'thinking') ? transcript : statusText[status];
+  
+  const statusTextMap = {
+    idle: "Tap the mic to speak.",
+    listening: "Listening...",
+    thinking: "Thinking...",
+    speaking: "Gabi is responding...",
+  };
 
   return (
-    <main className="flex flex-col h-screen bg-transparent text-foreground p-6 overflow-hidden">
+    <main className={cn(
+        "flex flex-col h-screen bg-transparent text-foreground p-6 overflow-hidden transition-[padding,justify-content] duration-500",
+        isResponseVisible ? "justify-start pt-20" : "justify-center"
+    )}>
         
-        <header className="relative z-10 flex items-center justify-start w-full">
-            <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2 text-foreground bg-background/30 backdrop-blur-sm hover:bg-background/50 rounded-full">
+        <header className="absolute top-6 left-6 right-6 z-10 flex items-center justify-start w-full">
+            <Button asChild variant="ghost" size="icon" className="h-10 w-10 text-foreground bg-background/30 backdrop-blur-sm hover:bg-background/50 rounded-full">
                 <div onClick={() => router.back()}>
                     <ArrowLeft />
                 </div>
             </Button>
         </header>
 
-        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6">
+        <motion.div layout className="flex flex-col items-center space-y-4">
             <div
                 onClick={handleListen}
                 className={cn(
@@ -317,33 +345,33 @@ export default function TalkPage() {
                 </div>
             </div>
 
-            <Card className="w-full max-w-sm h-32 flex flex-col justify-center items-center bg-background/40 backdrop-blur-lg border-border/10 rounded-2xl p-4">
-                <p className="text-xl font-semibold mb-2">{aiResponse?.type !== 'text' ? statusText[status] : "Gabi is speaking..."}</p>
-                <p className="text-muted-foreground min-h-[2.5em] text-lg">
-                  {(aiResponse?.type === 'text' && status === 'speaking') ? displayedText : transcript }
+            <Card className="w-full max-w-sm min-h-[128px] flex flex-col justify-center items-center bg-background/40 backdrop-blur-lg border-border/10 rounded-2xl p-4 text-center">
+                <p className="text-xl font-semibold mb-2">{statusTextMap[status]}</p>
+                 <p className="text-muted-foreground text-lg min-h-[2.5em]">
+                  {status === 'speaking' ? displayedText : transcript}
                 </p>
             </Card>
+        </motion.div>
 
-            <AnimatePresence>
-              {status === 'idle' && !aiResponse && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="w-full max-w-sm"
-                >
-                  <h3 className="text-sm font-semibold text-muted-foreground mb-2">Try saying...</h3>
-                  <ul className="space-y-1.5 text-foreground/80">
-                    {sampleCommands.map(cmd => <li key={cmd}>"{cmd}"</li>)}
-                  </ul>
-                </motion.div>
-              )}
+        <div className="flex-1 w-full max-w-sm mx-auto flex flex-col justify-center gap-4 mt-6">
+             <AnimatePresence>
+                {status === 'idle' && !aiResponse && (
+                    <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="text-center"
+                    >
+                    <h3 className="text-sm font-semibold text-muted-foreground mb-2">Try saying...</h3>
+                    <ul className="space-y-1.5 text-foreground/80">
+                        {sampleCommands.map(cmd => <li key={cmd}>"{cmd}"</li>)}
+                    </ul>
+                    </motion.div>
+                )}
             </AnimatePresence>
-        </div>
 
-        <div className="absolute bottom-6 left-6 right-6 z-20">
             <AnimatePresence>
-                {aiResponse && aiResponse.type !== 'text' && status === 'speaking' && (
+                {isResponseVisible && aiResponse && aiResponse.type !== 'text' && (
                     <motion.div
                         key={aiResponse.key}
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -354,6 +382,26 @@ export default function TalkPage() {
                         {aiResponse.type === 'dataCard' && <DataCardComponent content={aiResponse.content} />}
                         {aiResponse.type === 'barChart' && <BarChartComponent content={aiResponse.content} />}
                         {aiResponse.type === 'task' && <TaskComponent content={aiResponse.content} />}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+             <AnimatePresence>
+                {suggestedFollowUps.length > 0 && (
+                     <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="text-center"
+                    >
+                        <h3 className="text-sm font-semibold text-muted-foreground mb-2">Try a follow-up...</h3>
+                        <div className="flex flex-wrap gap-2 justify-center">
+                            {suggestedFollowUps.map(prompt => (
+                                <Button key={prompt} variant="outline" size="sm" className="rounded-full bg-background/50" onClick={() => handleFollowUpClick(prompt)}>
+                                    {prompt}
+                                </Button>
+                            ))}
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
