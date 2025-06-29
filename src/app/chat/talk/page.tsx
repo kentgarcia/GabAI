@@ -184,7 +184,7 @@ export default function TalkPage() {
           clearInterval(timer);
            setTimeout(() => setStatus('idle'), 1000); // Give a moment before resetting to idle
         }
-      }, 40); // typing speed
+      }, 25); // typing speed
 
       return () => clearInterval(timer);
     }
