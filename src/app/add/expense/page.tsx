@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft, Check, ChevronRight, ShoppingBag, Truck, Laptop, Megaphone, Wrench, Camera, Lightbulb, Bot
+  ArrowLeft, Check, ChevronRight, ShoppingBag, Truck, Laptop, Megaphone, Wrench, Camera, Lightbulb
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,6 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const steps = [
   { id: 1, name: 'Details' },
@@ -141,7 +142,7 @@ export default function AddExpensePage() {
                         
                         {formData.vendor && (
                             <div className="flex items-start justify-center gap-3 text-sm text-muted-foreground bg-foreground/5 p-3 rounded-lg">
-                                <Bot className="h-6 w-6 text-accent flex-shrink-0 mt-0.5" />
+                                <Image src="/gabi-avatar.png" width={32} height={32} alt="Gabi" className="rounded-full flex-shrink-0" data-ai-hint="robot assistant" />
                                 <p><span className="font-semibold text-foreground/80">Gabi suggests:</span> I see you entered '{formData.vendor}'. I can categorize this under <span className="font-bold">Software & Subs</span> for you.</p>
                             </div>
                         )}

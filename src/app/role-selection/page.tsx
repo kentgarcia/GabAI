@@ -4,9 +4,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { ShoppingCart, Laptop, ArrowRight, Bot, Check, Plus } from 'lucide-react';
+import { ShoppingCart, Laptop, ArrowRight, Check, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import {
   Dialog,
@@ -18,6 +17,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import Image from 'next/image';
 
 
 const roles = [
@@ -67,9 +67,7 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
         variants={itemVariants}
         className="flex items-start gap-3"
     >
-        <div className="flex-shrink-0 p-2 bg-accent/20 rounded-full">
-            <Bot className="h-6 w-6 text-accent" />
-        </div>
+        <Image src="/gabi-avatar.png" width={40} height={40} alt="Gabi" className="rounded-full flex-shrink-0" data-ai-hint="robot assistant" />
         <div className="bg-background/30 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
             {children}
         </div>
@@ -172,7 +170,7 @@ export default function RoleSelectionPage() {
                             variant="outline"
                             disabled={!!selectedRole}
                             className={cn(
-                                'h-auto w-full justify-start rounded-2xl p-4 text-left transition-all duration-200',
+                                'h-auto w-full justify-start rounded-full p-4 text-left transition-all duration-200',
                                 selectedRole === role.id
                                     ? 'border-transparent bg-primary text-primary-foreground ring-2 ring-offset-2 ring-primary hover:bg-primary/90'
                                     : 'border-border bg-background/30 backdrop-blur-md hover:bg-muted/50'

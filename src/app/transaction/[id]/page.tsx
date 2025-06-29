@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText, Bot } from 'lucide-react';
+import { ArrowLeft, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -35,9 +36,7 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
     <motion.div
         className="flex items-start gap-3 mb-6"
     >
-        <div className="flex-shrink-0 p-2 bg-accent/20 rounded-full">
-            <Bot className="h-6 w-6 text-accent" />
-        </div>
+        <Image src="/gabi-avatar.png" width={40} height={40} alt="Gabi" className="rounded-full flex-shrink-0" data-ai-hint="robot assistant" />
         <div className="bg-background/30 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
             {children}
         </div>

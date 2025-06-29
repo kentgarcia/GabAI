@@ -2,8 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Bot, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -45,9 +46,7 @@ export default function MeetGabiPage() {
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1, transition: { delay: 0.2, type: 'spring' } }}
             >
-                <div className="p-4 bg-accent/20 rounded-full">
-                    <Bot className="h-48 w-48 text-accent" />
-                </div>
+                <Image src="/gabi-avatar.png" width={224} height={224} alt="Gabi" className="rounded-full" data-ai-hint="robot assistant" />
             </motion.div>
             
             <motion.div 

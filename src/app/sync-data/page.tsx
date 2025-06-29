@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Upload, ArrowRight, Info, Sheet, BarChart3, Bot } from 'lucide-react';
+import { Upload, ArrowRight, Info, Sheet, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -13,6 +13,7 @@ import {
   DialogFooter,
   DialogClose,
 } from '@/components/ui/dialog';
+import Image from 'next/image';
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -39,9 +40,7 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
         variants={itemVariants}
         className="flex items-start gap-3 mb-8"
     >
-        <div className="flex-shrink-0 p-2 bg-accent/20 rounded-full">
-            <Bot className="h-6 w-6 text-accent" />
-        </div>
+        <Image src="/gabi-avatar.png" width={40} height={40} alt="Gabi" className="rounded-full flex-shrink-0" data-ai-hint="robot assistant" />
         <div className="bg-background/30 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
             {children}
         </div>

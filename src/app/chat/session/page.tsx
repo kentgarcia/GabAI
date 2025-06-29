@@ -4,12 +4,13 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Bot, Sparkles } from 'lucide-react';
+import { ArrowLeft, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { addDays, format } from 'date-fns';
+import Image from 'next/image';
 
 // --- Type Definitions ---
 type ChatAction = {
@@ -265,9 +266,7 @@ export default function ChatSessionPage() {
         </Button>
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="p-2 bg-accent/20 rounded-full">
-              <Bot className="h-6 w-6 text-accent" />
-            </div>
+            <Image src="/gabi-avatar.png" width={40} height={40} alt="Gabi" className="rounded-full" data-ai-hint="robot assistant" />
             <AnimatePresence>
             {isLoading && (
                  <motion.div
@@ -312,9 +311,7 @@ export default function ChatSessionPage() {
                     </div>
                   ) : (
                     <div className="flex items-start gap-3 w-full max-w-sm">
-                         <div className="p-2 bg-accent/20 rounded-full self-end">
-                            <Bot className="h-6 w-6 text-accent" />
-                        </div>
+                         <Image src="/gabi-avatar.png" width={40} height={40} alt="Gabi" className="rounded-full self-end flex-shrink-0" data-ai-hint="robot assistant" />
                         <div className='bg-background/40 rounded-2xl rounded-bl-none p-4 w-full backdrop-blur-md'>
                            <p className="whitespace-pre-wrap">{message.content}</p>
                            {message.component?.type === 'profit-card' && <ProfitCard data={message.component.data} />}
@@ -332,9 +329,7 @@ export default function ChatSessionPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className='flex items-start gap-3'
                 >
-                    <div className="p-2 bg-accent/20 rounded-full self-end">
-                      <Bot className="h-6 w-6 text-accent" />
-                    </div>
+                    <Image src="/gabi-avatar.png" width={40} height={40} alt="Gabi" className="rounded-full self-end flex-shrink-0" data-ai-hint="robot assistant" />
                      <div className='bg-background/40 backdrop-blur-md rounded-2xl rounded-bl-none p-4 max-w-sm'>
                         <motion.div
                             className="flex gap-1.5"

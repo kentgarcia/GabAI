@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Check, Lock, Award, Bot, FileDown, Share2 } from 'lucide-react';
+import { ArrowLeft, Check, Lock, Award, FileDown, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Accordion,
@@ -28,6 +28,7 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 const initialGrowthLevels = [
   {
@@ -157,7 +158,7 @@ const LevelAccordionTrigger = ({ level, isLocked }: { level: typeof initialGrowt
 
 const Certificate = ({ levelTitle }: { levelTitle: string }) => (
     <div className="bg-gradient-to-br from-primary/10 to-accent/20 p-6 rounded-lg border border-primary/20 text-center relative overflow-hidden">
-        <Bot className="absolute -bottom-4 -right-4 w-24 h-24 text-primary/10" />
+        <Image src="/gabi-avatar.png" width={96} height={96} alt="Gabi" className="absolute -bottom-4 -right-4 text-primary/10 opacity-10" data-ai-hint="robot assistant" />
         <Award className="w-16 h-16 mx-auto text-yellow-500 mb-4" />
         <p className="text-sm font-semibold text-muted-foreground">CERTIFICATE OF COMPLETION</p>
         <h3 className="text-2xl font-bold my-2">Juan dela Cruz</h3>

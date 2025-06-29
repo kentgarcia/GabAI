@@ -4,11 +4,12 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Mic, Loader2, Bot } from 'lucide-react';
+import { ArrowLeft, Mic, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Image from 'next/image';
 
 // Extend the window interface for the SpeechRecognition API
 declare global {
@@ -441,7 +442,7 @@ export default function TalkPage() {
                                 transition={{ duration: 0.3 }}
                             >
                                 {status === 'thinking' && <Loader2 className="w-16 h-16 text-primary animate-spin" />}
-                                {status === 'speaking' && <Bot className="w-16 h-16 text-primary" />}
+                                {status === 'speaking' && <Image src="/gabi-avatar.png" width={80} height={80} alt="Gabi" className="rounded-full" data-ai-hint="robot assistant" />}
                                 {status === 'idle' && <Mic className="w-16 h-16 text-primary" />}
                                 {status === 'listening' && <SoundWave />}
                                 {hasPermission === false && <Mic className="w-16 h-16 text-destructive" />}

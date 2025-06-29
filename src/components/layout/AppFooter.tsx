@@ -4,7 +4,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-    Bot, 
     Home, 
     FileText, 
     Plus, 
@@ -22,12 +21,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import Image from 'next/image';
 
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
   { href: '/reports', icon: FileText, label: 'Reports' },
   { href: '/add', icon: Plus, label: 'Actions' },
-  { href: '/chat', icon: Bot, label: 'Gabi' },
+  { href: '/chat', label: 'Gabi' },
   { href: '/learn', icon: BookOpen, label: 'Learn' },
 ];
 
@@ -61,7 +61,7 @@ export function AppFooter() {
     <footer className="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 z-20">
       <div className="bg-black rounded-full h-16 flex justify-around items-center shadow-lg">
         {navItems.map((item) => {
-          const isActive = item.label !== 'Actions' && (pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href)));
+          const isActive = item.label !== 'Actions' && (pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href || '')));
           
           if (item.label === 'Actions') {
             return (
@@ -73,7 +73,7 @@ export function AppFooter() {
                         'flex items-center justify-center w-12 h-12 rounded-full transition-colors text-primary-foreground/70 hover:bg-white/20'
                     )}
                     >
-                    <item.icon className="w-6 h-6" />
+                    {item.icon && <item.icon className="w-6 h-6" />}
                   </button>
                 </SheetTrigger>
                 <SheetContent side="bottom" className="rounded-t-3xl bg-background/90 backdrop-blur-lg border-none p-6">
@@ -95,7 +95,7 @@ export function AppFooter() {
           return (
             <Link
               key={item.label}
-              href={item.href}
+              href={item.href || '#'}
               aria-label={item.label}
               className={cn(
                 'flex items-center justify-center w-12 h-12 rounded-full transition-colors',
@@ -104,7 +104,13 @@ export function AppFooter() {
                   : 'text-primary-foreground/70 hover:bg-white/20'
               )}
             >
-              <item.icon className="w-6 h-6" />
+             {item.label === 'Gabi' ? (
+                <div className={cn('p-0.5 rounded-full', isActive && 'bg-black/20')}>
+                    <Image src="/gabi-avatar.png" width={28} height={28} alt="Gabi" className="rounded-full" data-ai-hint="robot assistant" />
+                </div>
+                ) : (
+                item.icon && <item.icon className="w-6 h-6" />
+                )}
             </Link>
           );
         })}
