@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Bot, SendHoriz, Sparkles } from 'lucide-react';
+import { ArrowLeft, Bot, SendHorizontal, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -302,7 +302,7 @@ export default function ChatPage() {
             className="rounded-full h-12 w-12 shrink-0 bg-black"
             disabled={isLoading || !input.trim()}
           >
-            <SendHoriz />
+            <SendHorizontal />
           </Button>
         </form>
       </footer>
