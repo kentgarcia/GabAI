@@ -1,6 +1,5 @@
 
-'use client';
-
+import { Suspense } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,7 +47,9 @@ const ContributionsData = {
     pagibig: 200.00,
 };
 
-export default function TaxSummaryPreviewPage() {
+function TaxSummaryPreviewContent() {
+  'use client';
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -235,4 +236,20 @@ export default function TaxSummaryPreviewPage() {
       </AnimatePresence>
     </main>
   );
+}
+
+const LoadingFallback = () => (
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-lg text-muted-foreground">Loading Page...</p>
+    </div>
+);
+
+
+export default function TaxSummaryPreviewPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <TaxSummaryPreviewContent />
+        </Suspense>
+    );
 }

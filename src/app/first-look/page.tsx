@@ -1,9 +1,9 @@
-'use client';
 
+import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Bot, ArrowRight } from 'lucide-react';
+import { Bot, ArrowRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const containerVariants = {
@@ -40,7 +40,9 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
     </motion.div>
 );
 
-export default function FirstLookPage() {
+function FirstLookContent() {
+  'use client';
+
   const searchParams = useSearchParams();
   const from = searchParams.get('from');
 
@@ -99,5 +101,20 @@ export default function FirstLookPage() {
         </Button>
       </motion.div>
     </main>
+  );
+}
+
+const LoadingFallback = () => (
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-lg text-muted-foreground">Loading Page...</p>
+    </div>
+);
+
+export default function FirstLookPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <FirstLookContent />
+    </Suspense>
   );
 }

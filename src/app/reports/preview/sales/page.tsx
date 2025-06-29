@@ -1,6 +1,5 @@
 
-'use client';
-
+import { Suspense } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -49,8 +48,9 @@ const salesDataByCategory = [
   { name: 'Services', unitsSold: 15, grossRevenue: 50000 },
 ];
 
+function SalesReportPreviewContent() {
+  'use client';
 
-export default function SalesReportPreviewPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -227,4 +227,19 @@ export default function SalesReportPreviewPage() {
       </AnimatePresence>
     </main>
   );
+}
+
+const LoadingFallback = () => (
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-lg text-muted-foreground">Loading Page...</p>
+    </div>
+);
+
+export default function SalesReportPreviewPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <SalesReportPreviewContent />
+        </Suspense>
+    );
 }

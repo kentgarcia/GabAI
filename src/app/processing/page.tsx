@@ -1,9 +1,9 @@
-'use client';
 
+import { Suspense } from 'react';
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { FileText, ArrowRight, BarChart3, Lightbulb, Receipt } from 'lucide-react';
+import { FileText, ArrowRight, BarChart3, Lightbulb, Receipt, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 
 const containerVariants = {
@@ -38,7 +38,9 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
     </motion.div>
 );
 
-export default function ProcessingPage() {
+function ProcessingContent() {
+  'use client';
+  
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || 'seller'; // Default to seller
@@ -144,5 +146,21 @@ export default function ProcessingPage() {
         </div>
       </motion.div>
     </main>
+  );
+}
+
+
+const LoadingFallback = () => (
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-lg text-muted-foreground">Loading Page...</p>
+    </div>
+);
+
+export default function ProcessingPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ProcessingContent />
+    </Suspense>
   );
 }

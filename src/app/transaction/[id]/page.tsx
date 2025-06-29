@@ -1,9 +1,9 @@
-'use client';
 
+import { Suspense } from 'react';
 import { useState } from 'react';
 import { useSearchParams, useRouter, useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText } from 'lucide-react';
+import { ArrowLeft, FileText, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -43,8 +43,9 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
     </motion.div>
 );
 
-
-export default function TransactionDetailsPage() {
+function TransactionDetailsContent() {
+    'use client';
+    
     const router = useRouter();
     const params = useParams();
     const searchParams = useSearchParams();
@@ -169,5 +170,20 @@ export default function TransactionDetailsPage() {
                 </DialogContent>
             </Dialog>
         </main>
+    );
+}
+
+const LoadingFallback = () => (
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-lg text-muted-foreground">Loading Page...</p>
+    </div>
+);
+
+export default function TransactionDetailsPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <TransactionDetailsContent />
+        </Suspense>
     );
 }

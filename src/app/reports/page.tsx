@@ -338,7 +338,7 @@ export default function ReportsPage() {
                 
                  <TabsContent value="forecast" className="space-y-6">
                     <motion.div variants={itemVariants}>
-                         <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                         <Card className="rounded-2xl mb-4 border bg-background/40 backdrop-blur-lg border-border/10">
                             <CardHeader>
                                 <CardTitle>Your Next 3 Months' Outlook</CardTitle>
                                 <CardDescription>AI-powered revenue forecast</CardDescription>
@@ -360,7 +360,7 @@ export default function ReportsPage() {
                                 </ChartContainer>
                             </CardContent>
                          </Card>
-                         <div className="flex items-start justify-center gap-3 text-sm text-muted-foreground bg-foreground/5 p-3 rounded-b-2xl -mt-1">
+                         <div className="flex items-start justify-center gap-3 text-sm text-muted-foreground bg-foreground/5 p-3 rounded-2xl -mt-1">
                             <Lightbulb className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-0.5" />
                             <p><span className="font-semibold text-foreground/80">Gabi's Insight:</span> The predicted dip in July is consistent with your past two years of data. Don't worry, sales usually pick up again in August.</p>
                         </div>
@@ -395,7 +395,7 @@ export default function ReportsPage() {
                       {reportOptions.map((option) => (
                           <Link href={option.href} key={option.title}>
                           <motion.div whileTap={{ scale: 0.98 }}>
-                              <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
+                              <Card className="rounded-2xl mb-2 border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
                               <CardContent className="p-4 flex items-center gap-4">
                                   <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
                                   <option.icon className="w-6 h-6 text-primary-foreground" />

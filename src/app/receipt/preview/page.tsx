@@ -1,10 +1,10 @@
-'use client';
 
+import { Suspense } from 'react';
 import { useRef, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -21,7 +21,8 @@ const itemVariants = {
   },
 };
 
-export default function ReceiptPreviewPage() {
+function ReceiptPreviewContent() {
+    'use client';
     const router = useRouter();
     const searchParams = useSearchParams();
     const receiptRef = useRef<HTMLDivElement>(null);
@@ -184,4 +185,19 @@ export default function ReceiptPreviewPage() {
             </motion.div>
         </main>
     )
+}
+
+const LoadingFallback = () => (
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-lg text-muted-foreground">Loading Page...</p>
+    </div>
+);
+
+export default function ReceiptPreviewPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <ReceiptPreviewContent />
+        </Suspense>
+    );
 }

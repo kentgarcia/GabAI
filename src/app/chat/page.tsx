@@ -108,7 +108,7 @@ export default function ChatHubPage() {
                     {proactiveInsights.map((insight, index) => (
                         <Link href={insight.href} key={index}>
                             <motion.div whileTap={{ scale: 0.98 }}>
-                                <Card className="rounded-2xl bg-background/30 transition-colors hover:bg-muted/40">
+                                <Card className="rounded-2xl mb-2 bg-background/30 transition-colors hover:bg-muted/40">
                                     <CardContent className="p-4 flex items-center gap-4">
                                         <insight.icon className={cn("w-6 h-6 flex-shrink-0", insight.iconColor)} />
                                         <p className="font-medium text-sm flex-grow">{insight.text}</p>

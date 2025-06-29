@@ -1,6 +1,5 @@
 
-'use client';
-
+import { Suspense } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,16 +9,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -53,7 +42,9 @@ const PnlData = {
   },
 };
 
-export default function PnlPreviewPage() {
+function PnlPreviewContent() {
+  'use client';
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -215,4 +206,19 @@ export default function PnlPreviewPage() {
       </AnimatePresence>
     </main>
   );
+}
+
+const LoadingFallback = () => (
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-lg text-muted-foreground">Loading Page...</p>
+    </div>
+);
+
+export default function PnlPreviewPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <PnlPreviewContent />
+        </Suspense>
+    );
 }
