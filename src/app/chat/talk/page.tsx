@@ -8,6 +8,8 @@ import { ArrowLeft, Mic, Loader2, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
+
 
 // Extend the window interface for the SpeechRecognition API
 declare global {
@@ -57,7 +59,7 @@ export default function TalkPage() {
 
   const statusText = {
     idle: "Tap the mic to speak.",
-    listening: "I'm listening...",
+    listening: "Listening...",
     thinking: "Thinking...",
     speaking: "Gabi is speaking...",
   };
@@ -185,28 +187,22 @@ export default function TalkPage() {
   const currentText = status === 'speaking' || (status === 'idle' && displayedResponse) ? displayedResponse : transcript;
 
   return (
-    <main className="relative flex flex-col h-screen bg-background text-foreground p-6 overflow-hidden">
-        
-        <div className="absolute inset-0 -z-10">
-            <div className="absolute top-0 -left-40 w-96 h-96 bg-accent/30 rounded-full filter blur-2xl animate-blob opacity-50"></div>
-            <div className="absolute top-0 -right-40 w-96 h-96 bg-primary/30 rounded-full filter blur-2xl animate-blob animation-delay-2000 opacity-50"></div>
-            <div className="absolute -bottom-40 left-20 w-96 h-96 bg-accent/30 rounded-full filter blur-2xl animate-blob animation-delay-4000 opacity-50"></div>
-        </div>
+    <main className="flex flex-col h-screen bg-transparent text-foreground p-6 overflow-hidden">
         
         <header className="relative z-10 flex items-center justify-start w-full">
-            <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2 text-foreground bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-full">
+            <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2 text-foreground bg-background/30 backdrop-blur-sm hover:bg-background/50 rounded-full">
                 <div onClick={() => router.back()}>
                     <ArrowLeft />
                 </div>
             </Button>
         </header>
 
-        <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center space-y-8">
-            <motion.div
+        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8">
+            <Card
                 onClick={handleListen}
                 className={cn(
-                    "w-48 h-48 rounded-full flex items-center justify-center transition-transform",
-                    "bg-white/10 backdrop-blur-md border border-white/20 shadow-lg",
+                    "w-48 h-48 rounded-full flex items-center justify-center transition-all",
+                    "bg-background/40 backdrop-blur-lg border-border/10 shadow-lg",
                     status === 'idle' && 'cursor-pointer active:scale-95'
                 )}
             >
@@ -217,7 +213,7 @@ export default function TalkPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.3 }}
-                    className="w-36 h-36 rounded-full flex items-center justify-center bg-gradient-to-br from-white/40 to-white/10 shadow-inner"
+                    className="w-36 h-36 rounded-full flex items-center justify-center bg-background/50 shadow-inner"
                 >
                     <motion.div
                         className="flex items-center justify-center"
@@ -232,14 +228,14 @@ export default function TalkPage() {
                     </motion.div>
                 </motion.div>
                 </AnimatePresence>
-            </motion.div>
+            </Card>
 
-            <div className="w-full max-w-sm h-32 flex flex-col justify-center items-center bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4">
+            <Card className="w-full max-w-sm h-32 flex flex-col justify-center items-center bg-background/40 backdrop-blur-lg border-border/10 rounded-2xl p-4">
                 <p className="text-xl font-semibold mb-2">{statusText[status]}</p>
                 <p className="text-muted-foreground min-h-[2.5em] text-lg">
                   {currentText}
                 </p>
-            </div>
+            </Card>
         </div>
     </main>
   );
