@@ -27,7 +27,7 @@ const Ripple = ({ ripples }: { ripples: { x: number, y: number, id: number }[] }
       {ripples.map(ripple => (
         <motion.div
           key={ripple.id}
-          className="absolute bg-black/20 rounded-full"
+          className="absolute bg-white/30 rounded-full"
           initial={{ x: ripple.x - 50, y: ripple.y - 50, scale: 0, opacity: 1, width: 100, height: 100 }}
           animate={{ scale: 10, opacity: 0 }}
           transition={{ duration: 0.75, ease: "easeInOut" }}
@@ -57,11 +57,26 @@ export default function OnboardingPage() {
 
   return (
     <motion.main 
-      className="relative flex flex-col flex-grow h-full text-foreground"
+      className="relative flex flex-col flex-grow h-full text-primary overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
+        <div className="absolute inset-0 -z-10 bg-white">
+            <motion.div 
+                className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-[#bad6eb] to-[#334eac] rounded-full opacity-50"
+                initial={{ scale: 0, y: 100 }}
+                animate={{ scale: 1, y: 0 }}
+                transition={{ duration: 1.5, type: 'spring' }}
+            />
+            <motion.div 
+                className="absolute bottom-[-10rem] left-[-10rem] w-[25rem] h-[25rem] bg-gradient-to-tr from-[#bad6eb] to-white rounded-full opacity-60"
+                initial={{ scale: 0, x: -100 }}
+                animate={{ scale: 1, x: 0 }}
+                transition={{ delay: 0.3, duration: 1.5, type: 'spring' }}
+            />
+        </div>
+
       <div className="relative z-10 flex flex-col flex-grow h-full p-6">
         <motion.header
           initial={{ opacity: 0, y: -20 }}
@@ -92,8 +107,8 @@ export default function OnboardingPage() {
           }}
         >
           <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-            <p className="font-semibold text-foreground/80 text-lg">Your all-in-one financial co-pilot.</p>
-            <h1 className="text-3xl font-bold leading-tight tracking-tighter text-foreground">
+            <p className="font-semibold text-primary/80 text-lg">Your all-in-one financial co-pilot.</p>
+            <h1 className="text-3xl font-bold leading-tight tracking-tighter text-primary">
               Mula sa sales tracking hanggang sa tax, nandito kami para i-guide ka.
             </h1>
           </motion.div>
@@ -102,10 +117,10 @@ export default function OnboardingPage() {
             className="flex items-center gap-3"
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
           >
-            <Button variant="ghost" size="icon" className="w-14 h-14 bg-background/50 backdrop-blur-lg border rounded-2xl">
+            <Button variant="ghost" size="icon" className="w-14 h-14 bg-white/50 backdrop-blur-lg border border-primary/20 rounded-2xl text-primary">
                 <AppleIcon className="w-7 h-7" />
             </Button>
-            <Button variant="ghost" size="icon" className="w-14 h-14 bg-background/50 backdrop-blur-lg border rounded-2xl">
+            <Button variant="ghost" size="icon" className="w-14 h-14 bg-white/50 backdrop-blur-lg border border-primary/20 rounded-2xl text-primary">
                 <GoogleIcon className="w-6 h-6" />
             </Button>
             <Button asChild className="relative flex-grow h-14 bg-primary text-primary-foreground rounded-2xl overflow-hidden" onClick={handleRipple}>
@@ -118,11 +133,11 @@ export default function OnboardingPage() {
           </motion.div>
 
           <motion.p 
-            className="text-center text-sm text-muted-foreground"
+            className="text-center text-sm text-primary/70"
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
           >
             Already have an account?{' '}
-            <Link href="#" className="font-semibold text-foreground underline">
+            <Link href="#" className="font-semibold text-primary underline">
               Sign in
             </Link>
           </motion.p>

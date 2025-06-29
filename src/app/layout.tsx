@@ -19,9 +19,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">
-        <div className="fixed inset-0 -z-10 bg-gradient-to-br from-slate-50 via-white to-sky-100" />
-        <div className="relative z-10 mx-auto flex min-h-screen max-w-sm flex-col border-x border-border bg-background/50 backdrop-blur-sm shadow-2xl">
+      <body className="font-body antialiased bg-background">
+        <div className="relative z-10 mx-auto flex min-h-screen max-w-sm flex-col border-x border-border bg-background shadow-2xl">
           {children}
         </div>
         <Toaster />
