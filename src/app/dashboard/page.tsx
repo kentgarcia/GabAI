@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDownToLine, ArrowRightLeft, ArrowUpRight, Check, ChevronRight, Clock, DollarSign, Home, Bitcoin, Camera, Gift, Trophy } from "lucide-react";
+import { ArrowDownToLine, ArrowRightLeft, ArrowUpRight, Check, ChevronRight, Clock, DollarSign, Home, Bitcoin, Bot, Gift, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Image from 'next/image';
@@ -22,18 +22,18 @@ const LyftIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col h-screen bg-black text-white font-sans">
+    <div className="flex flex-col h-screen bg-background text-foreground font-sans">
       <main className="flex-1 px-4 py-6 space-y-8 overflow-y-auto no-scrollbar pb-28">
         
-        <div className="rounded-3xl p-5 bg-gradient-to-br from-green-400 to-emerald-600 shadow-lg text-black">
+        <div className="rounded-3xl p-5 bg-primary shadow-lg text-primary-foreground">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-black/20 text-white flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
                 <DollarSign className="w-5 h-5" />
               </div>
               <p className="font-bold text-lg">FOLD CARD</p>
             </div>
-            <Button variant="ghost" className="h-auto px-4 py-2 rounded-full bg-black/20 text-white hover:bg-black/30 text-sm">
+            <Button variant="ghost" className="h-auto px-4 py-2 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/30 text-sm">
               Card Details <ChevronRight className="w-4 h-4 -mr-1" />
             </Button>
           </div>
@@ -41,24 +41,24 @@ export default function DashboardPage() {
           <h1 className="text-5xl font-bold tracking-tighter mb-5">$50.65</h1>
 
           <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2">
-            <Button className="bg-black/80 hover:bg-black text-white rounded-full h-11 text-base font-semibold col-span-1">
+            <Button className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground rounded-full h-11 text-base font-semibold col-span-1">
               <ArrowDownToLine className="w-4 h-4 mr-2" /> Deposit
             </Button>
-            <Button size="icon" variant="ghost" className="bg-black/20 hover:bg-black/30 text-white rounded-full w-11 h-11">
+            <Button size="icon" variant="ghost" className="bg-primary-foreground/20 hover:bg-primary-foreground/30 rounded-full w-11 h-11">
               <ArrowRightLeft className="w-5 h-5" />
             </Button>
-            <Button className="bg-black/80 hover:bg-black text-white rounded-full h-11 text-base font-semibold col-span-1">
+            <Button className="bg-primary-foreground/20 hover:bg-primary-foreground/30 text-primary-foreground rounded-full h-11 text-base font-semibold col-span-1">
               <ArrowUpRight className="w-4 h-4 mr-2" /> Withdraw
             </Button>
           </div>
         </div>
 
         
-        <div className="bg-[#1C1C1E] rounded-2xl p-5 flex items-center gap-4">
+        <div className="bg-card rounded-2xl p-5 flex items-center gap-4 border">
           <div className="flex-1 space-y-2">
             <h2 className="font-bold text-lg">Card Boost</h2>
-            <p className="text-neutral-400 text-sm">Earn boosted sats back on eveyday catagories and brands.</p>
-            <Button variant="secondary" className="mt-3 rounded-lg h-9 px-4 text-white bg-neutral-800 hover:bg-neutral-700">
+            <p className="text-muted-foreground text-sm">Earn boosted sats back on eveyday catagories and brands.</p>
+            <Button variant="secondary" className="mt-3 rounded-lg h-9 px-4">
               See More
             </Button>
           </div>
@@ -71,30 +71,30 @@ export default function DashboardPage() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="font-bold text-lg">Category Boosts</h2>
-            <Link href="#" className="text-sm text-neutral-400 flex items-center gap-1 hover:text-white">
+            <Link href="#" className="text-sm text-muted-foreground flex items-center gap-1 hover:text-primary">
               See all <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="bg-[#1C1C1E] rounded-2xl p-4 space-y-4">
+          <div className="bg-card rounded-2xl p-4 space-y-4 border">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center">
+                <div className="w-12 h-12 rounded-lg bg-card flex items-center justify-center border">
                   <DoorDashIcon className="w-7 h-7" />
                 </div>
                 <div>
                   <h3 className="font-semibold">DoorDash</h3>
-                  <div className="flex items-center gap-1.5 text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full mt-1 w-fit">
+                  <div className="flex items-center gap-1.5 text-xs bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-full mt-1 w-fit">
                     <Check className="w-3 h-3"/> 10% Back
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-green-400">
-                <div className="w-2 h-2 rounded-full bg-green-400"></div>
+              <div className="flex items-center gap-2 text-sm text-primary">
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
                 Online
               </div>
             </div>
-            <div className="flex justify-between items-center text-xs text-neutral-500 pt-2 border-t border-neutral-800 mt-3">
+            <div className="flex justify-between items-center text-xs text-muted-foreground pt-2 border-t mt-3">
                 <div className="flex items-center gap-1.5">
                     <Clock className="w-3 h-3" />
                     <span>Active until 05/01/2025</span>
@@ -103,18 +103,18 @@ export default function DashboardPage() {
             </div>
           </div>
           
-          <div className="bg-[#1C1C1E] rounded-2xl p-4 flex items-start justify-between">
+          <div className="bg-card rounded-2xl p-4 flex items-start justify-between border">
             <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-black flex items-center justify-center p-1">
+                <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center p-1">
                   <LyftIcon/>
                 </div>
                 <div>
                   <h3 className="font-semibold">Lyft</h3>
-                   <p className="text-xs text-neutral-400 mt-1">4.1% Back</p>
+                   <p className="text-xs text-muted-foreground mt-1">4.1% Back</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-green-400">
-                <div className="w-2 h-2 rounded-full bg-green-400"></div>
+              <div className="flex items-center gap-2 text-sm text-primary">
+                <div className="w-2 h-2 rounded-full bg-primary"></div>
                 Online
               </div>
           </div>
@@ -123,20 +123,20 @@ export default function DashboardPage() {
 
       
       <footer className="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 z-20">
-        <div className="bg-[#1C1C1E]/80 backdrop-blur-xl rounded-full h-20 flex justify-around items-center shadow-lg border border-neutral-700/50">
-          <Link href="#" className="flex flex-col items-center text-neutral-400 hover:text-white transition-colors">
+        <div className="bg-background/90 backdrop-blur-xl rounded-full h-20 flex justify-around items-center shadow-lg border">
+          <Link href="#" className="flex flex-col items-center text-muted-foreground hover:text-primary transition-colors">
             <Home className="w-7 h-7" />
           </Link>
-          <Link href="#" className="flex flex-col items-center text-neutral-400 hover:text-white transition-colors">
+          <Link href="#" className="flex flex-col items-center text-muted-foreground hover:text-primary transition-colors">
             <Bitcoin className="w-7 h-7" />
           </Link>
-          <div className="w-16 h-16 bg-green-400 rounded-full flex items-center justify-center -mt-10 shadow-[0_-5px_20px_-5px_rgba(100,255,100,0.3)] border-4 border-black cursor-pointer">
-            <Camera className="w-8 h-8 text-black" />
+          <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center -mt-10 shadow-[0_-5px_20px_-5px_rgba(100,255,100,0.3)] border-4 border-background cursor-pointer">
+            <Bot className="w-8 h-8 text-primary-foreground" />
           </div>
-          <Link href="#" className="flex flex-col items-center text-neutral-400 hover:text-white transition-colors">
+          <Link href="#" className="flex flex-col items-center text-muted-foreground hover:text-primary transition-colors">
             <Gift className="w-7 h-7" />
           </Link>
-          <Link href="#" className="flex flex-col items-center text-neutral-400 hover:text-white transition-colors">
+          <Link href="#" className="flex flex-col items-center text-muted-foreground hover:text-primary transition-colors">
             <Trophy className="w-7 h-7" />
           </Link>
         </div>
