@@ -45,9 +45,9 @@ const learningPath = [
 ];
 
 const recommendations = [
-    { title: 'Finding & Cutting Business Costs', image: 'https://placehold.co/300x160', hint: 'money savings' },
-    { title: 'Why Registering with BIR is Smart', image: 'https://placehold.co/300x160', hint: 'government building' },
-    { title: 'Advanced Inventory Management', image: 'https://placehold.co/300x160', hint: 'warehouse inventory' },
+    { title: 'Finding & Cutting Business Costs', image: 'https://placehold.co/300x160.png', hint: 'money savings' },
+    { title: 'Why Registering with BIR is Smart', image: 'https://placehold.co/300x160.png', hint: 'government building' },
+    { title: 'Advanced Inventory Management', image: 'https://placehold.co/300x160.png', hint: 'warehouse inventory' },
 ];
 
 const categories = ['Finance & Tax', 'Marketing', 'Business Ops', 'Legal'];
@@ -76,7 +76,7 @@ export default function LearnPage() {
               <Card className="rounded-2xl border bg-primary/10 backdrop-blur-lg border-primary/20">
                 <CardHeader className="flex flex-row items-start gap-4 p-4">
                     <div className="w-20 h-20 bg-primary rounded-lg flex-shrink-0">
-                         <Image src="https://placehold.co/200x200" width={80} height={80} alt="Course" className="rounded-lg" data-ai-hint="finance course" />
+                         <Image src="https://placehold.co/200x200.png" width={80} height={80} alt="Course" className="rounded-lg" data-ai-hint="finance course" />
                     </div>
                     <div>
                         <CardTitle className="text-lg">BIR Basics for Freelancers</CardTitle>
