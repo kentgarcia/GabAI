@@ -2,6 +2,22 @@
 
 GabAI is an all-in-one financial co-pilot designed for Filipino freelancers and small business owners. It simplifies financial management, from sales tracking to tax preparation, using a friendly, AI-powered conversational interface.
 
+## 🚀 Live Demo
+
+- **Mobile App:** [https://gab-ai-fawn.vercel.app/](https://gab-ai-fawn.vercel.app/)
+- **Web Portal:** [https://gab-ai-fawn.vercel.app/web](https://gab-ai-fawn.vercel.app/web)
+
+## 🤔 How to Use
+
+1.  **Onboarding**: Start by selecting your role - either an **Online Seller** or a **Freelancer**. This tailors the app to your specific needs.
+2.  **Log Your First Transaction**:
+    *   **For Sellers**: Upload a sales report (`.csv` or `.xlsx`) from platforms like Shopee or Lazada. GabAI will automatically analyze it.
+    *   **For Freelancers**: Use your camera to scan a payment screenshot (e.g., from GCash or Maya), or enter the income details manually.
+3.  **Explore the Dashboard**: Once you've logged a transaction, your dashboard comes to life. See your net profit, income, and expenses at a glance.
+4.  **Chat with Gabi**: Tap on the "Gabi" icon in the footer to start a conversation. Ask questions like "What's my tax estimate?" or "Show my top expenses."
+5.  **Generate Reports**: Navigate to the "Reports" tab to generate official documents like a Profit & Loss statement or a Tax Summary.
+6.  **Switch to Web**: For an even more powerful experience, open the [Web Portal](https://gab-ai-fawn.vercel.app/web). Here you can access advanced reporting, a dedicated invoicing center, and the full Gabi AI workspace.
+
 ## ✨ Features
 
 - **Personalized Onboarding**: Tailored setup flows for different user types, including Online Sellers and Freelancers.
@@ -18,7 +34,7 @@ GabAI is an all-in-one financial co-pilot designed for Filipino freelancers and 
 - **Progressive Web App (PWA)**: Installable on any device for a native-app-like experience with offline capabilities.
 - **Dual Interface**: A focused, responsive mobile view and a separate, full-screen web portal for desktop management.
 
-## 🚀 Getting Started
+## 🛠️ Getting Started (Local Development)
 
 1.  **Run the development server:**
     ```bash
