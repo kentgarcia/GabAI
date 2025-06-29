@@ -40,8 +40,8 @@ export default function WebLayout({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <SidebarProvider defaultOpen={false}>
-        <Sidebar variant="floating" collapsible="icon">
+    <SidebarProvider defaultOpen={true}>
+        <Sidebar variant="sidebar" collapsible="icon">
             <SidebarHeader>
                  <h2 className="text-xl font-bold p-2 group-data-[collapsible=icon]:hidden">GabAI</h2>
             </SidebarHeader>
@@ -95,10 +95,12 @@ export default function WebLayout({ children }: { children: React.ReactNode }) {
                 <SidebarGroup>
                     <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Gabi AI">
-                            <Sparkles />
-                            <span>Gabi AI</span>
-                        </SidebarMenuButton>
+                        <Link href="/web/gabi">
+                            <SidebarMenuButton tooltip="Gabi AI" isActive={pathname.startsWith('/web/gabi')}>
+                                <Sparkles />
+                                <span>Gabi AI</span>
+                            </SidebarMenuButton>
+                        </Link>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
                         <SidebarMenuButton tooltip="Integrations">
@@ -132,7 +134,7 @@ export default function WebLayout({ children }: { children: React.ReactNode }) {
                 </SidebarGroup>
             </SidebarContent>
         </Sidebar>
-        <SidebarInset className="p-4 md:p-8 bg-muted/40 text-foreground overflow-y-auto">
+        <SidebarInset className="p-4 md:p-8 bg-muted/40 text-foreground overflow-y-auto h-screen">
              {children}
         </SidebarInset>
     </SidebarProvider>
