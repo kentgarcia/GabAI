@@ -45,7 +45,7 @@ const reportOptions = [
     icon: BarChart3,
     title: 'Sales Report',
     description: 'Breakdown of all sales (for Sellers).',
-    href: '#',
+    href: '/reports/generate/sales',
   },
   {
     icon: ScrollText,
