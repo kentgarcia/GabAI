@@ -1,9 +1,12 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { Mail } from 'lucide-react';
+import { Mail, Loader2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -41,6 +44,32 @@ const itemVariants = {
 };
 
 export default function AuthPage() {
+  const [status, setStatus] = useState<'idle' | 'signing-up' | 'success'>('idle');
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'idle') {
+      const timer = setTimeout(() => {
+        setStatus('signing-up');
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+    
+    if (status === 'signing-up') {
+      const timer = setTimeout(() => {
+        setStatus('success');
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+
+    if (status === 'success') {
+      const timer = setTimeout(() => {
+        router.push('/role-selection');
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [status, router]);
+
   return (
     <main className="flex min-h-screen flex-col justify-between p-6 bg-white text-black">
       <div className="flex-grow flex flex-col justify-center">
@@ -58,19 +87,45 @@ export default function AuthPage() {
           </motion.p>
           
           <motion.div variants={itemVariants} className="space-y-3">
-             <Button variant="outline" className="w-full h-14 rounded-full text-lg font-semibold border-gray-300">
+             <Button variant="outline" className={cn(
+                "w-full h-14 rounded-full text-lg font-semibold border-gray-300 transition-opacity",
+                status !== 'idle' && 'opacity-50 cursor-not-allowed'
+            )}>
                 <GoogleIcon className="w-6 h-6 mr-3" />
                 Continue with Google
             </Button>
-            <Button variant="outline" className="w-full h-14 rounded-full text-lg font-semibold border-gray-300">
+            <Button variant="outline" className={cn(
+                "w-full h-14 rounded-full text-lg font-semibold border-gray-300 transition-opacity",
+                 status !== 'idle' && 'opacity-50 cursor-not-allowed'
+            )}>
                 <AppleIcon className="w-7 h-7 mr-3" />
                 Continue with Apple
             </Button>
-             <Button asChild variant="outline" className="w-full h-14 rounded-full text-lg font-semibold border-gray-300">
-                <Link href="/role-selection">
-                    <Mail className="mr-3" />
-                    Sign up with Email
-                </Link>
+             <Button variant="outline" className={cn(
+                "w-full h-14 rounded-full text-lg font-semibold border-gray-300 transition-all duration-300 overflow-hidden",
+                status === 'signing-up' && 'bg-black text-white border-black',
+                status === 'success' && 'bg-emerald-500 text-white border-emerald-500'
+            )}>
+                <AnimatePresence mode="wait">
+                    {status === 'idle' && (
+                        <motion.span key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center">
+                            <Mail className="mr-3" />
+                            Sign up with Email
+                        </motion.span>
+                    )}
+                    {status === 'signing-up' && (
+                        <motion.span key="signing-up" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center">
+                            <Loader2 className="mr-3 animate-spin" />
+                            Creating Account...
+                        </motion.span>
+                    )}
+                    {status === 'success' && (
+                        <motion.span key="success" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center">
+                            <Check className="mr-3" />
+                            Account Created!
+                        </motion.span>
+                    )}
+                </AnimatePresence>
             </Button>
           </motion.div>
         </motion.div>
