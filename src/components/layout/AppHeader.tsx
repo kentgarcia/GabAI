@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Bell, User } from 'lucide-react';
+import { Bell, User, Settings, Languages } from 'lucide-react';
 
 type AppHeaderProps = {
     userName: string;
@@ -25,11 +25,21 @@ export function AppHeader({ userName }: AppHeaderProps) {
                     <h1 className="text-xl font-bold">{userName}</h1>
                 </div>
             </Link>
-            <Button asChild variant="ghost" size="icon">
-                <Link href="/settings/notifications">
-                     <Bell className="h-6 w-6" />
-                </Link>
-            </Button>
+            <div className="flex items-center gap-1">
+                <Button variant="ghost" size="icon">
+                    <Languages className="h-6 w-6" />
+                </Button>
+                 <Button asChild variant="ghost" size="icon">
+                    <Link href="/settings/notifications">
+                        <Bell className="h-6 w-6" />
+                    </Link>
+                </Button>
+                <Button asChild variant="ghost" size="icon">
+                    <Link href="/settings">
+                        <Settings className="h-6 w-6" />
+                    </Link>
+                </Button>
+            </div>
         </header>
     );
 }
