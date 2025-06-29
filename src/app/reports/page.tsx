@@ -5,11 +5,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   Landmark, BarChart3, ScrollText,
-  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase, DollarSign, Package, FileText
+  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase, DollarSign, Package, FileText, Lightbulb, Sparkles, TrendingUp
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,10 +25,11 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { Line, LineChart, Pie, PieChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend, Cell } from "recharts";
+import { Line, LineChart, Pie, PieChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend, Cell, ComposedChart, Area } from "recharts";
 import { motion } from 'framer-motion';
 import { AppFooter } from '@/components/layout/AppFooter';
 import { AppHeader } from '@/components/layout/AppHeader';
+import { cn } from '@/lib/utils';
 
 const reportOptions = [
   {
@@ -65,6 +67,19 @@ const lineChartData = [
   { month: "Jun", income: 21400, expenses: 14000 },
 ];
 
+const forecastChartData = [
+  { month: 'Jan', actual: 18600 },
+  { month: 'Feb', actual: 30500 },
+  { month: 'Mar', actual: 23700 },
+  { month: 'Apr', actual: 17300 },
+  { month: 'May', actual: 20900 },
+  { month: 'Jun', actual: 21400 },
+  { month: 'Jul', predicted: 21400 }, // Anchor point
+  { month: 'Aug', predicted: 25000, confidence: [22000, 28000] },
+  { month: 'Sep', predicted: 28000, confidence: [25000, 31000] },
+  { month: 'Oct', predicted: 32000, confidence: [28000, 36000] },
+];
+
 const donutData = [
   { name: 'Product Costs', value: 400, fill: 'var(--color-productCosts)' },
   { name: 'Marketing', value: 300, fill: 'var(--color-marketing)' },
@@ -79,6 +94,9 @@ const chartConfig = {
   marketing: { label: "Marketing", color: "hsl(var(--chart-2))" },
   fees: { label: "Fees", color: "hsl(var(--chart-3))" },
   other: { label: "Other", color: "hsl(var(--chart-5))" },
+  actual: { label: "Actual", color: "hsl(var(--primary))" },
+  predicted: { label: "Predicted", color: "hsl(var(--primary))" },
+  confidence: { label: "Confidence", color: "hsl(var(--primary) / 0.1)" },
 } satisfies ChartConfig;
 
 const topPerformers = [
@@ -86,6 +104,13 @@ const topPerformers = [
     { name: 'Digital Art Commission', value: '₱15,500', icon: Briefcase },
     { name: 'Vintage T-Shirt', value: '₱8,942', icon: ShoppingCart },
 ];
+
+const inventoryData = [
+    { name: 'Product A', stock: 150, avgSales: 10, status: 'Healthy' },
+    { name: 'Product B', stock: 8, avgSales: 5, status: 'Reorder Soon' },
+    { name: 'Product C', stock: 2, avgSales: 3, status: 'URGENT: Restock Now!' },
+];
+
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -113,6 +138,20 @@ const formatCurrencyForChart = (value: number) => {
   return `₱${value}`;
 };
 
+const InventoryStatusBadge = ({ status }: { status: string }) => {
+    const baseClasses = "font-semibold";
+    switch (status) {
+        case 'Healthy':
+            return <p className={cn(baseClasses, "text-emerald-500")}>{status}</p>;
+        case 'Reorder Soon':
+            return <p className={cn(baseClasses, "text-yellow-500")}>⚠️ {status}</p>;
+        case 'URGENT: Restock Now!':
+            return <p className={cn(baseClasses, "text-red-500")}>🚨 {status}</p>;
+        default:
+            return <p className={baseClasses}>{status}</p>;
+    }
+}
+
 export default function ReportsPage() {
   const [dateRange, setDateRange] = useState('This Quarter');
 
@@ -133,10 +172,14 @@ export default function ReportsPage() {
                 <h1 className="text-3xl font-bold tracking-tight">Reports & Insights</h1>
             </motion.div>
 
-            <Tabs defaultValue="insights" className="w-full">
+            <Tabs defaultValue="analyze" className="w-full">
                 <motion.div variants={itemVariants} className="flex justify-between items-center mb-4">
                     <TabsList className="bg-muted/60 p-1.5 rounded-full backdrop-blur-lg">
-                        <TabsTrigger value="insights" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Insights</TabsTrigger>
+                        <TabsTrigger value="analyze" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Analyze</TabsTrigger>
+                        <TabsTrigger value="forecast" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm flex items-center gap-1.5">
+                            Forecast
+                            <Badge variant="default" className="bg-primary/80 text-primary-foreground py-0.5 px-1.5 text-[10px]"><Sparkles className="w-3 h-3 -ml-0.5 mr-0.5"/>Pro</Badge>
+                        </TabsTrigger>
                         <TabsTrigger value="generate" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Generate</TabsTrigger>
                     </TabsList>
                     
@@ -157,7 +200,7 @@ export default function ReportsPage() {
                     </DropdownMenu>
                 </motion.div>
 
-                <TabsContent value="insights" className="space-y-6">
+                <TabsContent value="analyze" className="space-y-6">
                     <motion.div variants={itemVariants}>
                       <h2 className="text-lg font-semibold mb-2">Performance for {dateRange}</h2>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -287,6 +330,59 @@ export default function ReportsPage() {
                         </Card>
                     </motion.div>
                 </TabsContent>
+                
+                 <TabsContent value="forecast" className="space-y-6">
+                    <motion.div variants={itemVariants}>
+                         <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                            <CardHeader>
+                                <CardTitle>Your Next 3 Months' Outlook</CardTitle>
+                                <CardDescription>AI-powered revenue forecast</CardDescription>
+                            </CardHeader>
+                            <CardContent className="h-[250px] -ml-2">
+                                <ChartContainer config={chartConfig} className="w-full h-full">
+                                    <ResponsiveContainer>
+                                       <ComposedChart data={forecastChartData} margin={{ top: 20, right: 20, bottom: 0, left: -20 }}>
+                                            <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                                            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+                                            <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+                                            <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
+                                            <ChartLegend content={<ChartLegendContent />} />
+                                            <Area type="monotone" dataKey="confidence" fill="var(--color-confidence)" stroke="none" />
+                                            <Line dataKey="actual" type="monotone" stroke="var(--color-actual)" strokeWidth={2.5} dot={true} />
+                                            <Line dataKey="predicted" type="monotone" stroke="var(--color-predicted)" strokeWidth={2.5} strokeDasharray="5 5" dot={true} />
+                                        </ComposedChart>
+                                    </ResponsiveContainer>
+                                </ChartContainer>
+                            </CardContent>
+                         </Card>
+                         <div className="flex items-start justify-center gap-3 text-sm text-muted-foreground bg-foreground/5 p-3 rounded-b-2xl -mt-1">
+                            <Lightbulb className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+                            <p><span className="font-semibold text-foreground/80">Gabi's Insight:</span> Based on your current trend, I predict your income for next month will be between ₱22k and ₱28k. The upcoming 11.11 sale could boost this significantly!</p>
+                        </div>
+                    </motion.div>
+                     <motion.div variants={itemVariants}>
+                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                            <CardHeader>
+                                <CardTitle>Inventory Health</CardTitle>
+                                <CardDescription>For your top-selling products</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                               {inventoryData.map((item, index) => (
+                                    <div key={index} className="grid grid-cols-3 items-center gap-3 text-sm">
+                                        <p className="font-semibold col-span-1 truncate">{item.name}</p>
+                                        <div className="col-span-1 text-center">
+                                            <p className="font-medium">{item.stock} units</p>
+                                            <p className="text-xs text-muted-foreground">Sells ~{item.avgSales}/wk</p>
+                                        </div>
+                                        <div className="col-span-1 text-right">
+                                            <InventoryStatusBadge status={item.status} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                </TabsContent>
 
                 <TabsContent value="generate">
                     <motion.div variants={itemVariants} className="space-y-2">
@@ -319,5 +415,3 @@ export default function ReportsPage() {
     </div>
   );
 }
-
-    
