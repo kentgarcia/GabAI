@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -41,8 +43,6 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
 );
 
 function FirstLookContent() {
-  'use client';
-
   const searchParams = useSearchParams();
   const from = searchParams.get('from');
 
