@@ -24,9 +24,9 @@ export default function RootLayout({
         <Image
           src="https://placehold.co/600x1200.png"
           alt="Abstract background"
-          layout="fill"
-          objectFit="cover"
-          className="z-0"
+          fill
+          style={{ objectFit: 'cover' }}
+          className="fixed inset-0 z-0"
           data-ai-hint="abstract 3d shapes"
         />
         <div className="relative z-10 mx-auto flex min-h-screen max-w-sm flex-col border-x border-white/10 shadow-2xl">
