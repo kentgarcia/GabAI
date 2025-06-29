@@ -5,12 +5,17 @@ import Link from 'next/link';
 import {
   MessageSquare,
   Mic,
-  Bot,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  Lightbulb,
+  AlertTriangle,
+  TrendingUp,
+  History,
+  PlusCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { AppFooter } from '@/components/layout/AppFooter';
@@ -35,11 +40,10 @@ const itemVariants = {
   },
 };
 
-const suggestedPrompts = [
-    { title: "What was my profit last month?", href: "/chat/session" },
-    { title: "Create a receipt for my latest sale.", href: "/chat/session" },
-    { title: "How can I reduce my expenses?", href: "/chat/session" },
-    { title: "Draft a follow-up email to a client.", href: "/chat/session" },
+const proactiveInsights = [
+    { type: 'alert', icon: AlertTriangle, text: "Your 'Software' spending is up 30% this month. Tap to review.", href: '#', iconColor: 'text-yellow-500' },
+    { type: 'opportunity', icon: TrendingUp, text: "Your top client, 'Innovate Corp', hasn't had a new project in 60 days. Time for a follow-up?", href: '#', iconColor: 'text-emerald-500' },
+    { type: 'forecast', icon: Lightbulb, text: "Looking ahead, next month could be slow. Let's plan a promo to boost sales.", href: '#', iconColor: 'text-blue-500' },
 ];
 
 const historyItems = [
@@ -53,14 +57,11 @@ const historyItems = [
     response: 'Subject: Friendly Reminder: Invoice #123 Due',
     href: '#',
   },
-  {
-    prompt: 'Is it a good time to run a promo?',
-    response: 'Based on your current sales trend, running a promo this weekend could boost engagement.',
-    href: '#',
-  },
 ];
 
 export default function ChatHubPage() {
+  const userName = "Juan";
+
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
       <main className="flex-1 p-6 space-y-8 overflow-y-auto no-scrollbar pb-28">
@@ -71,30 +72,27 @@ export default function ChatHubPage() {
           className="space-y-8"
         >
             <motion.div variants={itemVariants}>
-                <AppHeader userName="Juan dela Cruz" />
+                <AppHeader userName={`${userName} dela Cruz`} />
             </motion.div>
 
             <motion.div variants={itemVariants}>
-                <h1 className="text-3xl font-bold tracking-tight">Hi there, I'm Gabi.</h1>
-                <h2 className="text-2xl font-bold tracking-tight text-muted-foreground">
-                    Your financial co-pilot. How can I help?
-                </h2>
+                <h1 className="text-3xl font-bold tracking-tight">Hi {userName}, I'm ready to help.</h1>
             </motion.div>
 
             <motion.section variants={itemVariants}>
                 <div className="grid grid-cols-2 gap-4 h-40">
                     <Link href="/chat/session">
-                        <Card className="h-full bg-primary/20 border-primary/30 rounded-2xl relative group transition-transform hover:scale-105 flex flex-col justify-center items-center text-center p-4">
+                        <Card className="h-full bg-primary/20 border-primary/30 rounded-2xl group transition-transform hover:scale-105 flex flex-col justify-center items-center text-center p-4">
                             <MessageSquare className="w-10 h-10 text-primary mb-2" />
                             <h3 className="text-lg font-semibold text-primary">Chat with Gabi</h3>
-                            <p className="text-xs text-primary/80 mt-1">Type your questions and commands.</p>
+                            <p className="text-xs text-primary/80 mt-1">Type your questions.</p>
                         </Card>
                     </Link>
                     <Link href="/chat/talk">
-                         <Card className="h-full bg-primary/10 border-primary/20 rounded-2xl relative group transition-transform hover:scale-105 flex flex-col justify-center items-center text-center p-4">
+                         <Card className="h-full bg-primary/10 border-primary/20 rounded-2xl group transition-transform hover:scale-105 flex flex-col justify-center items-center text-center p-4">
                             <Mic className="w-10 h-10 text-primary mb-2" />
                             <h3 className="text-lg font-semibold text-primary">Talk to Gabi</h3>
-                            <p className="text-xs text-primary/80 mt-1">Go hands-free with voice commands.</p>
+                            <p className="text-xs text-primary/80 mt-1">Use voice commands.</p>
                         </Card>
                     </Link>
                 </div>
@@ -102,16 +100,18 @@ export default function ChatHubPage() {
 
              <motion.section variants={itemVariants} className="space-y-4">
                 <h2 className="text-xl font-bold flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-yellow-400" />
-                    Things I Can Help With
+                    <Lightbulb className="w-5 h-5 text-yellow-400" />
+                    Here's What I'm Seeing...
+                    <Badge variant="default" className="bg-primary/80">Pro</Badge>
                 </h2>
                 <div className="space-y-3">
-                    {suggestedPrompts.map((prompt, index) => (
-                        <Link href={prompt.href} key={index}>
+                    {proactiveInsights.map((insight, index) => (
+                        <Link href={insight.href} key={index}>
                             <motion.div whileTap={{ scale: 0.98 }}>
                                 <Card className="rounded-2xl bg-background/30 transition-colors hover:bg-muted/40">
-                                    <CardContent className="p-4 flex items-center justify-between">
-                                        <p className="font-semibold">{prompt.title}</p>
+                                    <CardContent className="p-4 flex items-center gap-4">
+                                        <insight.icon className={cn("w-6 h-6 flex-shrink-0", insight.iconColor)} />
+                                        <p className="font-medium text-sm flex-grow">{insight.text}</p>
                                         <ChevronRight className="w-5 h-5 text-muted-foreground" />
                                     </CardContent>
                                 </Card>
@@ -122,8 +122,27 @@ export default function ChatHubPage() {
             </motion.section>
             
             <motion.section variants={itemVariants} className="space-y-4">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                    Automations & Shortcuts
+                </h2>
+                <Card className="rounded-2xl bg-background/30 transition-colors hover:bg-muted/40">
+                    <CardContent className="p-4 flex flex-col items-center text-center gap-3">
+                        <div className="p-3 bg-muted rounded-full">
+                           <Sparkles className="w-6 h-6 text-muted-foreground" />
+                        </div>
+                        <p className="font-semibold">Automate your recurring tasks.</p>
+                        <p className="text-sm text-muted-foreground">"Generate my standard monthly report for my boss."</p>
+                        <Button variant="outline" className="rounded-full mt-2 bg-background/50" disabled>
+                            <PlusCircle className="mr-2" />
+                            Create New Shortcut
+                        </Button>
+                    </CardContent>
+                </Card>
+            </motion.section>
+            
+            <motion.section variants={itemVariants} className="space-y-4">
                 <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-bold">Your Recent Conversations</h2>
+                    <h2 className="text-xl font-bold flex items-center gap-2"><History className="w-5 h-5"/>Recent Conversations</h2>
                     <Link href="#" className="text-sm text-primary">See all</Link>
                 </div>
                 <div className="space-y-3">
