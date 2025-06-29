@@ -32,6 +32,7 @@ type AppHeaderProps = {
 export function AppHeader({ userName }: AppHeaderProps) {
     const { toast } = useToast();
     const [language, setLanguage] = useState('en');
+    const [hasUnread, setHasUnread] = useState(true);
 
     const handleLanguageChange = (lang: string) => {
         setLanguage(lang);
@@ -66,30 +67,38 @@ export function AppHeader({ userName }: AppHeaderProps) {
                             <Languages className="h-6 w-6" />
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="bg-background/80 backdrop-blur-md border">
                         <DropdownMenuLabel>Select Language</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuRadioGroup value={language} onValueChange={handleLanguageChange}>
-                            <DropdownMenuRadioItem value="en">English</DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="tl">Tagalog</DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="ceb">Bisaya</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="en" className="flex items-center gap-2">
+                                <span role="img" aria-label="USA flag">🇺🇸</span> English
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="tl" className="flex items-center gap-2">
+                                <span role="img" aria-label="Philippines flag">🇵🇭</span> Tagalog
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="ceb" className="flex items-center gap-2">
+                                <span role="img" aria-label="Philippines flag">🇵🇭</span> Bisaya
+                            </DropdownMenuRadioItem>
                         </DropdownMenuRadioGroup>
                     </DropdownMenuContent>
                 </DropdownMenu>
 
-                 <DropdownMenu>
+                 <DropdownMenu onOpenChange={(open) => { if (open) setHasUnread(false)}}>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
                             <div className="relative">
                                 <Bell className="h-6 w-6" />
-                                <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                                </span>
+                                {hasUnread && (
+                                    <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                    </span>
+                                )}
                             </div>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-72">
+                    <DropdownMenuContent align="end" className="w-72 bg-background/80 backdrop-blur-md border">
                          <DropdownMenuLabel>Notifications</DropdownMenuLabel>
                          <DropdownMenuSeparator />
                          <DropdownMenuItem className="flex items-start gap-3 p-3">
