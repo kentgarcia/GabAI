@@ -134,7 +134,7 @@ export default function OnboardingPage() {
         </motion.div>
         <motion.div variants={itemVariants} className="w-full">
           <Button asChild className="w-full mt-8 bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900 relative overflow-hidden">
-            <Link href="/dashboard" onClick={createRipple}>
+            <Link href="/role-selection" onClick={createRipple}>
                 Get Started
                 <ArrowRight className="ml-2" />
                 {ripples.map((ripple) => (
