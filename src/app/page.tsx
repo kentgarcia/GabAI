@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from 'framer-motion';
+import { useState } from "react";
 
 const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -21,7 +22,40 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
+const Ripple = ({ ripples }: { ripples: { x: number, y: number, id: number }[] }) => {
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      {ripples.map(ripple => (
+        <motion.div
+          key={ripple.id}
+          className="absolute bg-white/30 rounded-full"
+          initial={{ x: ripple.x - 50, y: ripple.y - 50, scale: 0, opacity: 1, width: 100, height: 100 }}
+          animate={{ scale: 10, opacity: 0 }}
+          transition={{ duration: 0.75, ease: "easeInOut" }}
+        />
+      ))}
+    </div>
+  );
+};
+
+
 export default function OnboardingPage() {
+  const [ripples, setRipples] = useState<{ x: number, y: number, id: number }[]>([]);
+
+  const handleRipple = (event: React.MouseEvent<HTMLElement>) => {
+    const button = event.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const newRipple = { x, y, id: Date.now() };
+
+    setRipples([...ripples, newRipple]);
+
+    setTimeout(() => {
+      setRipples(current => current.filter(r => r.id !== newRipple.id));
+    }, 750);
+  };
+
   return (
     <motion.main 
       className="relative flex flex-col h-screen text-foreground"
@@ -67,11 +101,11 @@ export default function OnboardingPage() {
           }}
         >
           <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-            <p className="font-semibold text-accent-foreground/80 text-lg">Kumusta, ka-GabAI!</p>
+            <p className="font-semibold text-accent-foreground/80 text-lg">Take control of your finances.</p>
             <h1 className="text-4xl font-bold leading-tight tracking-tighter">
-              Let's grow
+              Income, taxes,
               <br />
-              your <span className="text-accent">hustle.</span>
+              and <span className="text-accent">planning.</span>
             </h1>
           </motion.div>
 
@@ -85,10 +119,11 @@ export default function OnboardingPage() {
             <Button variant="ghost" size="icon" className="w-14 h-14 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl">
                 <GoogleIcon className="w-6 h-6" />
             </Button>
-            <Button asChild className="flex-grow h-14 bg-primary text-primary-foreground rounded-2xl">
+            <Button asChild className="relative flex-grow h-14 bg-primary text-primary-foreground rounded-2xl overflow-hidden" onClick={handleRipple}>
               <Link href="/role-selection">
-                Get started
-                <ArrowUpRight className="w-5 h-5" />
+                <Ripple ripples={ripples} />
+                <span className="z-10">Get started</span>
+                <ArrowUpRight className="w-5 h-5 z-10" />
               </Link>
             </Button>
           </motion.div>
