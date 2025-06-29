@@ -45,12 +45,17 @@ const learningPath = [
 ];
 
 const recommendations = [
-    { title: 'Finding & Cutting Business Costs', image: 'https://images.pexels.com/photos/3184416/pexels-photo-3184416.jpeg' },
-    { title: 'Why Registering with BIR is Smart', image: 'https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg' },
-    { title: 'Advanced Inventory Management', image: 'https://images.pexels.com/photos/1797428/pexels-photo-1797428.jpeg' },
+    { title: 'Finding & Cutting Business Costs', image: 'https://images.pexels.com/photos/3184416/pexels-photo-3184416.jpeg', href: '#', hint: 'business meeting' },
+    { title: 'Why Registering with BIR is Smart', image: 'https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg', href: '#', hint: 'tax documents' },
+    { title: 'Advanced Inventory Management', image: 'https://images.pexels.com/photos/1797428/pexels-photo-1797428.jpeg', href: '#', hint: 'inventory management' },
 ];
 
-const categories = ['Finance & Tax', 'Marketing', 'Business Ops', 'Legal'];
+const categories = [
+    { name: 'Finance & Tax', slug: 'finance-tax' },
+    { name: 'Marketing', slug: 'marketing' },
+    { name: 'Business Ops', slug: 'business-ops' },
+    { name: 'Legal', slug: 'legal' },
+];
 
 export default function LearnPage() {
   return (
@@ -75,8 +80,8 @@ export default function LearnPage() {
               <h2 className="text-lg font-semibold mb-3">Pick Up Where You Left Off</h2>
               <Card className="rounded-2xl border bg-primary/10 backdrop-blur-lg border-primary/20">
                 <CardHeader className="flex flex-row items-start gap-4 p-4">
-                    <div className="w-20 h-20 bg-primary rounded-lg flex-shrink-0">
-                         <Image src="https://images.pexels.com/photos/814544/pexels-photo-814544.jpeg" width={80} height={80} alt="Course" className="rounded-lg object-cover" />
+                    <div className="w-20 h-20 bg-primary rounded-lg flex-shrink-0 relative overflow-hidden">
+                         <Image src="https://images.pexels.com/photos/814544/pexels-photo-814544.jpeg" fill alt="Course" className="object-cover" data-ai-hint="partnership handshake" />
                     </div>
                     <div>
                         <CardTitle className="text-lg">BIR Basics for Freelancers</CardTitle>
@@ -128,12 +133,16 @@ export default function LearnPage() {
                 <CarouselContent className="-ml-2">
                     {recommendations.map((rec, index) => (
                         <CarouselItem key={index} className="pl-2 basis-3/4">
-                            <Card className="rounded-xl border bg-background/40 backdrop-blur-lg border-border/10 overflow-hidden">
-                                <Image src={rec.image} width={300} height={160} alt={rec.title} className="aspect-video object-cover"/>
-                                <CardContent className="p-3">
-                                    <p className="font-semibold truncate">{rec.title}</p>
-                                </CardContent>
-                            </Card>
+                            <Link href={rec.href}>
+                                <Card className="rounded-xl border bg-background/40 backdrop-blur-lg border-border/10 overflow-hidden">
+                                    <div className="aspect-video relative">
+                                        <Image src={rec.image} fill alt={rec.title} className="object-cover" data-ai-hint={rec.hint}/>
+                                    </div>
+                                    <CardContent className="p-3">
+                                        <p className="font-semibold truncate">{rec.title}</p>
+                                    </CardContent>
+                                </Card>
+                            </Link>
                         </CarouselItem>
                     ))}
                 </CarouselContent>
@@ -145,9 +154,9 @@ export default function LearnPage() {
                 <h2 className="text-lg font-semibold">Browse by Category</h2>
                 <div className="flex flex-wrap gap-2">
                     {categories.map(cat => (
-                        <Button key={cat} asChild variant="outline" className="rounded-full bg-background/40 backdrop-blur-lg border-border/10">
-                           <Link href={`/learn/category/${cat.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`}>
-                                {cat}
+                        <Button key={cat.name} asChild variant="outline" className="rounded-full bg-background/40 backdrop-blur-lg border-border/10">
+                           <Link href={`/learn/category/${cat.slug}`}>
+                                {cat.name}
                             </Link>
                         </Button>
                     ))}
