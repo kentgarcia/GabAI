@@ -33,9 +33,11 @@ const sellingPlatforms = [
 ];
 
 const paymentMethods = [
-    { id: 'local', label: 'Local Bank Transfer / E-wallet' },
-    { id: 'international', label: 'PayPal / Wise / etc.' },
-    { id: 'both', label: 'Both' },
+    { id: 'local-ewallet', label: 'GCash / Maya' },
+    { id: 'local-bank', label: 'Local Bank Transfer' },
+    { id: 'paypal', label: 'PayPal' },
+    { id: 'wise', label: 'Wise / International Wire' },
+    { id: 'other', label: 'Other' },
 ];
 
 const containerVariants = {
@@ -104,15 +106,15 @@ export default function RoleSelectionPage() {
   const getQuestion2 = () => {
     if (selectedRole === 'seller') {
         return {
-            greeting: "Awesome! Para mas maintindihan ko ang business mo...",
-            question: "What's your main selling platform?",
+            greeting: "Awesome, a fellow seller! Let's get a real look at your business health. The fastest way is to connect your main store.",
+            question: "Which platform brings in the most sales?",
             options: sellingPlatforms,
         };
     }
     if (selectedRole === 'freelancer') {
         return {
-            greeting: "Great! Nakakarelate ako. To help you better...",
-            question: "How do you usually get paid?",
+            greeting: "Fantastic, a creative pro! Let's track your project income so you can see your business grow. How do your clients usually pay you?",
+            question: "Where do you receive your payments?",
             options: paymentMethods,
         };
     }
@@ -251,7 +253,7 @@ export default function RoleSelectionPage() {
 
       <div className="w-full max-w-sm mx-auto pb-4 pt-8">
         <AnimatePresence>
-            {secondarySelection && (
+            {secondarySelection && selectedRole && (
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -262,7 +264,7 @@ export default function RoleSelectionPage() {
                     asChild
                     className="w-full bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900"
                     >
-                    <Link href="/sync-data">
+                    <Link href={selectedRole === 'seller' ? '/sync-data' : '/log-income'}>
                         Continue
                         <ArrowRight className="ml-2" />
                     </Link>
