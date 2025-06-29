@@ -1,8 +1,9 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
-import { Bot, Gift, Home, Trophy, FileText, ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, User } from 'lucide-react';
+import { Bot, Gift, Home, Trophy, FileText, ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, User, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -137,6 +138,7 @@ function AnimatedNumber({ value, className, prefix = '' }: { value: number; clas
 export default function DashboardPage() {
   const [period, setPeriod] = useState<'week' | 'month' | 'quarter'>('month');
   const [data, setData] = useState<PeriodData>(mockData.month);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   useEffect(() => {
     setData(mockData[period]);
@@ -170,59 +172,78 @@ export default function DashboardPage() {
                 className="space-y-6"
             >
                 <motion.div variants={itemVariants}>
-                    <Card className="w-full bg-gradient-to-b from-primary-dark to-primary text-primary-foreground shadow-xl rounded-3xl">
-                      <CardContent className="p-6 space-y-4">
-                        <div className="flex justify-between items-center w-full">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-black/20 rounded-full flex items-center justify-center">
-                                    <span className="font-bold text-xl text-white">₱</span>
+                  <div className="relative h-[290px] [perspective:1000px]">
+                    <motion.div
+                      className="relative w-full h-full [transform-style:preserve-3d]"
+                      animate={{ rotateY: isFlipped ? 180 : 0 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      {/* Front: Net Profit */}
+                      <div
+                        className="absolute w-full h-full [backface-visibility:hidden] cursor-pointer"
+                        onClick={() => setIsFlipped(true)}
+                      >
+                        <Card className="w-full h-full bg-gradient-to-b from-primary-dark to-primary text-primary-foreground shadow-xl rounded-3xl">
+                          <CardContent className="p-6 flex flex-col justify-between h-full">
+                            <div className="flex justify-between items-center w-full">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-black/20 rounded-full flex items-center justify-center">
+                                        <span className="font-bold text-xl text-white">₱</span>
+                                    </div>
+                                    <p className="font-semibold tracking-wider text-primary-foreground/80">NET PROFIT</p>
                                 </div>
-                                <p className="font-semibold tracking-wider text-primary-foreground/80">NET PROFIT</p>
+                                <div className="text-primary-foreground/70 flex items-center gap-1 text-xs">
+                                  Flip <ArrowLeftRight className="w-3 h-3"/>
+                                </div>
                             </div>
-                            <Button className="bg-black/20 text-primary-foreground/80 hover:bg-black/30 h-10 px-3 text-xs rounded-full flex items-center gap-1">
-                                More Details <ArrowRight className="w-3 h-3" />
-                            </Button>
-                        </div>
-                        
-                        <div className="text-center">
-                            <AnimatedNumber value={data.netProfit} className="text-6xl font-bold my-2 tracking-tighter text-white whitespace-nowrap" />
-                        </div>
-                        
-                        <div className="w-full border-t border-primary-foreground/20"></div>
+                            
+                            <div className="text-center">
+                                <AnimatedNumber value={data.netProfit} className="text-6xl font-bold tracking-tighter text-white whitespace-nowrap" />
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4 w-full text-center">
+                              <div>
+                                <p className="text-sm text-primary-foreground/70">Income</p>
+                                <AnimatedNumber value={data.income} className="text-2xl font-semibold text-white" />
+                              </div>
+                              <div>
+                                <p className="text-sm text-primary-foreground/70">Expenses</p>
+                                <AnimatedNumber value={data.expenses} className="text-2xl font-semibold text-white" />
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
 
-                        <div className="grid grid-cols-2 gap-4 w-full text-center">
-                          <div>
-                            <p className="text-sm text-primary-foreground/70">Income</p>
-                            <AnimatedNumber value={data.income} className="text-2xl font-semibold text-white" />
-                          </div>
-                          <div>
-                            <p className="text-sm text-primary-foreground/70">Expenses</p>
-                            <AnimatedNumber value={data.expenses} className="text-2xl font-semibold text-white" />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                </motion.div>
-
-                <motion.div variants={itemVariants}>
-                    <Link href="/growth-path">
-                        <Card className="w-full bg-background/40 backdrop-blur-lg border-border/10 rounded-3xl cursor-pointer transition-transform hover:scale-105 hover:shadow-xl">
-                            <CardContent className="p-6 flex flex-col items-center justify-center">
-                                <h2 className="text-lg font-bold mb-2">Your Financial Health</h2>
-                                <FinancialHealthGauge
-                                    score={750}
-                                    maxScore={1000}
-                                    status="Healthy"
-                                    trend="up"
-                                />
-                                <p className="text-center text-xs text-muted-foreground mt-2 max-w-xs">
-                                    This score reflects your profitability, cash flow, and growth. Tap to see your growth path!
-                                </p>
+                      {/* Back: Financial Health */}
+                      <div
+                        className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] cursor-pointer"
+                        onClick={() => setIsFlipped(false)}
+                      >
+                        <Card className="w-full h-full bg-background/40 backdrop-blur-lg border-border/10 rounded-3xl">
+                            <CardContent className="p-6 flex flex-col items-center justify-center h-full relative">
+                                <Link href="/growth-path" onClick={(e) => e.stopPropagation()} className="flex flex-col items-center text-center">
+                                    <h2 className="text-lg font-bold mb-2">Your Financial Health</h2>
+                                    <FinancialHealthGauge
+                                        score={750}
+                                        maxScore={1000}
+                                        status="Healthy"
+                                        trend="up"
+                                    />
+                                    <p className="text-center text-xs text-muted-foreground mt-2 max-w-xs">
+                                        Tap to see your growth path!
+                                    </p>
+                                </Link>
+                                <div className="text-muted-foreground flex items-center gap-1 text-xs absolute bottom-4">
+                                  Flip Back <ArrowLeftRight className="w-3 h-3"/>
+                                </div>
                             </CardContent>
                         </Card>
-                    </Link>
+                      </div>
+                    </motion.div>
+                  </div>
                 </motion.div>
-
+                
                 <motion.div variants={itemVariants} className="space-y-4">
                     <h2 className="font-bold text-lg">This Month's Breakdown</h2>
                     <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
