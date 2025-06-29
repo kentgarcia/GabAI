@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from 'framer-motion';
 
 const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -22,7 +23,12 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export default function OnboardingPage() {
   return (
-    <main className="relative flex flex-col h-screen text-foreground">
+    <motion.main 
+      className="relative flex flex-col h-screen text-foreground"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+    >
       <Image
         src="https://placehold.co/400x800.png"
         alt="Abstract background"
@@ -32,31 +38,47 @@ export default function OnboardingPage() {
         data-ai-hint="abstract 3d shapes"
       />
       <div className="relative z-10 flex flex-col flex-grow h-full p-6">
-        <header>
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           <div className="text-xl font-bold">
-            onebank
+            GabAI
             <sup className="text-xs font-bold top-[-0.5em]">┐</sup>
           </div>
-        </header>
+        </motion.header>
 
         <div className="flex-grow"></div>
 
-        <footer className="flex flex-col gap-4">
-          <div>
-            <p className="font-semibold text-accent">Control your budget</p>
+        <motion.footer 
+          className="flex flex-col gap-4"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.4
+              }
+            }
+          }}
+        >
+          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
+            <p className="font-semibold text-accent-foreground/80 text-lg">Kumusta, ka-GabAI!</p>
             <h1 className="text-4xl font-bold leading-tight tracking-tighter">
-              Bank made
+              Let's grow
               <br />
-              by users
-              <br />
-              for <span className="text-accent">people.</span>
+              your <span className="text-accent">hustle.</span>
             </h1>
-            <p className="text-muted-foreground mt-2">
-              Track the money you spend with friends & brands
-            </p>
-          </div>
+          </motion.div>
 
-          <div className="flex items-center gap-3">
+          <motion.div 
+            className="flex items-center gap-3"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+          >
             <Button variant="ghost" size="icon" className="w-14 h-14 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl">
                 <AppleIcon className="w-7 h-7" />
             </Button>
@@ -69,16 +91,19 @@ export default function OnboardingPage() {
                 <ArrowUpRight className="w-5 h-5" />
               </Link>
             </Button>
-          </div>
+          </motion.div>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <motion.p 
+            className="text-center text-sm text-muted-foreground"
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+          >
             Already have an account?{' '}
             <Link href="#" className="font-semibold text-foreground underline">
               Sign in
             </Link>
-          </p>
-        </footer>
+          </motion.p>
+        </motion.footer>
       </div>
-    </main>
+    </motion.main>
   );
 }
