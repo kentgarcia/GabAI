@@ -244,7 +244,8 @@ export default function ChatSessionPage() {
         addGabiMessage({ content: `Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, and using the 8% tax rate, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()} for your taxes. Remember to keep saving for your quarterly payments!` });
     }
     else {
-        addGabiMessage({ content: "Sorry, I'm just a demo version. I can only respond to the suggested prompts. Please try one of those!" });
+        addGabiMessage({ content: "I'm not quite sure what you mean. Could you be more specific? You can ask me about profit, expenses, or creating invoices." });
+        setShowSuggested(true);
     }
 
     setIsLoading(false);
