@@ -69,7 +69,7 @@ export default function TalkPage() {
         try {
             recognitionRef.current.start();
         } catch(err) {
-            console.error("Speech recognition already started.");
+            // Speech recognition may already be started, which is fine.
         }
     }
   }, [status]);
