@@ -85,18 +85,20 @@ export default function OnboardingPage() {
         animate="visible"
       >
         <motion.div className="text-center w-full mt-4" variants={itemVariants}>
-            <h1 className="text-5xl font-bold leading-tight">
-              {titleLines[0]}<br/>
-              {titleLines[1]}<br/>
-              {titleLines[2]}
-              <motion.span
-                initial={{scale: 0, rotate: -180}}
-                animate={{scale: 1, rotate: 0}}
-                transition={{delay: 0.8, type: 'spring', stiffness: 150}}
-                className="inline-block"
-              >
-                <SparkleIcon className="w-6 h-6 inline-block ml-2 text-black" />
-              </motion.span>
+            <h1 className="font-bold leading-tight">
+              <span className="block text-4xl">{titleLines[0]}</span>
+              <span className="block text-5xl">{titleLines[1]}</span>
+              <span className="block text-5xl">
+                {titleLines[2]}
+                <motion.span
+                  initial={{scale: 0, rotate: -180}}
+                  animate={{scale: 1, rotate: 0}}
+                  transition={{delay: 0.8, type: 'spring', stiffness: 150}}
+                  className="inline-block"
+                >
+                  <SparkleIcon className="w-6 h-6 inline-block ml-2 text-black" />
+                </motion.span>
+              </span>
             </h1>
         </motion.div>
         <motion.div variants={itemVariants} className="w-full">
