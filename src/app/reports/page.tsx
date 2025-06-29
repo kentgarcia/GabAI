@@ -154,6 +154,7 @@ const InventoryStatusBadge = ({ status }: { status: string }) => {
 
 export default function ReportsPage() {
   const [dateRange, setDateRange] = useState('This Quarter');
+  const [activeTab, setActiveTab] = useState('analyze');
 
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
@@ -172,33 +173,37 @@ export default function ReportsPage() {
                 <h1 className="text-3xl font-bold tracking-tight">Reports & Insights</h1>
             </motion.div>
 
-            <Tabs defaultValue="analyze" className="w-full">
-                <motion.div variants={itemVariants} className="flex justify-between items-center mb-4">
-                    <TabsList className="bg-muted/60 p-1.5 rounded-full backdrop-blur-lg">
+            <Tabs defaultValue="analyze" className="w-full" onValueChange={setActiveTab}>
+                <motion.div variants={itemVariants} className="mb-4">
+                    <TabsList className="grid w-full grid-cols-3 bg-muted/60 p-1.5 rounded-full backdrop-blur-lg">
                         <TabsTrigger value="analyze" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Analyze</TabsTrigger>
-                        <TabsTrigger value="forecast" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm flex items-center gap-1.5">
+                        <TabsTrigger value="forecast" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">
                             Forecast
-                            <Badge variant="default" className="bg-primary/80 text-primary-foreground py-0.5 px-1.5 text-[10px]"><Sparkles className="w-3 h-3 -ml-0.5 mr-0.5"/>Pro</Badge>
                         </TabsTrigger>
                         <TabsTrigger value="generate" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Generate</TabsTrigger>
                     </TabsList>
-                    
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="rounded-full flex items-center gap-2 text-sm h-9">
-                            <CalendarIcon className="w-4 h-4" />
-                            <span>{dateRange}</span>
-                        </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                        {['This Month', 'This Quarter', 'Last Month', 'Year to Date', 'All Time'].map(range => (
-                            <DropdownMenuItem key={range} onSelect={() => setDateRange(range)}>
-                            {range}
-                            </DropdownMenuItem>
-                        ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
                 </motion.div>
+
+                {activeTab !== 'generate' && (
+                    <motion.div variants={itemVariants} className="flex justify-end mb-4">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="rounded-full flex items-center gap-2 text-sm h-9">
+                                <CalendarIcon className="w-4 h-4" />
+                                <span>{dateRange}</span>
+                            </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                            {['This Month', 'This Quarter', 'Last Month', 'Year to Date', 'All Time'].map(range => (
+                                <DropdownMenuItem key={range} onSelect={() => setDateRange(range)}>
+                                {range}
+                                </DropdownMenuItem>
+                            ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </motion.div>
+                )}
+
 
                 <TabsContent value="analyze" className="space-y-6">
                     <motion.div variants={itemVariants}>
@@ -415,3 +420,5 @@ export default function ReportsPage() {
     </div>
   );
 }
+
+    
