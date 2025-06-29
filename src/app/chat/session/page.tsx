@@ -18,9 +18,9 @@ export type GabiChatMessage = {
 
 const suggestedPrompts = [
   "What's my profit this month?",
-  "Create an invoice for 'Client X' for ₱50,000",
-  'Is it a good time to run a promo?',
-  'How much should I set aside for tax?',
+  'Show my top expenses',
+  'Create a receipt',
+  "What's my tax estimate?",
 ];
 
 const taxChoicePrompts = ['8% Flat Tax', 'Graduated Income Tax'];
@@ -63,7 +63,7 @@ export default function ChatSessionPage() {
   const getGabiResponse = (message: string, currentTaxPref: string | null): string => {
     const lowerCaseMessage = message.toLowerCase();
 
-    if (lowerCaseMessage.includes('how much should i set aside for tax?')) {
+    if (lowerCaseMessage.includes("what's my tax estimate?")) {
       if (!currentTaxPref) {
         return "Good question! To give you a good estimate, I need to know your preferred tax rate. In the Philippines, freelancers and small businesses can often choose between two types:\n\n- 8% Flat Tax: Simple. You pay 8% on your gross income after the first ₱250,000.\n- Graduated Income Tax: More complex, rates vary from 0% to 35% depending on your profit.\n\nWhich would you like me to use for estimates?";
       } else if (currentTaxPref === '8_percent') {
@@ -84,11 +84,11 @@ export default function ChatSessionPage() {
     if (lowerCaseMessage.includes("what's my profit this month?")) {
         return "Your net profit for this month is ₱12,345.67. This is calculated from your total income of ₱20,000.00 minus your expenses of ₱7,654.33. Keep up the great work!";
     }
-    if (lowerCaseMessage.includes('create an invoice for')) {
-        return "Done. I've created a draft invoice for 'Client X' for ₱50,000, due in 15 days. You can review and send it from the Reports > Receipt History page.";
+    if (lowerCaseMessage.includes('show my top expenses')) {
+        return "Your top expenses this month are:\n1. Product Costs: ₱7,654.33\n2. Marketing & Ads: ₱5,500.00\n3. Shipping & Fees: ₱1,500.00";
     }
-    if (lowerCaseMessage.includes('is it a good time to run a promo?')) {
-        return "That's a great idea! Based on your current sales trend, running a promo this weekend could boost your engagement. I can help you draft an announcement.";
+    if (lowerCaseMessage.includes('create a receipt')) {
+        return "Sure! To create a receipt, I need a bit more info. You can tell me the client's name and amount, or I can pull the details from a recent transaction. Which would you prefer?";
     }
 
     return "Sorry, I'm just a demo version. I can only respond to the suggested prompts. Please try one of those!";
@@ -135,8 +135,8 @@ export default function ChatSessionPage() {
   };
 
   return (
-    <main className="flex flex-col flex-grow p-0 text-foreground h-screen bg-background">
-      <header className="flex items-center gap-2 p-4 border-b shrink-0">
+    <main className="flex flex-col flex-grow p-0 text-foreground h-screen bg-transparent">
+      <header className="flex items-center gap-2 p-4 border-b shrink-0 bg-background/80 backdrop-blur-md">
         <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2">
           <Link href="/chat">
             <ArrowLeft />
@@ -192,9 +192,9 @@ export default function ChatSessionPage() {
                   )}
                   <div
                     className={cn(
-                      'rounded-2xl p-4 max-w-sm',
+                      'rounded-2xl p-4 max-w-sm backdrop-blur-md',
                       message.role === 'model'
-                        ? 'bg-background/30 rounded-bl-none'
+                        ? 'bg-background/40 rounded-bl-none'
                         : 'bg-primary text-primary-foreground rounded-br-none'
                     )}
                   >
@@ -215,7 +215,7 @@ export default function ChatSessionPage() {
                     <div className="p-2 bg-accent/20 rounded-full self-end">
                       <Bot className="h-6 w-6 text-accent" />
                     </div>
-                     <div className='bg-background/30 rounded-2xl rounded-bl-none p-4 max-w-sm'>
+                     <div className='bg-background/40 backdrop-blur-md rounded-2xl rounded-bl-none p-4 max-w-sm'>
                         <motion.div 
                             className="flex gap-1.5"
                             initial="start"
@@ -237,7 +237,7 @@ export default function ChatSessionPage() {
         </ScrollArea>
       </div>
 
-      <footer className="p-4 border-t shrink-0 bg-background">
+      <footer className="p-4 border-t shrink-0 bg-background/80 backdrop-blur-md">
         <AnimatePresence>
           {showSuggested && !showTaxChoice && (
             <motion.div
@@ -251,7 +251,7 @@ export default function ChatSessionPage() {
                   key={prompt}
                   variant="outline"
                   size="sm"
-                  className="rounded-full shrink-0"
+                  className="rounded-full shrink-0 bg-background/50"
                   onClick={() => handleSendMessage(prompt)}
                   disabled={isLoading}
                 >
@@ -272,7 +272,7 @@ export default function ChatSessionPage() {
                   key={prompt}
                   variant="outline"
                   size="sm"
-                  className="rounded-full shrink-0"
+                  className="rounded-full shrink-0 bg-background/50"
                   onClick={() => handleTaxChoice(prompt)}
                   disabled={isLoading}
                 >
