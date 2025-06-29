@@ -5,21 +5,12 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import html2canvas from 'html2canvas';
-import { ArrowLeft, Bot, Loader2, Upload, Mail, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Bot, Loader2, Upload, Mail, AlertTriangle, Lightbulb } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
+import { cn } from '@/lib/utils';
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -51,6 +42,12 @@ const TaxSummaryData = {
   },
 };
 
+const ContributionsData = {
+    sss: 1800.00,
+    philhealth: 600.00,
+    pagibig: 200.00,
+};
+
 export default function TaxSummaryPreviewPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -60,15 +57,21 @@ export default function TaxSummaryPreviewPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [businessName, setBusinessName] = useState('Your Business Name');
+  const [taxPreference, setTaxPreference] = useState<'8_percent' | 'graduated' | null>(null);
 
   const from = searchParams.get('from');
   const to = searchParams.get('to');
-  const dateRange = from && to ? `${from} to ${to}` : 'the selected period';
+  const dateRange = from && to ? `${from.replace(/,/g, '')} to ${to.replace(/,/g, '')}` : 'the selected period';
+
 
   useEffect(() => {
     const savedDetails = localStorage.getItem('businessDetails');
     if (savedDetails) {
       setBusinessName(JSON.parse(savedDetails).name);
+    }
+    const savedPreference = localStorage.getItem('taxPreference');
+    if (savedPreference === '8_percent' || savedPreference === 'graduated') {
+        setTaxPreference(savedPreference);
     }
 
     const timer = setTimeout(() => {
@@ -106,6 +109,13 @@ export default function TaxSummaryPreviewPage() {
 
   const totalGrossReceipts = Object.values(TaxSummaryData.grossReceipts).reduce((a, b) => a + b, 0);
   const totalDeductions = Object.values(TaxSummaryData.deductions).reduce((a, b) => a + b, 0);
+  const netTaxableIncome = totalGrossReceipts - totalDeductions;
+  
+  const estimatedTaxDue = taxPreference === '8_percent'
+    ? totalGrossReceipts * 0.08
+    : netTaxableIncome * 0.15; // Placeholder calculation for graduated tax
+    
+  const totalContributions = Object.values(ContributionsData).reduce((a, b) => a + b, 0);
 
   return (
     <main className="flex flex-col flex-grow p-6 text-foreground bg-muted">
@@ -144,20 +154,19 @@ export default function TaxSummaryPreviewPage() {
                   <ArrowLeft />
                 </Link>
               </Button>
-              <h1 className="text-xl font-bold">Tax Summary: {dateRange}</h1>
+              <h1 className="text-xl font-bold truncate">Tax Summary: {dateRange}</h1>
             </motion.header>
 
             <div className="flex-grow overflow-y-auto no-scrollbar rounded-lg">
                 <div ref={reportRef} className="bg-white p-6 text-black rounded-lg">
                     <div className="text-center mb-6">
                         <h2 className="text-xl font-bold">{businessName}</h2>
-                        <p className="text-lg font-semibold">Tax Data Summary</p>
+                        <p className="text-lg font-semibold">Tax & Contributions Summary</p>
                         <p className="text-sm text-gray-500">For the period of {dateRange}</p>
                     </div>
 
-                    {/* Gross Income / Receipts */}
                     <div className="mb-4">
-                        <h3 className="font-bold border-b pb-1 mb-2">Gross Income / Receipts</h3>
+                        <h3 className="font-bold border-b pb-1 mb-2">1. Gross Income / Receipts</h3>
                         {Object.entries(TaxSummaryData.grossReceipts).map(([key, value]) => (
                              <div key={key} className="flex justify-between text-sm py-1"><span>{key}</span><span>{formatCurrency(value)}</span></div>
                         ))}
@@ -165,9 +174,8 @@ export default function TaxSummaryPreviewPage() {
                          <div className="flex justify-between font-semibold py-1"><span>Total Gross Receipts</span><span>{formatCurrency(totalGrossReceipts)}</span></div>
                     </div>
                     
-                    {/* Tax-Deductible Expenses */}
                     <div className="mb-4">
-                        <h3 className="font-bold border-b pb-1 mb-2">Tax-Deductible Expenses</h3>
+                        <h3 className="font-bold border-b pb-1 mb-2">2. Allowable Deductions</h3>
                          {Object.entries(TaxSummaryData.deductions).map(([key, value]) => (
                             value > 0 && <div key={key} className="flex justify-between text-sm py-1"><span>{key}</span><span>{formatCurrency(value)}</span></div>
                         ))}
@@ -175,7 +183,26 @@ export default function TaxSummaryPreviewPage() {
                          <div className="flex justify-between font-semibold py-1"><span>Total Allowable Deductions</span><span>{formatCurrency(totalDeductions)}</span></div>
                     </div>
                     
-                    {/* Disclaimer */}
+                    <Separator className="my-2"/>
+                    <div className="flex justify-between font-bold text-lg py-2 mb-4"><span>3. Net Taxable Income</span><span>{formatCurrency(netTaxableIncome)}</span></div>
+
+                    <div className="mb-4">
+                        <h3 className="font-bold border-b pb-1 mb-2">4. Estimated Tax Due</h3>
+                        <div className="flex justify-between font-semibold py-1">
+                            <span>Based on {taxPreference === '8_percent' ? '8% Flat Tax' : 'Graduated Tax'}</span>
+                            <span>{formatCurrency(estimatedTaxDue)}</span>
+                        </div>
+                    </div>
+
+                    <div className="mb-4">
+                        <h3 className="font-bold border-b pb-1 mb-2">5. Estimated Government Contributions</h3>
+                         <div className="flex justify-between text-sm py-1"><span>SSS Contribution</span><span>{formatCurrency(ContributionsData.sss)}</span></div>
+                         <div className="flex justify-between text-sm py-1"><span>PhilHealth Contribution</span><span>{formatCurrency(ContributionsData.philhealth)}</span></div>
+                         <div className="flex justify-between text-sm py-1"><span>Pag-IBIG Contribution</span><span>{formatCurrency(ContributionsData.pagibig)}</span></div>
+                        <Separator className="my-1"/>
+                         <div className="flex justify-between font-semibold py-1"><span>Total Contributions</span><span>{formatCurrency(totalContributions)}</span></div>
+                    </div>
+                    
                     <div className="mt-8 bg-yellow-100/60 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-r-lg">
                         <div className="flex">
                             <div className="py-1"><AlertTriangle className="h-5 w-5 text-yellow-500 mr-3" /></div>
@@ -185,7 +212,11 @@ export default function TaxSummaryPreviewPage() {
                             </div>
                         </div>
                     </div>
+                </div>
 
+                 <div className="flex items-start justify-center gap-3 text-sm text-muted-foreground bg-foreground/5 p-3 rounded-lg mt-4">
+                    <Lightbulb className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+                    <p><span className="font-semibold text-foreground/80">Gabi's Tip:</span> These are estimates based on your income and can be adjusted in your Tax Settings. Gabi will send you a reminder before the payment deadlines.</p>
                 </div>
             </div>
 

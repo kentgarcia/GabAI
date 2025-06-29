@@ -105,7 +105,7 @@ export default function ReceiptHistoryPage() {
           </DropdownMenu>
         </motion.div>
 
-        <div className="flex-grow space-y-3 overflow-y-auto no-scrollbar">
+        <div className="flex-grow space-y-3 overflow-y-auto no-scrollbar -mx-1 px-1">
           {filteredReceipts.length > 0 ? (
             filteredReceipts.map(receipt => (
               <motion.div key={receipt.id} variants={itemVariants}>
