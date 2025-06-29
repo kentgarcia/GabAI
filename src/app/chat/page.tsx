@@ -1,311 +1,150 @@
-
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Bot, SendHorizontal, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import {
+  Menu,
+  User,
+  Mic,
+  MessageCircle,
+  Image as ImageIcon,
+  ArrowUpRight,
+  Bot,
+  BrainCircuit,
+  ChevronRight,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
-// Type definition for a chat message, kept for structure.
-export type GabiChatMessage = {
-  role: 'user' | 'model';
-  content: string;
-};
-
-const suggestedPrompts = [
-  "What's my profit this month?",
-  'Create a payment reminder for a client.',
-  'Is it a good time to run a promo?',
-  'How much should I set aside for tax?',
+const actionCards = [
+  {
+    title: 'Talk with Bot',
+    icon: Mic,
+    href: '#',
+    className: 'col-span-1 row-span-2 bg-primary/10',
+    iconClass: 'w-8 h-8',
+  },
+  {
+    title: 'Chat with Bot',
+    icon: MessageCircle,
+    href: '/chat/session',
+    className: 'col-span-1 row-span-1 bg-primary/20',
+    iconClass: 'w-6 h-6',
+  },
+  {
+    title: 'Search by Image',
+    icon: ImageIcon,
+    href: '#',
+    className: 'col-span-1 row-span-1 bg-primary/5',
+    iconClass: 'w-6 h-6',
+  },
 ];
 
-const taxChoicePrompts = ['8% Flat Tax', 'Graduated Income Tax'];
+const historyItems = [
+  {
+    title: 'ChatGPT',
+    subtitle: 'Best 2023 mobile app suggestion...',
+    icon: Bot,
+    time: '22:10',
+    href: '#',
+  },
+  {
+    title: 'Midjourney',
+    subtitle: 'Looking for dark UI design ideas.',
+    icon: ImageIcon,
+    time: '11:23',
+    href: '#',
+  },
+  {
+    title: 'Google AI',
+    subtitle: 'How to make a great pitch deck?',
+    icon: BrainCircuit,
+    time: '06:15',
+    href: '#',
+  },
+];
 
-const mockMonthlyIncome = 20000;
-
-export default function ChatPage() {
-  const [messages, setMessages] = useState<GabiChatMessage[]>([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [taxPreference, setTaxPreference] = useState<string | null>(null);
-  const [showSuggested, setShowSuggested] = useState(true);
-  const [showTaxChoice, setShowTaxChoice] = useState(false);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const savedPreference = localStorage.getItem('taxPreference');
-    if (savedPreference) {
-      setTaxPreference(savedPreference);
-    }
-    // Gabi's initial greeting
-    setMessages([
-      {
-        role: 'model',
-        content: "Hi there! I'm Gabi. How can I help you today?",
-      },
-    ]);
-  }, []);
-
-  useEffect(() => {
-    // Auto-scroll to bottom
-    if (scrollAreaRef.current) {
-      scrollAreaRef.current.scrollTo({
-        top: scrollAreaRef.current.scrollHeight,
-        behavior: 'smooth',
-      });
-    }
-  }, [messages]);
-  
-  const getGabiResponse = (message: string, currentTaxPref: string | null): string => {
-    const lowerCaseMessage = message.toLowerCase();
-
-    if (lowerCaseMessage.includes('how much should i set aside for tax?')) {
-      if (!currentTaxPref) {
-        return "Good question! To give you a good estimate, I need to know your preferred tax rate. In the Philippines, freelancers and small businesses can often choose between two types:\n\n- 8% Flat Tax: Simple. You pay 8% on your gross income after the first ₱250,000.\n- Graduated Income Tax: More complex, rates vary from 0% to 35% depending on your profit.\n\nWhich would you like me to use for estimates?";
-      } else if (currentTaxPref === '8_percent') {
-        return `Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, and using the 8% tax rate, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()} for your taxes. Remember to keep saving for your quarterly payments!`;
-      } else {
-        return "Because you've chosen the Graduated Income Tax rate, I'll need to know your business expenses for this month to give you an accurate estimate. Let's start tracking them!";
-      }
-    }
-    
-    if (lowerCaseMessage.includes("okay, let's use the")) {
-         if (currentTaxPref === '8_percent') {
-            return `Got it! Using the 8% Flat Tax rate. Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()}.`;
-        } else {
-            return "Sounds good. With the Graduated rate, we'll need to track your expenses to get an accurate tax amount. You can start logging expenses from the main dashboard.";
-        }
-    }
-
-    if (lowerCaseMessage.includes("what's my profit this month?")) {
-        return "Your net profit for this month is ₱12,345.67. This is calculated from your total income of ₱20,000.00 minus your expenses of ₱7,654.33. Keep up the great work!";
-    }
-    if (lowerCaseMessage.includes('create a payment reminder for a client.')) {
-        return "Of course. Who is the reminder for, and what's the amount? I can draft a message for you.";
-    }
-    if (lowerCaseMessage.includes('is it a good time to run a promo?')) {
-        return "That's a great idea! Based on your current sales trend, running a promo this weekend could boost your engagement. I can help you draft an announcement.";
-    }
-
-    return "Sorry, I'm just a demo version. I can only respond to the suggested prompts. Please try one of those!";
-  };
-
-
-  const handleSendMessage = async (messageContent: string) => {
-    if (!messageContent.trim() || isLoading) return;
-
-    setShowSuggested(false);
-    setShowTaxChoice(false);
-    const newHumanMessage: GabiChatMessage = {
-      role: 'user',
-      content: messageContent,
-    };
-    setMessages(prev => [...prev, newHumanMessage]);
-    setInput('');
-    setIsLoading(true);
-
-    // Simulate Gabi thinking
-    await new Promise(res => setTimeout(res, 1500));
-    
-    const gabiResponse = getGabiResponse(messageContent, taxPreference);
-    
-    const newGabiMessage: GabiChatMessage = {
-      role: 'model',
-      content: gabiResponse,
-    };
-    setMessages(prev => [...prev, newGabiMessage]);
-    
-    // Check if Gabi is asking for tax preference
-    if (gabiResponse.includes('Which would you like me to use for estimates?')) {
-        setShowTaxChoice(true);
-    }
-
-    setIsLoading(false);
-  };
-
-  const handleTaxChoice = (choice: string) => {
-    const preference = choice === '8% Flat Tax' ? '8_percent' : 'graduated';
-    localStorage.setItem('taxPreference', preference);
-    setTaxPreference(preference);
-    handleSendMessage(`Okay, let's use the ${choice}.`);
-  };
-
+export default function ChatHubPage() {
   return (
-    <main className="flex flex-col flex-grow p-0 text-foreground h-screen bg-background">
-      <header className="flex items-center gap-2 p-4 border-b shrink-0">
-        <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2">
-          <Link href="/dashboard">
-            <ArrowLeft />
-          </Link>
+    <main className="flex flex-col flex-grow p-6 text-foreground bg-background space-y-8">
+      <header className="flex items-center justify-between">
+        <Button variant="ghost" size="icon">
+          <Menu className="h-6 w-6" />
         </Button>
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <div className="p-2 bg-accent/20 rounded-full">
-              <Bot className="h-6 w-6 text-accent" />
-            </div>
-            <AnimatePresence>
-            {isLoading && (
-                 <motion.div 
-                    key="sparkle"
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
-                    className="absolute -top-1 -right-1 p-1 bg-primary rounded-full"
-                >
-                    <Sparkles className="w-3 h-3 text-primary-foreground" />
-                 </motion.div>
-            )}
-            </AnimatePresence>
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">Gabi</h1>
-            <p className="text-xs text-muted-foreground">{isLoading ? 'Typing...' : 'Online'}</p>
-          </div>
+        <div className="flex items-center gap-2 text-sm">
+          <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+          Online
         </div>
+        <Avatar className="h-9 w-9">
+          <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person avatar" />
+          <AvatarFallback>
+            <User />
+          </AvatarFallback>
+        </Avatar>
       </header>
 
-      <div className="flex-grow overflow-hidden">
-        <ScrollArea className="h-full" ref={scrollAreaRef}>
-          <div className="p-6 space-y-6">
-            <AnimatePresence>
-              {messages.map((message, index) => (
-                <motion.div
-                  key={index}
-                  layout
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className={cn(
-                    'flex items-start gap-3',
-                    message.role === 'user' && 'justify-end'
-                  )}
-                >
-                  {message.role === 'model' && (
-                    <div className="p-2 bg-accent/20 rounded-full self-end">
-                      <Bot className="h-6 w-6 text-accent" />
-                    </div>
-                  )}
-                  <div
-                    className={cn(
-                      'rounded-2xl p-4 max-w-sm',
-                      message.role === 'model'
-                        ? 'bg-background/30 rounded-bl-none'
-                        : 'bg-primary text-primary-foreground rounded-br-none'
-                    )}
-                  >
-                    <p className="whitespace-pre-wrap">
-                      {message.content}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-               {isLoading && (
-                 <motion.div
-                    key="typing"
-                    layout
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className='flex items-start gap-3'
-                >
-                    <div className="p-2 bg-accent/20 rounded-full self-end">
-                      <Bot className="h-6 w-6 text-accent" />
-                    </div>
-                     <div className='bg-background/30 rounded-2xl rounded-bl-none p-4 max-w-sm'>
-                        <motion.div 
-                            className="flex gap-1.5"
-                            initial="start"
-                            animate="end"
-                            variants={{
-                                start: { transition: { staggerChildren: 0.2 }},
-                                end: { transition: { staggerChildren: 0.2 }}
-                            }}
-                        >
-                            <motion.div className="w-2 h-2 bg-muted-foreground rounded-full" variants={{start: {y: '0%'}, end: {y: '100%'}}} transition={{duration: 0.5, repeat: Infinity, repeatType: 'reverse'}} />
-                            <motion.div className="w-2 h-2 bg-muted-foreground rounded-full" variants={{start: {y: '0%'}, end: {y: '100%'}}} transition={{duration: 0.5, repeat: Infinity, repeatType: 'reverse', delay: 0.2}} />
-                            <motion.div className="w-2 h-2 bg-muted-foreground rounded-full" variants={{start: {y: '0%'}, end: {y: '100%'}}} transition={{duration: 0.5, repeat: Infinity, repeatType: 'reverse', delay: 0.4}} />
-                        </motion.div>
-                    </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </ScrollArea>
-      </div>
+      <section>
+        <h1 className="text-3xl font-bold tracking-tight">Hi, there! 👋</h1>
+        <h2 className="text-3xl font-bold tracking-tight text-muted-foreground">
+          How may I help you today?
+        </h2>
+      </section>
 
-      <footer className="p-4 border-t shrink-0 bg-background">
-        <AnimatePresence>
-          {showSuggested && !showTaxChoice && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="flex gap-2 overflow-x-auto no-scrollbar pb-3"
-            >
-              {suggestedPrompts.map((prompt) => (
-                <Button
-                  key={prompt}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full shrink-0"
-                  onClick={() => handleSendMessage(prompt)}
-                  disabled={isLoading}
-                >
-                  {prompt}
-                </Button>
-              ))}
-            </motion.div>
-          )}
-          {showTaxChoice && (
-             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="flex gap-2 overflow-x-auto no-scrollbar pb-3"
-            >
-              {taxChoicePrompts.map((prompt) => (
-                 <Button
-                  key={prompt}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full shrink-0"
-                  onClick={() => handleTaxChoice(prompt)}
-                  disabled={isLoading}
-                >
-                  {prompt}
-                </Button>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSendMessage(input);
-          }}
-          className="flex items-center gap-2"
-        >
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask Gabi anything..."
-            className="bg-background/30 backdrop-blur-md border rounded-full h-12"
-            disabled={isLoading}
-          />
-          <Button
-            type="submit"
-            size="icon"
-            className="rounded-full h-12 w-12 shrink-0 bg-black"
-            disabled={isLoading || !input.trim()}
-          >
-            <SendHorizontal />
-          </Button>
-        </form>
-      </footer>
+      <section>
+        <div className="grid grid-cols-2 grid-rows-2 gap-4 h-48">
+          {actionCards.map((card) => (
+            <Link key={card.title} href={card.href} className={card.className}>
+              <Card
+                className={cn(
+                  'h-full w-full bg-transparent border-none rounded-2xl relative group transition-transform hover:scale-105',
+                  card.className
+                )}
+              >
+                <CardContent className="p-4 flex flex-col justify-between h-full">
+                  <div className="flex justify-between items-start">
+                    <div className="p-2 bg-background/50 rounded-full">
+                      <card.icon className={cn('text-primary', card.iconClass)} />
+                    </div>
+                    <ArrowUpRight className="w-5 h-5 text-primary/70 transition-transform group-hover:rotate-45" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-primary">{card.title}</h3>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </section>
+      
+      <section className="space-y-4">
+        <div className="flex justify-between items-center">
+            <h2 className="text-xl font-bold">History</h2>
+            <Link href="#" className="text-sm text-primary">See all</Link>
+        </div>
+        <div className="space-y-3">
+            {historyItems.map((item) => (
+                <Link href={item.href} key={item.title}>
+                    <motion.div
+                      className="flex items-center gap-4 p-3 rounded-2xl bg-background/30 transition-colors hover:bg-muted/40"
+                      whileTap={{ scale: 0.98 }}
+                    >
+                        <div className="p-3 bg-muted rounded-full">
+                            <item.icon className="w-5 h-5 text-foreground" />
+                        </div>
+                        <div className="flex-grow">
+                            <p className="font-semibold">{item.title}</p>
+                            <p className="text-sm text-muted-foreground truncate">{item.subtitle}</p>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            {item.time}
+                            <ChevronRight className="w-4 h-4" />
+                        </div>
+                    </motion.div>
+                </Link>
+            ))}
+        </div>
+      </section>
     </main>
   );
 }
