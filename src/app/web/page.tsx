@@ -146,7 +146,7 @@ export default function WebAppPage() {
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <Link href="/web/reports">
-                                <SidebarMenuButton tooltip="Reports" asChild>
+                                <SidebarMenuButton tooltip="Reports">
                                     <BarChart2 />
                                     <span>Web Reports</span>
                                 </SidebarMenuButton>
