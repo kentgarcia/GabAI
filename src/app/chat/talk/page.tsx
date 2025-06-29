@@ -114,7 +114,6 @@ export default function TalkPage() {
     initPermissionsAndRecognition();
 
     return () => {
-      speechSynthesis.cancel();
       if (recognitionRef.current) {
         recognitionRef.current.abort();
       }
@@ -169,33 +168,26 @@ export default function TalkPage() {
   useEffect(() => {
     if (aiResponse) {
       setStatus('speaking');
-      const utterance = new SpeechSynthesisUtterance(aiResponse);
 
-      utterance.onend = () => {
-        setStatus('idle');
-      };
+      let i = 0;
+      setDisplayedResponse(''); // Clear previous response before typing
       
-      speechSynthesis.speak(utterance);
+      const timer = setInterval(() => {
+        setDisplayedResponse(aiResponse.slice(0, i + 1));
+        i++;
+        if (i >= aiResponse.length) {
+          clearInterval(timer);
+          // After typing is done, set status back to idle
+          setStatus('idle');
+        }
+      }, 40); // typing speed
+
+      return () => clearInterval(timer);
     }
   }, [aiResponse]);
 
-  useEffect(() => {
-    if (status !== 'speaking' || !aiResponse) return;
-    
-    let i = 0;
-    const timer = setInterval(() => {
-        setDisplayedResponse(aiResponse.slice(0, i + 1));
-        i++;
-        if (i > aiResponse.length) {
-            clearInterval(timer);
-        }
-    }, 40); // typing speed
-
-    return () => clearInterval(timer);
-  }, [status, aiResponse]);
-
   return (
-    <main className="relative flex flex-col h-screen bg-background text-foreground p-6 overflow-hidden">
+    <main className="relative flex flex-col h-screen bg-white text-foreground p-6 overflow-hidden">
         <header className="relative z-10 flex items-center justify-start w-full">
             <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2 text-foreground hover:bg-muted">
             <div onClick={() => router.back()}>
