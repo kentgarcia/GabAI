@@ -44,35 +44,35 @@ const mockCourseData = {
         {
             title: 'Module 1: Getting Started',
             lessons: [
-                { title: 'Why Formalize?', duration: '5 min', status: 'completed' },
-                { title: 'Choosing 8% vs. Graduated Tax', duration: '8 min', status: 'completed' },
+                { slug: 'bir-basics-lesson-1', title: 'Why Formalize?', duration: '5 min', status: 'completed' },
+                { slug: 'bir-basics-lesson-2', title: 'Choosing 8% vs. Graduated Tax', duration: '8 min', status: 'completed' },
             ]
         },
         {
             title: 'Module 2: Your Responsibilities',
             lessons: [
-                { title: 'How to Issue Official Receipts', duration: '6 min', status: 'next' },
-                { title: 'Understanding Quarterly ITRs', duration: '10 min', status: 'locked' },
+                { slug: 'bir-basics-lesson-3', title: 'How to Issue Official Receipts', duration: '6 min', status: 'next' },
+                { slug: 'bir-basics-lesson-4', title: 'Understanding Quarterly ITRs', duration: '10 min', status: 'locked' },
             ]
         },
         {
             title: 'Module 3: Filing Your First Return',
             lessons: [
-                { title: 'Using the BIR e-Filing System', duration: '12 min', status: 'locked' },
-                { title: 'Paying Your Taxes', duration: '4 min', status: 'locked' },
+                { slug: 'bir-basics-lesson-5', title: 'Using the BIR e-Filing System', duration: '12 min', status: 'locked' },
+                { slug: 'bir-basics-lesson-6', title: 'Paying Your Taxes', duration: '4 min', status: 'locked' },
             ]
         }
     ]
 };
 
-const LessonItem = ({ lesson }: { lesson: { title: string, duration: string, status: string } }) => {
+const LessonItem = ({ lesson, courseSlug }: { lesson: { slug: string, title: string, duration: string, status: string }, courseSlug: string }) => {
     const statusIcons = {
         completed: <CheckCircle className="w-5 h-5 text-emerald-500" />,
         next: <PlayCircle className="w-5 h-5 text-primary" />,
         locked: <Lock className="w-5 h-5 text-muted-foreground" />,
     };
 
-    return (
+    const content = (
         <div className="flex items-center gap-4 py-3 border-b border-border/10 last:border-b-0">
             {statusIcons[lesson.status as keyof typeof statusIcons]}
             <div className="flex-grow">
@@ -80,6 +80,16 @@ const LessonItem = ({ lesson }: { lesson: { title: string, duration: string, sta
                 <p className="text-sm text-muted-foreground">{lesson.duration}</p>
             </div>
         </div>
+    );
+    
+    if (lesson.status === 'locked') {
+        return <div className="cursor-not-allowed opacity-60">{content}</div>;
+    }
+
+    return (
+        <Link href={`/learn/lesson/${lesson.slug}?course=${courseSlug}`} className="block transition-colors hover:bg-muted/40 rounded-md">
+            {content}
+        </Link>
     );
 };
 
@@ -89,6 +99,7 @@ export default function CourseDetailPage() {
 
   // In a real app, you'd fetch course data based on the slug.
   const course = mockCourseData;
+  const firstLessonSlug = course.modules[0]?.lessons[0]?.slug;
 
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
@@ -117,9 +128,11 @@ export default function CourseDetailPage() {
             </motion.div>
             
             <motion.div variants={itemVariants}>
-                <Button className="w-full h-14 text-lg bg-black rounded-full">
-                    <PlayCircle className="mr-2"/>
-                    Start Course
+                <Button asChild className="w-full h-14 text-lg bg-black rounded-full">
+                   <Link href={`/learn/lesson/${firstLessonSlug}?course=${slug}`}>
+                     <PlayCircle className="mr-2"/>
+                     Start Course
+                   </Link>
                 </Button>
             </motion.div>
             
@@ -133,7 +146,7 @@ export default function CourseDetailPage() {
                             </AccordionTrigger>
                             <AccordionContent className="px-2 pt-2">
                                {module.lessons.map(lesson => (
-                                    <LessonItem key={lesson.title} lesson={lesson} />
+                                    <LessonItem key={lesson.title} lesson={lesson} courseSlug={slug as string} />
                                ))}
                             </AccordionContent>
                         </AccordionItem>
