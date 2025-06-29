@@ -51,6 +51,7 @@ export default function TalkPage() {
   const [status, setStatus] = useState<'idle' | 'listening' | 'thinking' | 'speaking'>('idle');
   const [transcript, setTranscript] = useState('');
   const [aiResponse, setAiResponse] = useState('');
+  const [displayedResponse, setDisplayedResponse] = useState('');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const recognitionRef = useRef<any>(null);
 
@@ -66,6 +67,7 @@ export default function TalkPage() {
     if (status === 'idle' && recognitionRef.current) {
         setTranscript('');
         setAiResponse('');
+        setDisplayedResponse('');
         try {
             recognitionRef.current.start();
         } catch(err) {
@@ -100,7 +102,6 @@ export default function TalkPage() {
         recognitionRef.current = recognition;
 
       } catch (error) {
-        console.error('Error accessing media devices:', error);
         setHasPermission(false);
          toast({
           variant: 'destructive',
@@ -171,8 +172,6 @@ export default function TalkPage() {
       const utterance = new SpeechSynthesisUtterance(aiResponse);
 
       utterance.onend = () => {
-        setAiResponse('');
-        setTranscript('');
         setStatus('idle');
       };
       
@@ -180,10 +179,25 @@ export default function TalkPage() {
     }
   }, [aiResponse]);
 
+  useEffect(() => {
+    if (status !== 'speaking' || !aiResponse) return;
+    
+    let i = 0;
+    const timer = setInterval(() => {
+        setDisplayedResponse(aiResponse.slice(0, i + 1));
+        i++;
+        if (i > aiResponse.length) {
+            clearInterval(timer);
+        }
+    }, 40); // typing speed
+
+    return () => clearInterval(timer);
+  }, [status, aiResponse]);
+
   return (
-    <main className="relative flex flex-col h-screen bg-black text-white p-6 overflow-hidden">
+    <main className="relative flex flex-col h-screen bg-background text-foreground p-6 overflow-hidden">
         <header className="relative z-10 flex items-center justify-start w-full">
-            <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2 text-white hover:bg-white/10">
+            <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2 text-foreground hover:bg-muted">
             <div onClick={() => router.back()}>
                 <ArrowLeft />
             </div>
@@ -224,8 +238,8 @@ export default function TalkPage() {
 
             <div className="h-24">
                 <p className="text-2xl font-semibold mb-2">{statusText[status]}</p>
-                <p className="text-gray-400 min-h-[2.5em]">
-                    {transcript || aiResponse}
+                <p className="text-muted-foreground min-h-[2.5em]">
+                    {transcript || displayedResponse}
                 </p>
             </div>
             
