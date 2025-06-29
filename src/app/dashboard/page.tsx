@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 
 export default function DashboardPage() {
@@ -26,8 +25,6 @@ export default function DashboardPage() {
     }).format(value).replace('₱', '₱ ');
   };
 
-  const isProfitPositive = data.netProfit >= 0;
-
   return (
     <div className="flex flex-col h-screen bg-background text-foreground font-sans">
       <main className="flex-1 px-4 py-6 space-y-6 overflow-y-auto no-scrollbar pb-28">
@@ -42,25 +39,22 @@ export default function DashboardPage() {
             </Tabs>
         </div>
 
-        <Card className="w-full bg-primary/5 border-primary/20 shadow-lg rounded-3xl">
+        <Card className="w-full bg-gradient-to-br from-primary to-blue-800 text-primary-foreground border-none shadow-xl rounded-3xl">
           <CardContent className="p-6 flex flex-col items-center">
-            <p className="text-sm font-medium text-primary/80 tracking-widest">NET PROFIT</p>
-            <p className={cn(
-              "text-6xl font-bold my-2 tracking-tighter",
-              isProfitPositive ? 'text-green-600' : 'text-destructive'
-            )}>
+            <p className="text-sm font-medium text-primary-foreground/80 tracking-widest">NET PROFIT</p>
+            <p className="text-6xl font-bold my-2 tracking-tighter">
               {formatCurrency(data.netProfit)}
             </p>
             
-            <div className="w-full border-t border-primary/10 my-4"></div>
+            <div className="w-full border-t border-primary-foreground/20 my-4"></div>
 
             <div className="grid grid-cols-2 gap-4 w-full text-center">
               <div>
-                <p className="text-sm text-muted-foreground">Income</p>
+                <p className="text-sm text-primary-foreground/80">Income</p>
                 <p className="text-2xl font-semibold">{formatCurrency(data.income)}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Expenses</p>
+                <p className="text-sm text-primary-foreground/80">Expenses</p>
                 <p className="text-2xl font-semibold">{formatCurrency(data.expenses)}</p>
               </div>
             </div>
