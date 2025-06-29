@@ -58,7 +58,7 @@ export default function MeetGabiPage() {
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         <Button asChild className="w-full bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900">
-          <Link href="/role-selection">
+          <Link href="/auth">
             Let's Get Started!
             <ArrowRight className="ml-2" />
           </Link>
