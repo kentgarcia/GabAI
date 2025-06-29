@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Bot, FileText, ArrowRight, BarChart3, Lightbulb } from 'lucide-react';
 
@@ -41,14 +41,16 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
 
 export default function ProcessingPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get('from');
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push('/dashboard');
-    }, 3500); // 3.5 seconds for the animation to play out a bit
+      router.push(`/first-look?from=${from || 'seller'}`);
+    }, 3500);
 
     return () => clearTimeout(timer);
-  }, [router]);
+  }, [router, from]);
 
   return (
     <main className="flex flex-col flex-grow justify-between p-6 text-foreground overflow-hidden">

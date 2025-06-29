@@ -1,11 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
-import { TrendingUp, Crown, ArrowRight } from 'lucide-react';
+import { TrendingUp, Crown } from 'lucide-react';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
-import { Button } from '@/components/ui/button';
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -199,22 +197,6 @@ export default function DashboardPage() {
           </motion.div>
         </motion.div>
       </div>
-      <motion.div
-        className="p-6 border-t border-border"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-      >
-        <Button
-          asChild
-          className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90"
-        >
-          <Link href="/dashboard">
-            Let's Go!
-            <ArrowRight className="ml-2" />
-          </Link>
-        </Button>
-      </motion.div>
     </div>
   );
 }

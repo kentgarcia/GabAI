@@ -116,7 +116,7 @@ export default function LogIncomePage() {
        >
         <div className="space-y-3">
              <Button asChild className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90">
-                <Link href="/processing">
+                <Link href="/processing?from=freelancer">
                     + Log Income
                 </Link>
              </Button>
