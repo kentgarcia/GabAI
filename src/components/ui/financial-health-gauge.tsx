@@ -31,7 +31,7 @@ export function FinancialHealthGauge({ score, maxScore, status, trend }: Financi
       : 'stroke-red-500';
 
   return (
-    <div className="relative flex h-48 w-48 items-center justify-center">
+    <div className="relative flex h-40 w-40 items-center justify-center">
       <svg className="h-full w-full" viewBox="0 0 100 100">
         {/* Background Circle */}
         <circle
@@ -59,12 +59,12 @@ export function FinancialHealthGauge({ score, maxScore, status, trend }: Financi
       </svg>
       <div className="absolute flex flex-col items-center justify-center">
         <div className="flex items-baseline">
-          <p className={cn('text-4xl font-bold', scoreColor)}>
+          <p className={cn('text-3xl font-bold', scoreColor)}>
             {score}
           </p>
           <p className="text-sm text-muted-foreground">/ {maxScore}</p>
         </div>
-        <p className={cn('text-lg font-semibold', scoreColor)}>{status}</p>
+        <p className={cn('text-base font-semibold', scoreColor)}>{status}</p>
         <div className="mt-1 flex items-center text-xs text-muted-foreground">
           <ArrowUp className={cn(
               'mr-1 h-3 w-3',
