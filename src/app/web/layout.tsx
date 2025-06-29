@@ -74,7 +74,7 @@ export default function WebLayout({ children }: { children: React.ReactNode }) {
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                              <Link href="/web/actions/invoice">
-                                <SidebarMenuButton tooltip="Invoices">
+                                <SidebarMenuButton tooltip="Invoices" isActive={pathname.startsWith('/web/actions/invoice')}>
                                     <FileText />
                                     <span>Invoices</span>
                                 </SidebarMenuButton>
@@ -109,7 +109,7 @@ export default function WebLayout({ children }: { children: React.ReactNode }) {
                 </SidebarGroup>
                 <SidebarSeparator />
                 <SidebarGroup>
-                    <SidebarGroupLabel>User & App Controls</SidebarGroupLabel>
+                    <SidebarGroupLabel>User &amp; App Controls</SidebarGroupLabel>
                     <SidebarMenu>
                         <SidebarMenuItem>
                             <Link href="/settings">

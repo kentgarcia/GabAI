@@ -9,7 +9,7 @@ const actions = [
   { href: "/web/actions/log", icon: ArrowUp, title: "Log Income", description: "Quickly add a payment from a client or a manual sale." },
   { href: "/web/actions/log", icon: ArrowDown, title: "Log Expense", description: "Record a business expense to keep your books accurate." },
   { href: "/web/actions/upload", icon: Camera, title: "Scan & Upload Receipts", description: "Upload multiple receipts or documents at once for Gabi to process." },
-  { href: "/web/actions/invoice", icon: FileText, title: "Create an Invoice", description: "Bill a client with a professional, trackable invoice." },
+  { href: "/web/actions/invoice/new", icon: FileText, title: "Create an Invoice", description: "Bill a client with a professional, trackable invoice." },
   { href: "/web/actions/payment-link", icon: LinkIcon, title: "Generate a Payment Link", description: "Create a secure link to accept card payments.", isPro: true },
 ];
 
