@@ -80,6 +80,7 @@ export default function RoleSelectionPage() {
                       <p className="font-semibold">{role.label}</p>
                       {role.description && (
                         <p className="text-sm opacity-70">{role.description}</p>
+
                       )}
                     </div>
                   </CardContent>
@@ -117,7 +118,7 @@ export default function RoleSelectionPage() {
               className="w-full bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900 disabled:bg-gray-300 disabled:cursor-not-allowed"
               disabled={!selectedRole}
             >
-              <Link href="/dashboard">
+              <Link href="/sync-data">
                 Continue
                 <ArrowRight className="ml-2" />
               </Link>
