@@ -33,7 +33,7 @@ const reportOptions = [
     icon: FileText,
     title: 'Profit & Loss Statement (P&L)',
     description: 'For business health checks & loan applications.',
-    href: '#',
+    href: '/reports/generate/pnl',
   },
   {
     icon: Landmark,
@@ -291,7 +291,7 @@ export default function ReportsPage() {
                           <motion.div whileTap={{ scale: 0.98 }}>
                               <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
                               <CardContent className="p-4 flex items-center gap-4">
-                                  <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
+                                  <div className="w-12 h-12 bg-[#131313] rounded-xl flex items-center justify-center flex-shrink-0">
                                   <option.icon className="w-6 h-6 text-primary-foreground" />
                                   </div>
                                   <div className="flex-grow">
