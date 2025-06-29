@@ -4,25 +4,10 @@
  * @fileOverview A Gabi AI chat agent.
  *
  * - gabiChat - A function that handles the AI chat interaction.
- * - GabiChatMessage - The type for a single chat message.
- * - GabiChatInput - The input type for the gabiChat function.
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'zod';
-
-export const GabiChatMessageSchema = z.object({
-  role: z.enum(['user', 'model']),
-  content: z.string(),
-});
-export type GabiChatMessage = z.infer<typeof GabiChatMessageSchema>;
-
-export const GabiChatInputSchema = z.object({
-  messages: z.array(GabiChatMessageSchema),
-  monthlyIncome: z.number(),
-  taxPreference: z.string().optional(),
-});
-export type GabiChatInput = z.infer<typeof GabiChatInputSchema>;
+import { GabiChatInput, GabiChatInputSchema } from '@/ai/types';
 
 export async function gabiChat(
   input: GabiChatInput
