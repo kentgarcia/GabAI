@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
   { href: '/reports', icon: FileText, label: 'Reports' },
-  { href: '/log-income', icon: Plus, label: 'Add' },
+  { href: '/add', icon: Plus, label: 'Add' },
   { href: '/chat', icon: Bot, label: 'Gabi' },
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
@@ -21,11 +21,7 @@ export function AppFooter() {
       <div className="bg-black rounded-full h-16 flex justify-around items-center shadow-lg">
         {navItems.map((item) => {
           const isActive = item.href !== '#' && (pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href)));
-          if (pathname === '/' && item.href === '/dashboard') {
-            // This is a temp fix until the root page is removed.
-          }
-
-
+          
           return (
             <Link
               key={item.label}

@@ -1,16 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { format } from "date-fns"
-import { Calendar as CalendarIcon, Bot, ArrowRight } from 'lucide-react';
+import { Calendar as CalendarIcon, Bot, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -48,9 +50,28 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
 
 export default function LogIncomePage() {
     const [date, setDate] = useState<Date>();
+    const router = useRouter();
+    const { toast } = useToast();
+
+    const handleLogIncome = () => {
+        toast({
+            title: "✅ Income Logged!",
+            description: "Your transaction has been added to the dashboard.",
+        });
+        router.push('/dashboard');
+    }
 
   return (
     <main className="flex flex-col flex-grow p-6 text-foreground">
+        <header className="flex items-center gap-2 mb-4 -ml-2">
+            <Button asChild variant="ghost" size="icon">
+                <Link href="/add">
+                    <ArrowLeft />
+                </Link>
+            </Button>
+            <h1 className="text-2xl font-bold">Log Income</h1>
+        </header>
+
       <div className="flex-grow flex flex-col justify-center">
         <motion.div
           className="w-full"
@@ -58,21 +79,13 @@ export default function LogIncomePage() {
           initial="hidden"
           animate="visible"
         >
-            <ChatBubble>
-                <p>Got it. Let's log your first-ever project in GabAI to see it in action. Let's start with a recent one!</p>
-            </ChatBubble>
-
-            <motion.div variants={itemVariants} className='text-center'>
-                 <h1 className="text-3xl font-bold mb-8">Log your first client payment</h1>
-            </motion.div>
-
             <motion.div variants={itemVariants} className="space-y-6">
                 <div className="space-y-2">
-                    <Label htmlFor="client-name">Client Name</Label>
+                    <Label htmlFor="client-name">Client Name / Payer</Label>
                     <Input id="client-name" placeholder="e.g., Awesome Client Inc." className="bg-background/30 backdrop-blur-md border" />
                 </div>
                  <div className="space-y-2">
-                    <Label htmlFor="project">Project/Service</Label>
+                    <Label htmlFor="project">Project/Service/Item</Label>
                     <Input id="project" placeholder="e.g., Logo Design Package" className="bg-background/30 backdrop-blur-md border" />
                 </div>
                  <div className="space-y-2">
@@ -114,18 +127,9 @@ export default function LogIncomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
        >
-        <div className="space-y-3">
-             <Button asChild className="w-full bg-black text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-black/90">
-                <Link href="/processing?from=freelancer">
-                    + Log Income
-                </Link>
-             </Button>
-             <Button asChild variant="ghost" className="w-full h-14 text-lg font-semibold rounded-full text-foreground hover:bg-foreground/10">
-                <Link href="/dashboard">
-                    I'll do this later
-                </Link>
-             </Button>
-        </div>
+         <Button onClick={handleLogIncome} className="w-full bg-black text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-black/90">
+            + Log Income
+         </Button>
       </motion.div>
     </main>
   );
