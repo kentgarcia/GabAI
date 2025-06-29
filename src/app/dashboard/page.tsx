@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bot, Gift, Home, Trophy, Bitcoin, ArrowRight, Package, Briefcase, ShoppingCart, Truck } from 'lucide-react';
+import { Bot, Gift, Home, Trophy, Bitcoin, ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -135,14 +135,45 @@ export default function DashboardPage() {
 
         <div className="space-y-4">
             <div className="flex justify-between items-center">
-                <h2 className="font-bold text-lg">Recent Transactions</h2>
+                <h2 className="font-bold text-lg">Recent Activity</h2>
                 <Link href="#" className="text-sm text-muted-foreground flex items-center gap-1 hover:text-primary">
                 See all <ArrowRight className="w-4 h-4" />
                 </Link>
             </div>
-            <div className="text-center py-10 bg-background/40 backdrop-blur-lg rounded-2xl border border-border/10">
-                <p className="text-muted-foreground">No recent transactions yet.</p>
-            </div>
+            <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                <CardContent className="p-4 space-y-4">
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center">
+                            <TrendingUp className="w-5 h-5 text-emerald-500" />
+                        </div>
+                        <div className="flex-grow">
+                            <p className="font-semibold">Client Payment</p>
+                            <p className="text-sm text-muted-foreground">Today</p>
+                        </div>
+                        <p className="font-semibold text-lg text-emerald-500">+ ₱5,000</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center">
+                            <TrendingDown className="w-5 h-5 text-red-500" />
+                        </div>
+                        <div className="flex-grow">
+                            <p className="font-semibold">Internet Bill</p>
+                            <p className="text-sm text-muted-foreground">Yesterday</p>
+                        </div>
+                        <p className="font-semibold text-lg text-red-500">- ₱799</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center">
+                            <TrendingUp className="w-5 h-5 text-emerald-500" />
+                        </div>
+                        <div className="flex-grow">
+                            <p className="font-semibold">Shopee Payout</p>
+                            <p className="text-sm text-muted-foreground">2 days ago</p>
+                        </div>
+                        <p className="font-semibold text-lg text-emerald-500">+ ₱1,250</p>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
       </main>
 
