@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 const settingsCategories = [
     { id: 'profile', label: 'My Profile', icon: User },
@@ -48,8 +49,8 @@ const SettingsSidebar = ({ activeSection, setActiveSection }: { activeSection: s
     </aside>
 );
 
-const SectionCard = ({ title, description, children }: { title: string, description?: string, children: React.ReactNode }) => (
-    <Card className="bg-background/40 backdrop-blur-lg border-border/10 rounded-xl">
+const SectionCard = ({ title, description, children, className }: { title: string, description?: string, children: React.ReactNode, className?: string }) => (
+    <Card className={cn("bg-background/40 backdrop-blur-lg border-border/10 rounded-xl", className)}>
         <CardHeader>
             <CardTitle>{title}</CardTitle>
             {description && <CardDescription>{description}</CardDescription>}
@@ -60,38 +61,117 @@ const SectionCard = ({ title, description, children }: { title: string, descript
     </Card>
 );
 
-const ProfileSection = () => (
-    <div className="space-y-6">
-        <SectionCard title="My Profile">
-            <div className="space-y-4">
-                 <div className="flex items-center gap-4">
-                    <Avatar className="w-16 h-16">
-                        <AvatarImage src="https://avatar.iran.liara.run/public/25" />
-                        <AvatarFallback>JD</AvatarFallback>
-                    </Avatar>
-                    <Button variant="outline"><Upload className="mr-2" /> Change Photo</Button>
-                 </div>
-                 <div className="grid grid-cols-2 gap-4">
-                     <div className="space-y-1.5">
-                        <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" defaultValue="Juan" />
-                    </div>
-                    <div className="space-y-1.5">
-                        <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" defaultValue="dela Cruz" />
-                    </div>
-                 </div>
-                 <div className="space-y-1.5">
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" defaultValue="juan.delacruz@email.com" disabled />
+const ProfileSection = () => {
+    const [showPasswordFields, setShowPasswordFields] = useState(false);
+
+    return (
+        <div className="space-y-6">
+            <SectionCard title="Personal Details">
+                <div className="space-y-6">
+                     <div className="flex items-center gap-4">
+                        <Avatar className="w-20 h-20">
+                            <AvatarImage src="https://avatar.iran.liara.run/public/25" />
+                            <AvatarFallback>JD</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col gap-2">
+                             <Button variant="outline"><Upload className="mr-2" /> Upload New Picture</Button>
+                             <Button variant="ghost" className="text-muted-foreground">Remove</Button>
+                        </div>
+                     </div>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <div className="space-y-1.5">
+                            <Label htmlFor="firstName">First Name</Label>
+                            <Input id="firstName" defaultValue="Juan" />
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="lastName">Last Name</Label>
+                            <Input id="lastName" defaultValue="dela Cruz" />
+                        </div>
+                     </div>
                 </div>
-            </div>
-            <div className="flex justify-end mt-6">
-                 <Button>Save Profile</Button>
-            </div>
-        </SectionCard>
-    </div>
-);
+                <div className="flex justify-end mt-6">
+                     <Button>Save Changes</Button>
+                </div>
+            </SectionCard>
+            <SectionCard title="Account & Login">
+                <div className="space-y-6">
+                     <div className="space-y-1.5">
+                        <Label htmlFor="email">Email Address</Label>
+                        <div className="flex items-center gap-4">
+                             <Input id="email" type="email" defaultValue="juan.delacruz@email.com" disabled className="flex-grow" />
+                             <Button variant="link" className="p-0 h-auto">Change Email</Button>
+                        </div>
+                    </div>
+                    <div className="space-y-4">
+                        <Label>Password</Label>
+                        {!showPasswordFields && <Button variant="outline" onClick={() => setShowPasswordFields(true)}>Change Password</Button>}
+                        {showPasswordFields && (
+                            <div className="p-4 border rounded-lg space-y-4">
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="currentPassword">Current Password</Label>
+                                    <Input id="currentPassword" type="password" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="newPassword">New Password</Label>
+                                    <Input id="newPassword" type="password" />
+                                </div>
+                                 <div className="space-y-1.5">
+                                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                                    <Input id="confirmPassword" type="password" />
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                     <Button variant="ghost" onClick={() => setShowPasswordFields(false)}>Cancel</Button>
+                                     <Button>Update Password</Button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                     <div className="space-y-2">
+                        <Label>Two-Factor Authentication (2FA)</Label>
+                        <div className="flex items-center gap-4 p-3 border rounded-lg">
+                            <p className="text-sm text-muted-foreground flex-grow">Status: <span className="font-semibold text-foreground">Disabled</span></p>
+                            <Button variant="outline">Enable 2FA</Button>
+                        </div>
+                    </div>
+                </div>
+            </SectionCard>
+            <SectionCard title="Account Actions" className="border-destructive/50">
+                <div className="space-y-6">
+                     <div>
+                        <h4 className="font-semibold">Export All My Data</h4>
+                        <p className="text-sm text-muted-foreground mb-2">Request a complete export of your financial data (transactions, invoices, etc.) in a machine-readable format.</p>
+                        <Button variant="outline">Request Data Export</Button>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold text-destructive">Delete Account</h4>
+                        <p className="text-sm text-muted-foreground mb-2">This action is permanent and cannot be undone. All your financial data will be erased from GabAI.</p>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="destructive">Delete My Account</Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <div className="py-2">
+                                     <Label htmlFor="passwordConfirm" className="text-destructive">To confirm, please type your password</Label>
+                                     <Input id="passwordConfirm" type="password" className="mt-1 border-destructive focus-visible:ring-destructive" />
+                                </div>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction className="bg-destructive hover:bg-destructive/90">Delete Account</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
+                </div>
+            </SectionCard>
+        </div>
+    );
+};
 
 const BusinessDetailsSection = () => (
      <div className="space-y-6">
@@ -248,31 +328,42 @@ const UsersSection = () => (
         </SectionCard>
     </div>
 );
-const SecuritySection = () => (
-    <div className="space-y-6">
-        <SectionCard title="Change Password">
-            <div className="space-y-4">
-                <div className="space-y-1.5">
-                    <Label htmlFor="currentPassword">Current Password</Label>
-                    <Input id="currentPassword" type="password" />
+
+const SecuritySection = () => {
+    const [showPasswordFields, setShowPasswordFields] = useState(false);
+    
+    return (
+        <div className="space-y-6">
+            <SectionCard title="Change Password">
+                 <div className="space-y-4">
+                        {!showPasswordFields && <Button variant="outline" onClick={() => setShowPasswordFields(true)}>Change Password</Button>}
+                        {showPasswordFields && (
+                            <div className="space-y-4">
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="currentPassword">Current Password</Label>
+                                    <Input id="currentPassword" type="password" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <Label htmlFor="newPassword">New Password</Label>
+                                    <Input id="newPassword" type="password" />
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                     <Button variant="ghost" onClick={() => setShowPasswordFields(false)}>Cancel</Button>
+                                     <Button>Update Password</Button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+            </SectionCard>
+            <SectionCard title="Two-Factor Authentication (2FA)">
+                <div className="flex items-center gap-4">
+                    <p className="text-muted-foreground flex-grow">Add an extra layer of security to your account.</p>
+                    <Button variant="outline">Enable 2FA</Button>
                 </div>
-                 <div className="space-y-1.5">
-                    <Label htmlFor="newPassword">New Password</Label>
-                    <Input id="newPassword" type="password" />
-                </div>
-            </div>
-            <div className="flex justify-end mt-6">
-                 <Button>Update Password</Button>
-            </div>
-        </SectionCard>
-        <SectionCard title="Two-Factor Authentication (2FA)">
-            <div className="flex items-center gap-4">
-                <p className="text-muted-foreground flex-grow">Add an extra layer of security to your account.</p>
-                <Button variant="outline">Enable 2FA</Button>
-            </div>
-        </SectionCard>
-    </div>
-);
+            </SectionCard>
+        </div>
+    );
+}
 
 export default function WebSettingsPage() {
     const [activeSection, setActiveSection] = useState('profile');
