@@ -1,191 +1,104 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, animate } from 'framer-motion';
-import { TrendingUp, Bot, Plus, Coins } from 'lucide-react';
-
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-
-const AnimatedNumber = ({ value }: { value: number }) => {
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    const previousValue = parseFloat(node.textContent?.replace(/[^0-9.-]+/g,"") || '0');
-
-    const controls = animate(previousValue, value, {
-      duration: 0.7,
-      ease: 'easeOut',
-      onUpdate(latest) {
-        node.textContent = `₱${latest.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      },
-    });
-
-    return () => controls.stop();
-  }, [value]);
-
-  return <span ref={ref}>₱{value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>;
-};
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { ArrowDownToLine, ArrowRight, ArrowUpRight, CreditCard, Euro, Home, LineChart, Plus, Wallet as WalletIcon } from "lucide-react";
+import Link from 'next/link';
 
 export default function DashboardPage() {
-  const [isClient, setIsClient] = useState(false);
-
-  const [grossIncome, setGrossIncome] = useState(45231);
-  const [expenses, setExpenses] = useState(0);
-  
-  const [transactions, setTransactions] = useState([
-    { type: 'income', description: 'Initial Shopee Report', amount: 45231, icon: TrendingUp, color: 'text-emerald-500' },
-  ]);
-
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
-  const [expenseDescription, setExpenseDescription] = useState('');
-  const [expenseAmount, setExpenseAmount] = useState('');
-  
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const handleAddExpenseClick = () => {
-    setIsAddExpenseOpen(true);
-  }
-  
-  const handleSaveExpense = () => {
-    const amount = parseFloat(expenseAmount);
-    if (!expenseDescription || !amount || isNaN(amount)) return;
-
-    const newExpense = {
-        type: 'expense',
-        description: expenseDescription,
-        amount: amount,
-        icon: Coins,
-        color: 'text-rose-500'
-    };
-    
-    // @ts-ignore
-    setTransactions(prev => [newExpense, ...prev]);
-    setExpenses(prev => prev + amount);
-    setIsAddExpenseOpen(false);
-    setExpenseDescription('');
-    setExpenseAmount('');
-  }
-  
-  const netProfit = grossIncome - expenses;
-  if (!isClient) return null; // Prevents hydration mismatch
-
   return (
-    <div className="relative flex flex-1 flex-col h-full">
-      <div className="flex-1 space-y-4 p-4 md:p-6 overflow-y-auto no-scrollbar">
-          <div className="space-y-1">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Your Dashboard</h2>
-            <p className="text-sm md:text-base text-muted-foreground">Here's your financial overview.</p>
+    <div className="flex flex-col h-screen bg-neutral-100 text-neutral-800 font-sans">
+      <header className="p-4 flex justify-between items-center flex-shrink-0">
+        <div className="flex items-center gap-2">
+          <Button className="bg-indigo-900 text-white rounded-full hover:bg-indigo-800 px-4">
+            <WalletIcon className="w-4 h-4 mr-2" />
+            Wallet
+          </Button>
+          <Button variant="ghost" className="rounded-full p-2">
+            <LineChart className="w-5 h-5" />
+          </Button>
+        </div>
+        <div className="flex items-center gap-2">
+          <Avatar className="h-9 w-9">
+            <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="person face" />
+            <AvatarFallback>U</AvatarFallback>
+          </Avatar>
+          <Button size="icon" variant="ghost" className="rounded-full bg-white shadow-sm w-9 h-9">
+            <Plus className="w-5 h-5" />
+          </Button>
+        </div>
+      </header>
+
+      <main className="flex-1 px-4 py-2 space-y-6 overflow-y-auto no-scrollbar">
+        <div className="text-left">
+          <p className="text-sm text-neutral-500">Get started with PayPal</p>
+          <h1 className="text-3xl font-bold mt-1">Your Balance</h1>
+          <div className="flex items-end gap-2 mt-2">
+            <p className="text-5xl font-bold tracking-tight">$14,567</p>
+            <p className="text-3xl font-bold text-neutral-400">.22</p>
+            <Badge className="bg-emerald-100 text-emerald-800 text-sm font-semibold border border-emerald-200 hover:bg-emerald-200">
+              2%
+            </Badge>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="col-span-2 bg-yellow-400 rounded-2xl p-4 flex flex-col justify-between h-40">
+            <div className="bg-black/10 rounded-full w-12 h-12 flex items-center justify-center">
+                <ArrowUpRight className="text-neutral-800 w-6 h-6" />
+            </div>
+            <div className="flex justify-between items-end">
+                <p className="text-lg font-semibold text-neutral-800">Send money</p>
+                <Button size="icon" className="rounded-full bg-neutral-800 text-white w-9 h-9 shrink-0">
+                    <ArrowRight className="w-5 h-5" />
+                </Button>
+            </div>
           </div>
 
-          <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
-            <div className="rounded-xl bg-violet-400/20 backdrop-blur-lg border border-violet-400/30 p-4 space-y-1">
-                <p className="text-xs sm:text-sm font-medium text-violet-900">Total Income</p>
-                <p className="text-xl sm:text-2xl font-bold text-violet-950">₱{grossIncome.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+          <div className="bg-indigo-900 text-white rounded-2xl p-4 flex flex-col justify-between h-48">
+             <div className="bg-white/20 rounded-full w-12 h-12 flex items-center justify-center">
+                <ArrowDownToLine className="w-6 h-6" />
             </div>
-            <div className="rounded-xl bg-orange-400/20 backdrop-blur-lg border border-orange-400/30 p-4 space-y-1">
-                <p className="text-xs sm:text-sm font-medium text-orange-900">Total Expenses</p>
-                <p className="text-xl sm:text-2xl font-bold text-orange-950">₱{expenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-            </div>
-            <div 
-                className="rounded-xl bg-emerald-400/20 backdrop-blur-lg border border-emerald-400/30 p-4 space-y-1 col-span-2 md:col-span-1"
-            >
-                <p className="text-xs sm:text-sm font-medium text-emerald-900">Net Profit</p>
-                <p className="text-xl sm:text-2xl font-bold text-emerald-950">
-                    <AnimatedNumber value={netProfit} />
-                </p>
+             <div className="flex justify-between items-end">
+                <p className="text-lg font-semibold">Request money</p>
+                <Button size="icon" className="rounded-full bg-white text-indigo-900 w-9 h-9 shrink-0 hover:bg-neutral-200">
+                    <ArrowRight className="w-5 h-5" />
+                </Button>
             </div>
           </div>
-          
-          <div className="rounded-xl bg-background/30 backdrop-blur-lg border p-4">
-              <h3 className="text-base font-semibold mb-4">Recent Transactions</h3>
-              <ul className="space-y-4">
-                  {transactions.map((transaction, index) => (
-                      <li key={index} className="flex items-center gap-4">
-                          <div className={cn("flex-shrink-0 bg-foreground/10 p-2 rounded-full", transaction.type === 'income' ? 'bg-emerald-500/10' : 'bg-rose-500/10' )}>
-                              <transaction.icon className={cn("h-5 w-5", transaction.color)} />
-                          </div>
-                          <div className="flex-grow">
-                              <p className="font-semibold text-sm">{transaction.description}</p>
-                              <p className="text-xs text-muted-foreground">{transaction.type}</p>
-                          </div>
-                          <p className={cn("font-semibold text-sm", transaction.color)}>
-                              {transaction.type === 'expense' && '-'}₱{transaction.amount.toLocaleString()}
-                          </p>
-                      </li>
-                  ))}
-              </ul>
-          </div>
-      </div>
 
-      <div className="absolute bottom-6 right-6 flex flex-col items-center gap-4 z-30">
-        <motion.div 
-            className="p-3 bg-accent/20 rounded-full cursor-pointer"
-            whileHover={{ scale: 1.1 }}
-        >
-            <Bot className="h-7 w-7 text-accent" />
-        </motion.div>
-        
-        <Button 
-            onClick={handleAddExpenseClick}
-            className="rounded-full w-16 h-16 bg-black text-primary-foreground shadow-lg"
-            aria-label="Add Transaction"
-        >
-            <Plus className="h-8 w-8" />
-        </Button>
-      </div>
-
-      <Dialog open={isAddExpenseOpen} onOpenChange={setIsAddExpenseOpen}>
-        <DialogContent className="sm:max-w-md bg-background/80 backdrop-blur-md border">
-          <DialogHeader>
-            <DialogTitle>Add an Expense</DialogTitle>
-            <DialogDescription>
-              Track your business costs to see your true profit.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="expense-description">Description</Label>
-              <Input 
-                id="expense-description" 
-                placeholder="e.g. Product Cost, Internet Bill" 
-                className="bg-background/50"
-                value={expenseDescription}
-                onChange={(e) => setExpenseDescription(e.target.value)}
-              />
+          <div className="bg-teal-500 text-white rounded-2xl p-4 flex flex-col justify-between h-48">
+            <div className="bg-white/20 rounded-full w-12 h-12 flex items-center justify-center">
+                <CreditCard className="w-6 h-6" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="expense-amount">Amount (PHP)</Label>
-              <Input 
-                id="expense-amount" 
-                type="number" 
-                placeholder="e.g. 5000" 
-                className="bg-background/50"
-                value={expenseAmount}
-                onChange={(e) => setExpenseAmount(e.target.value)}
-              />
+            <div className="flex justify-between items-end">
+                <p className="text-lg font-semibold">Add new card</p>
+                <Button size="icon" className="rounded-full bg-white text-teal-500 w-9 h-9 shrink-0 hover:bg-neutral-200">
+                    <ArrowRight className="w-5 h-5" />
+                </Button>
             </div>
           </div>
-          <DialogFooter>
-            <Button 
-              type="button" 
-              className="w-full bg-black text-primary-foreground"
-              onClick={handleSaveExpense}
-            >
-              Save Expense
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        </div>
+      </main>
+
+      <footer className="bg-white/95 backdrop-blur-sm rounded-t-3xl shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.05)] p-2 flex-shrink-0">
+        <nav className="flex justify-around items-center h-16">
+          <Link href="#" className="flex flex-col items-center text-indigo-900 font-semibold">
+            <Home className="w-6 h-6 mb-1" />
+            <span className="text-xs">Home</span>
+          </Link>
+          <Link href="#" className="flex flex-col items-center text-neutral-400 hover:text-indigo-900">
+            <Euro className="w-6 h-6 mb-1" />
+            <span className="text-xs">Payments</span>
+          </Link>
+          <Link href="#" className="flex flex-col items-center text-neutral-400 hover:text-indigo-900">
+            <WalletIcon className="w-6 h-6 mb-1" />
+            <span className="text-xs">Wallet</span>
+          </Link>
+        </nav>
+      </footer>
     </div>
   );
 }
