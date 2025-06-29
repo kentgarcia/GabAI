@@ -19,7 +19,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased bg-muted">
+      <body className="font-body antialiased bg-background">
         <div className="relative mx-auto flex min-h-screen max-w-sm flex-col border-x bg-background shadow-2xl">
           {children}
         </div>
