@@ -1,6 +1,9 @@
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const SparkleIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 28 28" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -38,41 +41,99 @@ const OaletLogo = () => (
 );
 
 export default function OnboardingPage() {
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.2 
+      }
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { type: 'spring', stiffness: 100, damping: 12 }
+    },
+  };
+
+  const titleLines = ["Easy ways to", "manage your", "finances"];
+
   return (
     <main className="bg-white text-black min-h-screen flex flex-col justify-end p-6 relative overflow-hidden">
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#D9BFFF]/50 rounded-full" />
-        <div className="absolute top-8 -right-24 w-48 h-48 bg-[#AFFFDF]/50 rounded-full" />
-        
+      {/* Background Elements */}
+      <motion.div 
+        className="absolute -top-12 -right-12 w-48 h-48 bg-[#D9BFFF]/50 rounded-full" 
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, delay: 0, ease: "easeOut" }}
+      />
+      <motion.div 
+        className="absolute top-8 -right-24 w-48 h-48 bg-[#AFFFDF]/50 rounded-full" 
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+      />
+      <motion.div
+        initial={{ opacity: 0, rotate: -30, scale: 0 }}
+        animate={{ opacity: 1, rotate: 0, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
         <SparkleIcon className="absolute top-24 left-8 w-10 h-10 text-black" />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, rotate: 30, scale: 0 }}
+        animate={{ opacity: 1, rotate: 0, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+      >
         <TeardropIcon className="absolute top-28 right-8 w-6 h-9 text-black" />
-        
-        <div className="absolute top-[40%] -left-20">
-            <div className="w-40 h-40 rounded-full border-[24px] border-black"/>
-        </div>
-      </div>
-
-      <div className="relative z-10 flex flex-col items-center w-full">
-        <div className="scale-90">
+      </motion.div>
+      <motion.div 
+        className="absolute top-[40%] -left-20"
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+      >
+        <div className="w-40 h-40 rounded-full border-[24px] border-black"/>
+      </motion.div>
+      
+      {/* Main Content */}
+      <motion.div 
+        className="relative z-10 flex flex-col items-center w-full"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div className="scale-90" variants={itemVariants}>
             <OaletLogo />
-        </div>
-        <div className="text-center w-full mt-4">
+        </motion.div>
+        <motion.div className="text-center w-full mt-4" variants={itemVariants}>
             <h1 className="text-5xl font-bold leading-tight">
-            Easy ways to
-            <br />
-            manage your
-            <br />
-            finances
-            <SparkleIcon className="w-6 h-6 inline-block ml-2 text-black" />
+              {titleLines[0]}<br/>
+              {titleLines[1]}<br/>
+              {titleLines[2]}
+              <motion.span
+                initial={{scale: 0, rotate: -180}}
+                animate={{scale: 1, rotate: 0}}
+                transition={{delay: 0.8, type: 'spring', stiffness: 150}}
+                className="inline-block"
+              >
+                <SparkleIcon className="w-6 h-6 inline-block ml-2 text-black" />
+              </motion.span>
             </h1>
-            <Button asChild className="w-full mt-8 bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900">
-            <Link href="/dashboard">
-                Get Started
-                <ArrowRight className="ml-2" />
-            </Link>
-            </Button>
-        </div>
-      </div>
+        </motion.div>
+        <motion.div variants={itemVariants} className="w-full">
+          <Button asChild className="w-full mt-8 bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900">
+          <Link href="/dashboard">
+              Get Started
+              <ArrowRight className="ml-2" />
+          </Link>
+          </Button>
+        </motion.div>
+      </motion.div>
     </main>
   );
 }
