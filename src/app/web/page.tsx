@@ -9,19 +9,23 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarSeparator,
   SidebarInset,
   SidebarFooter,
 } from '@/components/ui/sidebar';
 import {
   Home,
   BarChart2,
-  Landmark,
-  Mailbox,
-  CircleHelp,
-  SlidersHorizontal,
+  PlusCircle,
+  FileText,
+  BookOpen,
+  Sparkles,
+  Plug,
   Settings,
+  User,
   DollarSign,
-  Users,
   Briefcase,
   CheckCircle,
   AlertTriangle,
@@ -128,54 +132,75 @@ export default function WebAppPage() {
                  <h2 className="text-xl font-bold p-2 group-data-[collapsible=icon]:hidden">GabAI</h2>
             </SidebarHeader>
             <SidebarContent>
-                 <SidebarMenu>
+                 <SidebarGroup>
+                    <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton tooltip="Dashboard" isActive>
+                                <Home />
+                                <span>Dashboard</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton tooltip="Reports">
+                                <BarChart2 />
+                                <span>Reports</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton tooltip="Actions">
+                                <PlusCircle />
+                                <span>Actions</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton tooltip="Invoices">
+                                <FileText />
+                                <span>Invoices</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton tooltip="Learn">
+                                <BookOpen />
+                                <span>Learn</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarGroup>
+                <SidebarSeparator />
+                <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Home" isActive>
-                            <Home />
-                            <span>Home</span>
+                        <SidebarMenuButton tooltip="Web Gabi">
+                            <Sparkles />
+                            <span>Web Gabi</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Analytics">
-                            <BarChart2 />
-                            <span>Analytics</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Banking">
-                            <Landmark />
-                            <span>Banking</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Messages">
-                            <Mailbox />
-                            <span>Messages</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Help">
-                            <CircleHelp />
-                            <span>Help Center</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Configuration">
-                            <SlidersHorizontal />
-                            <span>Configuration</span>
+                        <SidebarMenuButton tooltip="Web Integrations">
+                            <Plug />
+                            <span>Web Integrations</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Settings">
-                            <Settings />
-                             <span>Settings</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
+                <SidebarGroup>
+                    <SidebarGroupLabel>User & App Controls</SidebarGroupLabel>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton tooltip="Web Settings">
+                                <Settings />
+                                 <span>Web Settings</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton tooltip="Web User Profile">
+                                <User />
+                                 <span>Web User Profile</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarGroup>
             </SidebarFooter>
         </Sidebar>
         <SidebarInset className="p-8 bg-transparent text-foreground">
