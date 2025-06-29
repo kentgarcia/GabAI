@@ -40,7 +40,7 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
         <div className="flex-shrink-0 p-2 bg-accent/20 rounded-full">
             <Bot className="h-6 w-6 text-accent" />
         </div>
-        <div className="bg-foreground/10 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
+        <div className="bg-background/30 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
             {children}
         </div>
     </motion.div>
@@ -69,15 +69,15 @@ export default function LogIncomePage() {
             <motion.div variants={itemVariants} className="space-y-6">
                 <div className="space-y-2">
                     <Label htmlFor="client-name">Client Name</Label>
-                    <Input id="client-name" placeholder="e.g., Awesome Client Inc." className="bg-foreground/10 backdrop-blur-md border-foreground/20" />
+                    <Input id="client-name" placeholder="e.g., Awesome Client Inc." className="bg-background/30 backdrop-blur-md border" />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="project">Project/Service</Label>
-                    <Input id="project" placeholder="e.g., Logo Design Package" className="bg-foreground/10 backdrop-blur-md border-foreground/20" />
+                    <Input id="project" placeholder="e.g., Logo Design Package" className="bg-background/30 backdrop-blur-md border" />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="amount">Amount Received (PHP)</Label>
-                    <Input id="amount" type="number" placeholder="e.g., 10000" className="bg-foreground/10 backdrop-blur-md border-foreground/20" />
+                    <Input id="amount" type="number" placeholder="e.g., 10000" className="bg-background/30 backdrop-blur-md border" />
                 </div>
                 <div className="space-y-2">
                     <Label>Date Received</Label>
@@ -86,7 +86,7 @@ export default function LogIncomePage() {
                         <Button
                             variant={"outline"}
                             className={cn(
-                            "w-full justify-start text-left font-normal bg-foreground/10 backdrop-blur-md border-foreground/20",
+                            "w-full justify-start text-left font-normal bg-background/30 backdrop-blur-md border",
                             !date && "text-muted-foreground"
                             )}
                         >
@@ -94,7 +94,7 @@ export default function LogIncomePage() {
                             {date ? format(date, "PPP") : <span>Pick a date</span>}
                         </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0 bg-background/80 backdrop-blur-md border-white/20">
+                        <PopoverContent className="w-auto p-0 bg-background/80 backdrop-blur-md border">
                         <Calendar
                             mode="single"
                             selected={date}

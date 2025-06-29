@@ -66,7 +66,7 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
         <div className="flex-shrink-0 p-2 bg-accent/20 rounded-full">
             <Bot className="h-6 w-6 text-accent" />
         </div>
-        <div className="bg-foreground/10 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
+        <div className="bg-background/30 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
             {children}
         </div>
     </motion.div>
@@ -148,11 +148,11 @@ export default function RoleSelectionPage() {
                         <Card
                         onClick={() => handleRoleSelect(role.id)}
                         className={cn(
-                            'transition-all duration-200 text-left overflow-hidden border-foreground/20',
+                            'transition-all duration-200 text-left overflow-hidden border',
                             !selectedRole && 'cursor-pointer hover:shadow-md hover:-translate-y-0.5',
                             selectedRole === role.id
                             ? 'bg-primary text-primary-foreground ring-2 ring-offset-2 ring-primary'
-                            : 'bg-foreground/10 backdrop-blur-md',
+                            : 'bg-background/30 backdrop-blur-md',
                             selectedRole && selectedRole !== role.id && 'opacity-50'
                         )}
                         >
@@ -175,7 +175,7 @@ export default function RoleSelectionPage() {
                   <DialogTrigger asChild>
                     <Button variant="link" className="text-muted-foreground text-sm">What if I'm both?</Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md bg-background/80 backdrop-blur-md border border-white/20">
+                  <DialogContent className="sm:max-w-md bg-background/80 backdrop-blur-md border">
                     <DialogHeader>
                       <DialogTitle>No worries!</DialogTitle>
                     </DialogHeader>
@@ -214,11 +214,11 @@ export default function RoleSelectionPage() {
                                     <Card
                                         onClick={() => handleSecondarySelect(option.id)}
                                         className={cn(
-                                            'transition-all duration-200 text-left overflow-hidden border-foreground/20',
+                                            'transition-all duration-200 text-left overflow-hidden border',
                                             !secondarySelection && 'cursor-pointer hover:shadow-md hover:-translate-y-0.5',
                                             secondarySelection === option.id
                                             ? 'bg-primary text-primary-foreground ring-2 ring-offset-2 ring-primary'
-                                            : 'bg-foreground/10 backdrop-blur-md',
+                                            : 'bg-background/30 backdrop-blur-md',
                                             secondarySelection && secondarySelection !== option.id && 'opacity-50'
                                         )}
                                     >

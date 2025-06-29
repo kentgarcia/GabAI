@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from 'framer-motion';
 import { useState } from "react";
 
@@ -28,7 +27,7 @@ const Ripple = ({ ripples }: { ripples: { x: number, y: number, id: number }[] }
       {ripples.map(ripple => (
         <motion.div
           key={ripple.id}
-          className="absolute bg-white/30 rounded-full"
+          className="absolute bg-black/20 rounded-full"
           initial={{ x: ripple.x - 50, y: ripple.y - 50, scale: 0, opacity: 1, width: 100, height: 100 }}
           animate={{ scale: 10, opacity: 0 }}
           transition={{ duration: 0.75, ease: "easeInOut" }}
@@ -93,7 +92,7 @@ export default function OnboardingPage() {
           }}
         >
           <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-            <p className="font-semibold text-accent-foreground/80 text-lg">Your all-in-one financial co-pilot.</p>
+            <p className="font-semibold text-foreground/80 text-lg">Your all-in-one financial co-pilot.</p>
             <h1 className="text-3xl font-bold leading-tight tracking-tighter text-foreground">
               Mula sa sales tracking hanggang sa tax, nandito kami para i-guide ka.
             </h1>
@@ -103,10 +102,10 @@ export default function OnboardingPage() {
             className="flex items-center gap-3"
             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
           >
-            <Button variant="ghost" size="icon" className="w-14 h-14 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl">
+            <Button variant="ghost" size="icon" className="w-14 h-14 bg-background/50 backdrop-blur-lg border rounded-2xl">
                 <AppleIcon className="w-7 h-7" />
             </Button>
-            <Button variant="ghost" size="icon" className="w-14 h-14 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl">
+            <Button variant="ghost" size="icon" className="w-14 h-14 bg-background/50 backdrop-blur-lg border rounded-2xl">
                 <GoogleIcon className="w-6 h-6" />
             </Button>
             <Button asChild className="relative flex-grow h-14 bg-primary text-primary-foreground rounded-2xl overflow-hidden" onClick={handleRipple}>

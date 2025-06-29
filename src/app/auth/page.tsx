@@ -88,21 +88,21 @@ export default function AuthPage() {
           
           <motion.div variants={itemVariants} className="space-y-3">
              <Button variant="outline" className={cn(
-                "w-full h-14 rounded-full text-lg font-semibold border-foreground/20 bg-foreground/10 backdrop-blur-md transition-opacity",
+                "w-full h-14 rounded-full text-lg font-semibold border bg-background/30 backdrop-blur-md transition-opacity",
                 status !== 'idle' && 'opacity-50 cursor-not-allowed'
             )}>
                 <GoogleIcon className="w-6 h-6 mr-3" />
                 Continue with Google
             </Button>
             <Button variant="outline" className={cn(
-                "w-full h-14 rounded-full text-lg font-semibold border-foreground/20 bg-foreground/10 backdrop-blur-md transition-opacity",
+                "w-full h-14 rounded-full text-lg font-semibold border bg-background/30 backdrop-blur-md transition-opacity",
                  status !== 'idle' && 'opacity-50 cursor-not-allowed'
             )}>
                 <AppleIcon className="w-7 h-7 mr-3" />
                 Continue with Apple
             </Button>
              <Button variant="outline" className={cn(
-                "w-full h-14 rounded-full text-lg font-semibold border-foreground/20 bg-foreground/10 backdrop-blur-md transition-all duration-300 overflow-hidden",
+                "w-full h-14 rounded-full text-lg font-semibold border bg-background/30 backdrop-blur-md transition-all duration-300 overflow-hidden",
                 status === 'signing-up' && 'bg-primary text-primary-foreground border-primary',
                 status === 'success' && 'bg-emerald-500 text-white border-emerald-500'
             )}>

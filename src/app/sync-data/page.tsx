@@ -42,7 +42,7 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
         <div className="flex-shrink-0 p-2 bg-accent/20 rounded-full">
             <Bot className="h-6 w-6 text-accent" />
         </div>
-        <div className="bg-foreground/10 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
+        <div className="bg-background/30 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
             {children}
         </div>
     </motion.div>
@@ -92,7 +92,7 @@ export default function SyncDataPage() {
                   Show me how to get this file from Shopee
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] bg-background/80 backdrop-blur-md border-white/20">
+              <DialogContent className="sm:max-w-[425px] bg-background/80 backdrop-blur-md border">
                 <DialogHeader>
                   <DialogTitle>How to get your report</DialogTitle>
                 </DialogHeader>
