@@ -46,6 +46,12 @@ const getGabiResponse = (message: string): string => {
     return "I'm sorry, I didn't quite catch that. Could you try asking in a different way? You can ask about profit, expenses, or creating receipts.";
 };
 
+const sampleCommands = [
+    "What's my profit this month?",
+    "How are my top expenses looking?",
+    "Create a receipt for my client.",
+];
+
 export default function TalkPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -197,7 +203,7 @@ export default function TalkPage() {
             </Button>
         </header>
 
-        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8">
+        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6">
             <Card
                 onClick={handleListen}
                 className={cn(
@@ -236,6 +242,22 @@ export default function TalkPage() {
                   {currentText}
                 </p>
             </Card>
+
+            <AnimatePresence>
+              {status === 'idle' && !displayedResponse && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="w-full max-w-sm"
+                >
+                  <h3 className="text-sm font-semibold text-muted-foreground mb-2">Try saying...</h3>
+                  <ul className="space-y-1.5 text-foreground/80">
+                    {sampleCommands.map(cmd => <li key={cmd}>"{cmd}"</li>)}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
         </div>
     </main>
   );
