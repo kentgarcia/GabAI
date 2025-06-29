@@ -153,6 +153,7 @@ export default function TalkPage() {
             await new Promise(res => setTimeout(res, 1500));
             const gabiResponse = getGabiResponse(trimmedTranscript);
             setAiResponse(gabiResponse);
+            setStatus('speaking');
         } else {
             setStatus('idle');
         }
@@ -171,9 +172,7 @@ export default function TalkPage() {
   }, [hasPermission, toast]);
 
   useEffect(() => {
-    if (aiResponse && status === 'thinking') {
-      setStatus('speaking');
-
+    if (aiResponse && status === 'speaking') {
       let i = 0;
       setDisplayedResponse(''); // Clear previous response before typing
       
