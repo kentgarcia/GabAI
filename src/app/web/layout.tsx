@@ -117,15 +117,15 @@ export default function WebLayout({ children }: { children: React.ReactNode }) {
                     <SidebarGroupLabel>User &amp; App Controls</SidebarGroupLabel>
                     <SidebarMenu>
                         <SidebarMenuItem>
-                            <Link href="/settings">
-                                <SidebarMenuButton tooltip="Settings">
+                            <Link href="/web/settings">
+                                <SidebarMenuButton tooltip="Settings" isActive={pathname.startsWith('/web/settings')}>
                                     <Settings />
                                     <span>Settings</span>
                                 </SidebarMenuButton>
                             </Link>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                             <Link href="/settings/profile">
+                             <Link href="/web/settings">
                                 <SidebarMenuButton tooltip="User Profile">
                                     <User />
                                     <span>User Profile</span>
