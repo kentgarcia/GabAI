@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Bot, Gift, Home, Trophy, Bitcoin, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
 
@@ -48,7 +48,7 @@ export default function DashboardPage() {
                     </div>
                     <p className="font-semibold tracking-wider text-primary-foreground/80">NET PROFIT</p>
                 </div>
-                <Button className="bg-black text-primary-foreground/80 hover:bg-black/90 h-auto px-3 py-1 text-xs rounded-full flex items-center gap-1">
+                <Button className="bg-black text-primary-foreground/80 hover:bg-black/90 h-10 px-3 text-xs rounded-full flex items-center gap-1">
                     More Details <ArrowRight className="w-3 h-3" />
                 </Button>
             </div>
@@ -77,38 +77,41 @@ export default function DashboardPage() {
         <div className="space-y-4">
             <h2 className="font-bold text-lg">This Month's Breakdown</h2>
             <Card className="rounded-2xl border">
-                <CardContent className="p-4 space-y-4">
-                    <div>
-                        <h3 className="text-sm font-semibold text-muted-foreground mb-2">Top Products/Services</h3>
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center text-sm">
-                                <span>Product A</span>
-                                <span className="font-semibold">₱8,000</span>
+                <CardContent className="p-4">
+                    <Tabs defaultValue="products" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2 bg-muted/60 p-1.5 rounded-2xl">
+                            <TabsTrigger value="products" className="rounded-lg">Top Products/Services</TabsTrigger>
+                            <TabsTrigger value="expenses" className="rounded-lg">Top Expenses</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="products" className="mt-4">
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center text-sm">
+                                    <span>Product A</span>
+                                    <span className="font-semibold">₱8,000</span>
+                                </div>
+                                <Progress value={100} />
+                                <div className="flex justify-between items-center text-sm">
+                                    <span>Service B</span>
+                                    <span className="font-semibold">₱6,000</span>
+                                </div>
+                                <Progress value={75} />
                             </div>
-                            <Progress value={100} />
-                            <div className="flex justify-between items-center text-sm">
-                                <span>Service B</span>
-                                <span className="font-semibold">₱6,000</span>
+                        </TabsContent>
+                        <TabsContent value="expenses" className="mt-4">
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center text-sm">
+                                    <span>Product Costs</span>
+                                    <span className="font-semibold">₱4,000</span>
+                                </div>
+                                <Progress value={100} className="[&>div]:bg-destructive" />
+                                <div className="flex justify-between items-center text-sm">
+                                    <span>Shipping Fees</span>
+                                    <span className="font-semibold">₱1,500</span>
+                                </div>
+                                <Progress value={37.5} className="[&>div]:bg-destructive" />
                             </div>
-                            <Progress value={75} />
-                        </div>
-                    </div>
-                    <div className="border-t border-border my-4"></div>
-                    <div>
-                        <h3 className="text-sm font-semibold text-muted-foreground mb-2">Top Expenses</h3>
-                        <div className="space-y-3">
-                             <div className="flex justify-between items-center text-sm">
-                                <span>Product Costs</span>
-                                <span className="font-semibold">₱4,000</span>
-                            </div>
-                            <Progress value={100} className="[&>div]:bg-destructive" />
-                             <div className="flex justify-between items-center text-sm">
-                                <span>Shipping Fees</span>
-                                <span className="font-semibold">₱1,500</span>
-                            </div>
-                            <Progress value={37.5} className="[&>div]:bg-destructive" />
-                        </div>
-                    </div>
+                        </TabsContent>
+                    </Tabs>
                 </CardContent>
             </Card>
         </div>
