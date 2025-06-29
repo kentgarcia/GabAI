@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { DollarSign, TrendingUp, Crown } from 'lucide-react';
+import { TrendingUp, Crown } from 'lucide-react';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 
 const containerVariants = {
@@ -80,7 +80,7 @@ const topProducts = [
 
 export default function DashboardPage() {
   return (
-    <div className="flex-1 space-y-4 p-6 pt-6 bg-muted/40 min-h-screen overflow-y-auto">
+    <div className="flex-1 space-y-4 p-6 pt-6 overflow-y-auto no-scrollbar">
       <motion.div
         className="space-y-6"
         variants={containerVariants}
@@ -98,7 +98,7 @@ export default function DashboardPage() {
               <CardTitle className="text-sm font-medium">
                 Gross Revenue
               </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground font-bold">₱</span>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">₱45,231.89</div>
