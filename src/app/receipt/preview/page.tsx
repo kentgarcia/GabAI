@@ -4,10 +4,11 @@ import { useRef, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
-import { ArrowLeft, Check } from 'lucide-react';
+import { ArrowLeft, Send } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
 
 type BusinessDetails = { name: string; tin: string; address: string; };
 
@@ -24,6 +25,7 @@ export default function ReceiptPreviewPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const receiptRef = useRef<HTMLDivElement>(null);
+    const { toast } = useToast();
 
     const [businessDetails, setBusinessDetails] = useState<BusinessDetails | null>(null);
     const [receiptNumber, setReceiptNumber] = useState('');
@@ -57,35 +59,18 @@ export default function ReceiptPreviewPage() {
 
         try {
             const canvas = await html2canvas(receiptRef.current, { scale: 2 });
-            const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+            const dataUrl = canvas.toDataURL('image/png');
+            
+            localStorage.setItem('receiptImage', dataUrl);
+            router.push('/share');
 
-            if (!blob) {
-                throw new Error("Could not create image blob.");
-            }
-
-            const fileName = `Official_Receipt_${receiptNumber}.png`;
-            const file = new File([blob], fileName, { type: 'image/png' });
-
-            if (navigator.share) {
-                await navigator.share({
-                    title: `Official Receipt ${receiptNumber}`,
-                    text: `Here is the official receipt for ${transaction.project}.`,
-                    files: [file],
-                });
-            } else {
-                // Fallback to download
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = fileName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(link.href);
-            }
         } catch (error) {
-            console.error('Error generating or sharing receipt:', error);
-            // In a real app, you might want to show a toast notification here
-        } finally {
+            console.error('Error generating receipt image:', error);
+            toast({
+                title: "Generation Failed",
+                description: "Could not create the receipt image. Please try again.",
+                variant: "destructive",
+            });
             setIsLoading(false);
         }
     };
@@ -191,8 +176,8 @@ export default function ReceiptPreviewPage() {
                         </>
                     ) : (
                         <>
-                            <Check className="mr-2" />
-                            Generate & Send
+                            <Send className="mr-2" />
+                            Confirm & Send
                         </>
                     )}
                 </Button>
