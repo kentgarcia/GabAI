@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 import { Bot, Gift, Home, Trophy, Bitcoin, ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -90,13 +90,48 @@ const mockData: MockData = {
   },
 };
 
-const pageVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
 };
 
-const transition = { type: 'tween', ease: 'anticipate', duration: 0.5 };
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100 },
+  },
+};
+
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('en-PH', {
+    style: 'currency',
+    currency: 'PHP',
+  }).format(value).replace('₱', '₱ ');
+};
+
+function AnimatedNumber({ value, className, prefix = '' }: { value: number; className: string; prefix?: string; }) {
+  const count = useMotionValue(0);
+  
+  useEffect(() => {
+    const controls = animate(count, value, { duration: 1, ease: "easeOut" });
+    return () => controls.stop();
+  }, [value, count]);
+
+  const display = useTransform(count, (latest) => {
+    const roundedValue = Math.round(latest);
+    return `${prefix} ${formatCurrency(roundedValue)}`.trim();
+  });
+
+  return <motion.p className={className}>{display}</motion.p>;
+}
+
 
 export default function DashboardPage() {
   const [period, setPeriod] = useState<'week' | 'month' | 'quarter'>('month');
@@ -105,13 +140,6 @@ export default function DashboardPage() {
   useEffect(() => {
     setData(mockData[period]);
   }, [period]);
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-PH', {
-      style: 'currency',
-      currency: 'PHP',
-    }).format(value).replace('₱', '₱ ');
-  };
 
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
@@ -134,49 +162,48 @@ export default function DashboardPage() {
         <AnimatePresence mode="wait">
             <motion.div
                 key={period}
-                variants={pageVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={transition}
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
                 className="space-y-6"
             >
-                <Card className="w-full bg-gradient-to-b from-primary-dark to-primary text-primary-foreground shadow-xl rounded-3xl">
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex justify-between items-center w-full">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
-                                <span className="font-bold text-xl text-white">₱</span>
+                <motion.div variants={itemVariants}>
+                    <Card className="w-full bg-gradient-to-b from-primary-dark to-primary text-primary-foreground shadow-xl rounded-3xl">
+                      <CardContent className="p-6 space-y-4">
+                        <div className="flex justify-between items-center w-full">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                                    <span className="font-bold text-xl text-white">₱</span>
+                                </div>
+                                <p className="font-semibold tracking-wider text-primary-foreground/80">NET PROFIT</p>
                             </div>
-                            <p className="font-semibold tracking-wider text-primary-foreground/80">NET PROFIT</p>
+                            <Button className="bg-black text-primary-foreground/80 hover:bg-black/90 h-10 px-3 text-xs rounded-full flex items-center gap-1">
+                                More Details <ArrowRight className="w-3 h-3" />
+                            </Button>
                         </div>
-                        <Button className="bg-black text-primary-foreground/80 hover:bg-black/90 h-10 px-3 text-xs rounded-full flex items-center gap-1">
-                            More Details <ArrowRight className="w-3 h-3" />
-                        </Button>
-                    </div>
-                    
-                    <div className="text-center">
-                        <p className="text-6xl font-bold my-2 tracking-tighter text-primary-foreground whitespace-nowrap">
-                          {formatCurrency(data.netProfit)}
-                        </p>
-                    </div>
-                    
-                    <div className="w-full border-t border-primary-foreground/20"></div>
+                        
+                        <div className="text-center">
+                            <AnimatedNumber value={data.netProfit} className="text-6xl font-bold my-2 tracking-tighter text-primary-foreground whitespace-nowrap" />
+                        </div>
+                        
+                        <div className="w-full border-t border-primary-foreground/20"></div>
 
-                    <div className="grid grid-cols-2 gap-4 w-full text-center">
-                      <div>
-                        <p className="text-sm text-primary-foreground/70">Income</p>
-                        <p className="text-2xl font-semibold text-primary-foreground">{formatCurrency(data.income)}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-primary-foreground/70">Expenses</p>
-                        <p className="text-2xl font-semibold text-primary-foreground">{formatCurrency(data.expenses)}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                        <div className="grid grid-cols-2 gap-4 w-full text-center">
+                          <div>
+                            <p className="text-sm text-primary-foreground/70">Income</p>
+                            <AnimatedNumber value={data.income} className="text-2xl font-semibold text-primary-foreground" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-primary-foreground/70">Expenses</p>
+                            <AnimatedNumber value={data.expenses} className="text-2xl font-semibold text-primary-foreground" />
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                </motion.div>
 
-                <div className="space-y-4">
+                <motion.div variants={itemVariants} className="space-y-4">
                     <h2 className="font-bold text-lg">This Month's Breakdown</h2>
                     <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
                         <CardContent className="p-4">
@@ -195,7 +222,7 @@ export default function DashboardPage() {
                                                 <div className="flex-grow">
                                                     <p className="font-semibold">{item.name}</p>
                                                 </div>
-                                                <p className="font-semibold text-lg">{formatCurrency(item.value)}</p>
+                                                <AnimatedNumber value={item.value} className="font-semibold text-lg" />
                                             </div>
                                         ))}
                                     </div>
@@ -210,7 +237,7 @@ export default function DashboardPage() {
                                                 <div className="flex-grow">
                                                     <p className="font-semibold">{item.name}</p>
                                                 </div>
-                                                <p className="font-semibold text-lg">{formatCurrency(item.value)}</p>
+                                                <AnimatedNumber value={item.value} className="font-semibold text-lg" />
                                             </div>
                                         ))}
                                     </div>
@@ -218,10 +245,10 @@ export default function DashboardPage() {
                             </Tabs>
                         </CardContent>
                     </Card>
-                </div>
+                </motion.div>
 
 
-                <div className="space-y-4">
+                <motion.div variants={itemVariants} className="space-y-4">
                     <div className="flex justify-between items-center">
                         <h2 className="font-bold text-lg">Recent Activity</h2>
                         <Link href="#" className="text-sm text-muted-foreground flex items-center gap-1 hover:text-primary">
@@ -242,17 +269,19 @@ export default function DashboardPage() {
                                         <p className="font-semibold">{item.name}</p>
                                         <p className="text-sm text-muted-foreground">{item.date}</p>
                                     </div>
-                                    <p className={cn(
+                                    <AnimatedNumber 
+                                      value={item.value} 
+                                      prefix={item.type === 'income' ? '+' : '-'}
+                                      className={cn(
                                         "font-semibold text-lg",
                                         item.type === 'income' ? "text-emerald-500" : "text-red-500"
-                                    )}>
-                                        {item.type === 'income' ? '+' : '-'} {formatCurrency(item.value)}
-                                    </p>
+                                      )}
+                                    />
                                 </div>
                             ))}
                         </CardContent>
                     </Card>
-                </div>
+                </motion.div>
             </motion.div>
         </AnimatePresence>
       </main>
