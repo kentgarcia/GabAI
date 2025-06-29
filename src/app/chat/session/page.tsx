@@ -2,7 +2,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, Bot, Sparkles } from 'lucide-react';
@@ -291,7 +290,7 @@ export default function ChatSessionPage() {
       </header>
 
       <div className="flex-grow overflow-hidden flex flex-col">
-        <ScrollArea className="flex-grow" ref={scrollAreaRef}>
+        <div className="flex-grow overflow-y-auto no-scrollbar" ref={scrollAreaRef}>
           <div className="p-6 space-y-6">
             <AnimatePresence>
               {messages.map((message) => (
@@ -355,7 +354,7 @@ export default function ChatSessionPage() {
               )}
             </AnimatePresence>
           </div>
-        </ScrollArea>
+        </div>
         <div className="p-4 border-t shrink-0 bg-background/80 backdrop-blur-md">
            <AnimatePresence>
             {!isLoading && lastMessage?.role === 'model' && lastMessage.actions && (
