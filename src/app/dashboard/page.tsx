@@ -40,14 +40,14 @@ export default function DashboardPage() {
             </Tabs>
         </div>
 
-        <Card className="w-full bg-background/40 backdrop-blur-lg border border-border/10 shadow-xl rounded-3xl">
+        <Card className="w-full bg-gradient-to-b from-primary-dark to-primary text-primary-foreground shadow-xl rounded-3xl">
           <CardContent className="p-6 space-y-4">
             <div className="flex justify-between items-center w-full">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
                         <span className="font-bold text-xl text-white">₱</span>
                     </div>
-                    <p className="font-semibold tracking-wider text-muted-foreground">NET PROFIT</p>
+                    <p className="font-semibold tracking-wider text-primary-foreground/80">NET PROFIT</p>
                 </div>
                 <Button className="bg-black text-primary-foreground/80 hover:bg-black/90 h-10 px-3 text-xs rounded-full flex items-center gap-1">
                     More Details <ArrowRight className="w-3 h-3" />
@@ -55,24 +55,21 @@ export default function DashboardPage() {
             </div>
             
             <div className="text-center">
-                <p className={cn(
-                  "text-6xl font-bold my-2 tracking-tighter",
-                  data.netProfit >= 0 ? 'text-chart-2' : 'text-destructive'
-                )}>
+                <p className="text-6xl font-bold my-2 tracking-tighter text-primary-foreground">
                   {formatCurrency(data.netProfit)}
                 </p>
             </div>
             
-            <div className="w-full border-t border-border/20"></div>
+            <div className="w-full border-t border-primary-foreground/20"></div>
 
             <div className="grid grid-cols-2 gap-4 w-full text-center">
               <div>
-                <p className="text-sm text-muted-foreground">Income</p>
-                <p className="text-2xl font-semibold text-foreground">{formatCurrency(data.income)}</p>
+                <p className="text-sm text-primary-foreground/70">Income</p>
+                <p className="text-2xl font-semibold text-primary-foreground">{formatCurrency(data.income)}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Expenses</p>
-                <p className="text-2xl font-semibold text-foreground">{formatCurrency(data.expenses)}</p>
+                <p className="text-sm text-primary-foreground/70">Expenses</p>
+                <p className="text-2xl font-semibold text-primary-foreground">{formatCurrency(data.expenses)}</p>
               </div>
             </div>
           </CardContent>
