@@ -139,7 +139,7 @@ function AnimatedNumber({ value, className, prefix = '' }: { value: number; clas
 export default function DashboardPage() {
   const [period, setPeriod] = useState<'week' | 'month' | 'quarter'>('month');
   const [data, setData] = useState<PeriodData>(mockData.month);
-  const [isFlipped, setIsFlipped] = useState(true);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   useEffect(() => {
     setData(mockData[period]);
