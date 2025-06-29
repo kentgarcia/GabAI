@@ -4,9 +4,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Mic, Loader2, Bot, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Mic, Loader2, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -103,11 +102,6 @@ export default function TalkPage() {
 
       } catch (error) {
         setHasPermission(false);
-         toast({
-          variant: 'destructive',
-          title: 'Permissions Denied',
-          description: 'Please enable microphone permissions in your browser settings to use this feature.',
-        });
       }
     };
 
@@ -144,12 +138,13 @@ export default function TalkPage() {
     };
     
     recognition.onend = async () => {
-        setStatus('idle');
         if (finalTranscript.trim()) {
             setStatus('thinking');
             await new Promise(res => setTimeout(res, 1500));
             const gabiResponse = getGabiResponse(finalTranscript.trim());
             setAiResponse(gabiResponse);
+        } else {
+            setStatus('idle');
         }
     };
     
@@ -177,7 +172,6 @@ export default function TalkPage() {
         i++;
         if (i >= aiResponse.length) {
           clearInterval(timer);
-          // After typing is done, set status back to idle
           setStatus('idle');
         }
       }, 40); // typing speed
@@ -231,19 +225,11 @@ export default function TalkPage() {
             <div className="h-24">
                 <p className="text-2xl font-semibold mb-2">{statusText[status]}</p>
                 <p className="text-muted-foreground min-h-[2.5em]">
-                    {transcript || displayedResponse}
+                  {status === 'speaking' || (status === 'idle' && displayedResponse)
+                    ? displayedResponse
+                    : transcript}
                 </p>
             </div>
-            
-            {hasPermission === false && (
-                <Alert variant="destructive" className="max-w-sm bg-destructive/20 text-destructive-foreground border-destructive">
-                    <AlertTriangle className="h-4 w-4" />
-                    <AlertTitle>Microphone Access Denied</AlertTitle>
-                    <AlertDescription>
-                    Please enable microphone permissions in your browser to use voice commands.
-                    </AlertDescription>
-                </Alert>
-            )}
         </div>
     </main>
   );
