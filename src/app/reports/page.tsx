@@ -1,9 +1,28 @@
 
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import { Bot, Gift, Home, Trophy, FileText, Landmark, BarChart3, ScrollText, ChevronRight } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import {
+  Bot, Gift, Home, Trophy, FileText, Landmark, BarChart3, ScrollText,
+  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartConfig,
+} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import { motion } from 'framer-motion';
 
 const reportOptions = [
@@ -33,6 +52,32 @@ const reportOptions = [
   },
 ];
 
+const chartData = [
+  { month: "Jan", income: 18600, expenses: 8000 },
+  { month: "Feb", income: 30500, expenses: 20000 },
+  { month: "Mar", income: 23700, expenses: 12000 },
+  { month: "Apr", income: 17300, expenses: 19000 },
+  { month: "May", income: 20900, expenses: 13000 },
+  { month: "Jun", income: 21400, expenses: 14000 },
+];
+
+const chartConfig = {
+  income: {
+    label: "Income",
+    color: "hsl(var(--chart-2))",
+  },
+  expenses: {
+    label: "Expenses",
+    color: "hsl(var(--chart-5))",
+  },
+} satisfies ChartConfig;
+
+const topChannels = [
+    { name: 'Shopee', value: '₱45,231', icon: ShoppingCart },
+    { name: 'Lazada', value: '₱31,842', icon: ShoppingCart },
+    { name: 'Client Project Alpha', value: '₱25,000', icon: Briefcase },
+];
+
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -42,7 +87,7 @@ const containerVariants = {
       },
     },
   };
-  
+
 const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -52,41 +97,137 @@ const itemVariants = {
     },
 };
 
+const formatCurrencyForChart = (value: number) => {
+  if (value >= 1000) {
+    return `₱${(value / 1000).toFixed(0)}k`;
+  }
+  return `₱${value}`;
+};
+
 export default function ReportsPage() {
+  const [dateRange, setDateRange] = useState('This Quarter');
+
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
-      <main className="flex-1 px-6 py-8 space-y-8 overflow-y-auto no-scrollbar pb-28">
+      <main className="flex-1 px-4 py-8 space-y-6 overflow-y-auto no-scrollbar pb-28">
         <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="space-y-8"
+            className="space-y-6"
         >
             <motion.div variants={itemVariants}>
-                <h1 className="text-3xl font-bold tracking-tight">Generate a Report</h1>
-                <p className="text-muted-foreground">Turn your data into professional documents.</p>
+                <h1 className="text-3xl font-bold tracking-tight">Reports & Insights</h1>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="space-y-4">
-              {reportOptions.map((option) => (
-                <Link href={option.href} key={option.title}>
-                  <motion.div whileTap={{ scale: 0.98 }}>
-                    <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
-                      <CardContent className="p-4 flex items-center gap-4">
-                        <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center flex-shrink-0">
-                          <option.icon className="w-6 h-6 text-foreground" />
-                        </div>
-                        <div className="flex-grow">
-                          <p className="font-semibold">{option.title}</p>
-                          <p className="text-sm text-muted-foreground">{option.description}</p>
-                        </div>
-                        <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Link>
-              ))}
-            </motion.div>
+            <Tabs defaultValue="insights" className="w-full">
+                <motion.div variants={itemVariants} className="flex justify-between items-center mb-4">
+                    <TabsList className="bg-muted/60 p-1.5 rounded-full backdrop-blur-lg">
+                        <TabsTrigger value="insights" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Insights</TabsTrigger>
+                        <TabsTrigger value="generate" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Generate</TabsTrigger>
+                    </TabsList>
+                    
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="rounded-full flex items-center gap-2 text-sm h-9">
+                            <CalendarIcon className="w-4 h-4" />
+                            <span>{dateRange}</span>
+                        </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                        {['This Month', 'This Quarter', 'Last Month', 'Year to Date', 'All Time'].map(range => (
+                            <DropdownMenuItem key={range} onSelect={() => setDateRange(range)}>
+                            {range}
+                            </DropdownMenuItem>
+                        ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </motion.div>
+
+                <TabsContent value="insights" className="space-y-6">
+                    <motion.div variants={itemVariants}>
+                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                            <CardHeader>
+                                <CardTitle>Income vs Expenses</CardTitle>
+                                <CardDescription>{dateRange}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="h-[250px] -ml-2">
+                                <ChartContainer config={chartConfig} className="w-full h-full">
+                                    <ResponsiveContainer>
+                                        <BarChart data={chartData} margin={{ top: 20, right: 20, bottom: 0, left: -20 }}>
+                                            <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                                            <XAxis
+                                                dataKey="month"
+                                                tickLine={false}
+                                                axisLine={false}
+                                                tickMargin={8}
+                                                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                                            />
+                                            <YAxis
+                                                tickFormatter={formatCurrencyForChart}
+                                                tickLine={false}
+                                                axisLine={false}
+                                                tickMargin={8}
+                                                tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+                                            />
+                                            <ChartTooltip
+                                                cursor={false}
+                                                content={<ChartTooltipContent indicator="dot" />}
+                                            />
+                                            <Bar dataKey="income" fill="var(--color-income)" radius={4} />
+                                            <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </ChartContainer>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                    <motion.div variants={itemVariants}>
+                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                            <CardHeader>
+                                <CardTitle>Top Earning Channels</CardTitle>
+                                <CardDescription>{dateRange}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                               {topChannels.map((channel, index) => (
+                                    <div key={index} className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
+                                            <channel.icon className="w-5 h-5 text-primary-foreground" />
+                                        </div>
+                                        <div className="flex-grow">
+                                            <p className="font-semibold">{channel.name}</p>
+                                        </div>
+                                        <p className="font-semibold text-lg">{channel.value}</p>
+                                    </div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                </TabsContent>
+
+                <TabsContent value="generate">
+                    <motion.div variants={itemVariants} className="space-y-4">
+                    {reportOptions.map((option) => (
+                        <Link href={option.href} key={option.title}>
+                        <motion.div whileTap={{ scale: 0.98 }}>
+                            <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
+                            <CardContent className="p-4 flex items-center gap-4">
+                                <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center flex-shrink-0">
+                                <option.icon className="w-6 h-6 text-foreground" />
+                                </div>
+                                <div className="flex-grow">
+                                <p className="font-semibold">{option.title}</p>
+                                <p className="text-sm text-muted-foreground">{option.description}</p>
+                                </div>
+                                <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                            </CardContent>
+                            </Card>
+                        </motion.div>
+                        </Link>
+                    ))}
+                    </motion.div>
+                </TabsContent>
+            </Tabs>
         </motion.div>
       </main>
 
