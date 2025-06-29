@@ -27,7 +27,7 @@ const itemVariants = {
 
 export default function UploadIntroPage() {
   return (
-    <main className="flex min-h-screen flex-col justify-between p-6 bg-white text-black">
+    <main className="flex flex-col flex-grow justify-between p-6 text-foreground">
       <div className="flex-grow flex flex-col justify-center">
         <motion.div
           className="text-center w-full"
@@ -36,16 +36,16 @@ export default function UploadIntroPage() {
           animate="visible"
         >
           <motion.div variants={itemVariants} className="flex justify-center items-center gap-4 mb-8">
-             <Sheet className="h-16 w-16 text-gray-300" />
-             <ArrowRight className="h-8 w-8 text-gray-400" />
-             <BarChart3 className="h-16 w-16 text-primary" />
+             <Sheet className="h-16 w-16 text-foreground/60" />
+             <ArrowRight className="h-8 w-8 text-foreground/80" />
+             <BarChart3 className="h-16 w-16 text-accent" />
           </motion.div>
 
           <motion.h1 variants={itemVariants} className="text-3xl font-bold mb-2">
             From 'Gulo' to 'Gets'
           </motion.h1>
 
-          <motion.p variants={itemVariants} className="text-gray-500 mb-8 max-w-xs mx-auto">
+          <motion.p variants={itemVariants} className="text-muted-foreground mb-8 max-w-xs mx-auto">
             Easily upload your sales reports from Shopee, Lazada, and more. Kami na ang bahalang mag-ayos at mag-compute para sa'yo.
           </motion.p>
         </motion.div>
@@ -57,7 +57,7 @@ export default function UploadIntroPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
-        <Button asChild className="w-full bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900">
+        <Button asChild className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90">
           <Link href="/meet-gabi">
             Next
             <ArrowRight className="ml-2" />

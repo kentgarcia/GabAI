@@ -71,7 +71,7 @@ export default function AuthPage() {
   }, [status, router]);
 
   return (
-    <main className="flex min-h-screen flex-col justify-between p-6 bg-white text-black">
+    <main className="flex flex-col flex-grow justify-between p-6 text-foreground">
       <div className="flex-grow flex flex-col justify-center">
         <motion.div
           className="text-center w-full"
@@ -82,28 +82,28 @@ export default function AuthPage() {
           <motion.h1 variants={itemVariants} className="text-3xl font-bold mb-4">
             Let's set up your space.
           </motion.h1>
-          <motion.p variants={itemVariants} className="text-gray-500 mb-10 max-w-xs mx-auto">
+          <motion.p variants={itemVariants} className="text-muted-foreground mb-10 max-w-xs mx-auto">
             Create a secure account to manage your finances and get personalized insights.
           </motion.p>
           
           <motion.div variants={itemVariants} className="space-y-3">
              <Button variant="outline" className={cn(
-                "w-full h-14 rounded-full text-lg font-semibold border-gray-300 transition-opacity",
+                "w-full h-14 rounded-full text-lg font-semibold border-foreground/20 bg-foreground/10 backdrop-blur-md transition-opacity",
                 status !== 'idle' && 'opacity-50 cursor-not-allowed'
             )}>
                 <GoogleIcon className="w-6 h-6 mr-3" />
                 Continue with Google
             </Button>
             <Button variant="outline" className={cn(
-                "w-full h-14 rounded-full text-lg font-semibold border-gray-300 transition-opacity",
+                "w-full h-14 rounded-full text-lg font-semibold border-foreground/20 bg-foreground/10 backdrop-blur-md transition-opacity",
                  status !== 'idle' && 'opacity-50 cursor-not-allowed'
             )}>
                 <AppleIcon className="w-7 h-7 mr-3" />
                 Continue with Apple
             </Button>
              <Button variant="outline" className={cn(
-                "w-full h-14 rounded-full text-lg font-semibold border-gray-300 transition-all duration-300 overflow-hidden",
-                status === 'signing-up' && 'bg-black text-white border-black',
+                "w-full h-14 rounded-full text-lg font-semibold border-foreground/20 bg-foreground/10 backdrop-blur-md transition-all duration-300 overflow-hidden",
+                status === 'signing-up' && 'bg-primary text-primary-foreground border-primary',
                 status === 'success' && 'bg-emerald-500 text-white border-emerald-500'
             )}>
                 <AnimatePresence mode="wait">
@@ -137,9 +137,9 @@ export default function AuthPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link href="#" className="font-semibold text-black underline">
+          <Link href="#" className="font-semibold text-foreground underline">
             Sign in
           </Link>
         </p>

@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -38,10 +37,10 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
         variants={itemVariants}
         className="flex items-start gap-3 mb-8"
     >
-        <div className="flex-shrink-0 p-2 bg-primary/10 rounded-full">
-            <Bot className="h-6 w-6 text-primary" />
+        <div className="flex-shrink-0 p-2 bg-accent/20 rounded-full">
+            <Bot className="h-6 w-6 text-accent" />
         </div>
-        <div className="bg-gray-100 rounded-2xl rounded-bl-none p-4 text-gray-800">
+        <div className="bg-foreground/10 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
             {children}
         </div>
     </motion.div>
@@ -51,7 +50,7 @@ export default function LogIncomePage() {
     const [date, setDate] = useState<Date>();
 
   return (
-    <main className="flex min-h-screen flex-col p-6 bg-white text-black">
+    <main className="flex flex-col flex-grow p-6 text-foreground">
       <div className="flex-grow flex flex-col justify-center">
         <motion.div
           className="w-full"
@@ -70,15 +69,15 @@ export default function LogIncomePage() {
             <motion.div variants={itemVariants} className="space-y-6">
                 <div className="space-y-2">
                     <Label htmlFor="client-name">Client Name</Label>
-                    <Input id="client-name" placeholder="e.g., Awesome Client Inc." />
+                    <Input id="client-name" placeholder="e.g., Awesome Client Inc." className="bg-foreground/10 backdrop-blur-md border-foreground/20" />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="project">Project/Service</Label>
-                    <Input id="project" placeholder="e.g., Logo Design Package" />
+                    <Input id="project" placeholder="e.g., Logo Design Package" className="bg-foreground/10 backdrop-blur-md border-foreground/20" />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="amount">Amount Received (PHP)</Label>
-                    <Input id="amount" type="number" placeholder="e.g., 10000" />
+                    <Input id="amount" type="number" placeholder="e.g., 10000" className="bg-foreground/10 backdrop-blur-md border-foreground/20" />
                 </div>
                 <div className="space-y-2">
                     <Label>Date Received</Label>
@@ -87,7 +86,7 @@ export default function LogIncomePage() {
                         <Button
                             variant={"outline"}
                             className={cn(
-                            "w-full justify-start text-left font-normal",
+                            "w-full justify-start text-left font-normal bg-foreground/10 backdrop-blur-md border-foreground/20",
                             !date && "text-muted-foreground"
                             )}
                         >
@@ -95,7 +94,7 @@ export default function LogIncomePage() {
                             {date ? format(date, "PPP") : <span>Pick a date</span>}
                         </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
+                        <PopoverContent className="w-auto p-0 bg-background/80 backdrop-blur-md border-white/20">
                         <Calendar
                             mode="single"
                             selected={date}
@@ -116,10 +115,10 @@ export default function LogIncomePage() {
             transition={{ delay: 0.5, duration: 0.5 }}
        >
         <div className="space-y-3">
-             <Button className="w-full bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900">
+             <Button className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90">
                 + Log Income
              </Button>
-             <Button asChild variant="ghost" className="w-full h-14 text-lg font-semibold rounded-full text-black hover:bg-gray-100">
+             <Button asChild variant="ghost" className="w-full h-14 text-lg font-semibold rounded-full text-foreground hover:bg-foreground/10">
                 <Link href="/dashboard">
                     I'll do this later
                 </Link>

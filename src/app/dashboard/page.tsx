@@ -38,7 +38,7 @@ const barData = [
 const chartConfigBar = {
   revenue: {
     label: "Revenue",
-    color: "hsl(var(--primary))",
+    color: "hsl(var(--accent))",
   },
 };
 
@@ -80,7 +80,7 @@ const topProducts = [
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-1 flex-col bg-white">
+    <div className="flex flex-1 flex-col">
       <div className="flex-1 space-y-4 p-4 md:p-6 overflow-y-auto no-scrollbar">
         <motion.div
           className="space-y-6"
@@ -94,36 +94,37 @@ export default function DashboardPage() {
           </motion.div>
 
           <motion.div variants={itemVariants} className="grid gap-4 grid-cols-2">
-            <div className="rounded-xl bg-violet-50 p-4 space-y-1">
+            <div className="rounded-xl bg-violet-400/20 backdrop-blur-lg border border-violet-400/30 p-4 space-y-1">
               <div className="flex items-center justify-between">
-                <p className="text-xs sm:text-sm font-medium text-violet-900">Gross Revenue</p>
-                <span className="text-violet-900/80 font-bold">₱</span>
+                <p className="text-xs sm:text-sm font-medium text-violet-200">Gross Revenue</p>
+                <span className="text-violet-200/80 font-bold">₱</span>
               </div>
-              <p className="text-xl sm:text-2xl font-bold text-violet-950">₱45,231</p>
-              <p className="text-xs text-violet-900/80">+20.1%</p>
+              <p className="text-xl sm:text-2xl font-bold text-violet-100">₱45,231</p>
+              <p className="text-xs text-violet-200/80">+20.1%</p>
             </div>
-            <div className="rounded-xl bg-emerald-50 p-4 space-y-1">
+            <div className="rounded-xl bg-emerald-400/20 backdrop-blur-lg border border-emerald-400/30 p-4 space-y-1">
               <div className="flex items-center justify-between">
-                  <p className="text-xs sm:text-sm font-medium text-emerald-900">Net Profit</p>
-                  <TrendingUp className="h-4 w-4 text-emerald-900/80" />
+                  <p className="text-xs sm:text-sm font-medium text-emerald-200">Net Profit</p>
+                  <TrendingUp className="h-4 w-4 text-emerald-200/80" />
               </div>
-              <p className="text-xl sm:text-2xl font-bold text-emerald-950">₱12,124</p>
-              <p className="text-xs text-emerald-900/80">+18.3%</p>
+              <p className="text-xl sm:text-2xl font-bold text-emerald-100">₱12,124</p>
+              <p className="text-xs text-emerald-200/80">+18.3%</p>
             </div>
           </motion.div>
           
-          <motion.div variants={itemVariants} className="rounded-xl bg-gray-50 p-4">
+          <motion.div variants={itemVariants} className="rounded-xl bg-foreground/10 backdrop-blur-lg border border-foreground/20 p-4">
               <h3 className="text-base font-semibold mb-1">Income Overview</h3>
               <p className="text-xs text-muted-foreground mb-4">Jan - Jun 2024</p>
               <ChartContainer config={chartConfigBar} className="h-[200px] w-full -ml-4">
                 <BarChart accessibilityLayer data={barData} margin={{ top: 5, right: 5, left: 5, bottom: 0 }}>
-                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                  <CartesianGrid vertical={false} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" />
                   <XAxis
                     dataKey="month"
                     tickLine={false}
                     tickMargin={8}
                     axisLine={false}
                     fontSize={12}
+                    stroke="hsl(var(--muted-foreground))"
                   />
                   <YAxis
                     tickLine={false}
@@ -131,25 +132,29 @@ export default function DashboardPage() {
                     tickMargin={8}
                     fontSize={12}
                     tickFormatter={(value) => `₱${value / 1000}k`}
+                    stroke="hsl(var(--muted-foreground))"
                   />
                   <ChartTooltip
                     cursor={false}
-                    content={<ChartTooltipContent hideIndicator />}
+                    content={<ChartTooltipContent 
+                        hideIndicator 
+                        className="bg-background/80 backdrop-blur-md border-white/20"
+                    />}
                   />
-                  <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="revenue" fill="hsl(var(--accent))" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ChartContainer>
           </motion.div>
 
           <motion.div variants={itemVariants} className="grid gap-4 grid-cols-1">
-              <div className="rounded-xl bg-gray-50 p-4">
+              <div className="rounded-xl bg-foreground/10 backdrop-blur-lg border border-foreground/20 p-4">
                   <h3 className="text-base font-semibold mb-1">Product Categories</h3>
                   <p className="text-xs text-muted-foreground mb-4">Top categories by sales volume.</p>
                   <ChartContainer config={chartConfigPie} className="w-full h-[150px]">
                     <PieChart accessibilityLayer>
                       <ChartTooltip
                         cursor={false}
-                        content={<ChartTooltipContent hideLabel />}
+                        content={<ChartTooltipContent hideLabel className="bg-background/80 backdrop-blur-md border-white/20" />}
                       />
                       <Pie
                         data={pieData}
@@ -174,14 +179,14 @@ export default function DashboardPage() {
                     </PieChart>
                   </ChartContainer>
               </div>
-               <div className="rounded-xl bg-gray-50 p-4">
+               <div className="rounded-xl bg-foreground/10 backdrop-blur-lg border border-foreground/20 p-4">
                   <h3 className="text-base font-semibold mb-1">Top 3 Products</h3>
                   <p className="text-xs text-muted-foreground mb-4">Your best-selling items.</p>
                   <ul className="space-y-4">
                       {topProducts.map((product, index) => (
                       <li key={index} className="flex items-center gap-4">
-                          <div className="flex-shrink-0 bg-yellow-100 p-2 rounded-full">
-                              <Crown className="h-5 w-5 text-yellow-500" />
+                          <div className="flex-shrink-0 bg-yellow-400/20 p-2 rounded-full">
+                              <Crown className="h-5 w-5 text-yellow-400" />
                           </div>
                           <div>
                           <p className="font-semibold text-sm">{product.name}</p>
@@ -195,14 +200,14 @@ export default function DashboardPage() {
         </motion.div>
       </div>
       <motion.div
-        className="p-6 bg-white border-t"
+        className="p-6 border-t border-white/10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         <Button
           asChild
-          className="w-full bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900"
+          className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90"
         >
           <Link href="/dashboard">
             Let's Go!

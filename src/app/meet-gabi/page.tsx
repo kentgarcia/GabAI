@@ -27,7 +27,7 @@ const itemVariants = {
 
 export default function MeetGabiPage() {
   return (
-    <main className="flex min-h-screen flex-col justify-between p-6 bg-white text-black">
+    <main className="flex flex-col flex-grow justify-between p-6 text-foreground">
       <div className="flex-grow flex flex-col justify-center">
         <motion.div
           className="text-center w-full"
@@ -36,8 +36,8 @@ export default function MeetGabiPage() {
           animate="visible"
         >
           <motion.div variants={itemVariants} className="flex justify-center items-center mb-8">
-             <div className="p-4 bg-primary/10 rounded-full">
-                <Bot className="h-16 w-16 text-primary" />
+             <div className="p-4 bg-accent/20 rounded-full">
+                <Bot className="h-16 w-16 text-accent" />
              </div>
           </motion.div>
 
@@ -45,7 +45,7 @@ export default function MeetGabiPage() {
             Meet Gabi, Your Guide
           </motion.h1>
 
-          <motion.p variants={itemVariants} className="text-gray-500 mb-8 max-w-xs mx-auto">
+          <motion.p variants={itemVariants} className="text-muted-foreground mb-8 max-w-xs mx-auto">
             Gabi is your smart assistant. Magtanong ka lang tungkol sa sales, expenses, o kahit anong kailangan mo.
           </motion.p>
         </motion.div>
@@ -57,7 +57,7 @@ export default function MeetGabiPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.5 }}
       >
-        <Button asChild className="w-full bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900">
+        <Button asChild className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90">
           <Link href="/auth">
             Let's Get Started!
             <ArrowRight className="ml-2" />

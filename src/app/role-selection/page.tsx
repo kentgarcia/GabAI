@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -64,10 +63,10 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
         variants={itemVariants}
         className="flex items-start gap-3"
     >
-        <div className="flex-shrink-0 p-2 bg-primary/10 rounded-full">
-            <Bot className="h-6 w-6 text-primary" />
+        <div className="flex-shrink-0 p-2 bg-accent/20 rounded-full">
+            <Bot className="h-6 w-6 text-accent" />
         </div>
-        <div className="bg-gray-100 rounded-2xl rounded-bl-none p-4 text-gray-800">
+        <div className="bg-foreground/10 backdrop-blur-md rounded-2xl rounded-bl-none p-4 text-foreground">
             {children}
         </div>
     </motion.div>
@@ -124,7 +123,7 @@ export default function RoleSelectionPage() {
   const question2 = getQuestion2();
 
   return (
-    <main className="flex min-h-screen flex-col p-6 bg-white text-black">
+    <main className="flex flex-col flex-grow p-6 text-foreground">
       <div className="flex-grow w-full max-w-sm mx-auto flex flex-col justify-center">
         <motion.div
             className="space-y-6"
@@ -149,11 +148,11 @@ export default function RoleSelectionPage() {
                         <Card
                         onClick={() => handleRoleSelect(role.id)}
                         className={cn(
-                            'transition-all duration-200 text-left overflow-hidden',
+                            'transition-all duration-200 text-left overflow-hidden border-foreground/20',
                             !selectedRole && 'cursor-pointer hover:shadow-md hover:-translate-y-0.5',
                             selectedRole === role.id
-                            ? 'bg-black text-white ring-2 ring-offset-2 ring-black'
-                            : 'bg-gray-100',
+                            ? 'bg-primary text-primary-foreground ring-2 ring-offset-2 ring-primary'
+                            : 'bg-foreground/10 backdrop-blur-md',
                             selectedRole && selectedRole !== role.id && 'opacity-50'
                         )}
                         >
@@ -174,18 +173,18 @@ export default function RoleSelectionPage() {
             <motion.div variants={itemVariants} className="text-center">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="link" className="text-gray-600 text-sm">What if I'm both?</Button>
+                    <Button variant="link" className="text-muted-foreground text-sm">What if I'm both?</Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className="sm:max-w-md bg-background/80 backdrop-blur-md border border-white/20">
                     <DialogHeader>
                       <DialogTitle>No worries!</DialogTitle>
                     </DialogHeader>
                     <div className="py-2">
-                      <p className="text-gray-700">Pick your main focus for now. You can track both inside the app.</p>
+                      <p className="text-muted-foreground">Pick your main focus for now. You can track both inside the app.</p>
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button type="button" className="w-full">Got it</Button>
+                            <Button type="button" className="w-full bg-primary text-primary-foreground">Got it</Button>
                         </DialogClose>
                     </DialogFooter>
                   </DialogContent>
@@ -215,11 +214,11 @@ export default function RoleSelectionPage() {
                                     <Card
                                         onClick={() => handleSecondarySelect(option.id)}
                                         className={cn(
-                                            'transition-all duration-200 text-left overflow-hidden',
+                                            'transition-all duration-200 text-left overflow-hidden border-foreground/20',
                                             !secondarySelection && 'cursor-pointer hover:shadow-md hover:-translate-y-0.5',
                                             secondarySelection === option.id
-                                            ? 'bg-black text-white ring-2 ring-offset-2 ring-black'
-                                            : 'bg-gray-100',
+                                            ? 'bg-primary text-primary-foreground ring-2 ring-offset-2 ring-primary'
+                                            : 'bg-foreground/10 backdrop-blur-md',
                                             secondarySelection && secondarySelection !== option.id && 'opacity-50'
                                         )}
                                     >
@@ -262,7 +261,7 @@ export default function RoleSelectionPage() {
                 >
                     <Button
                     asChild
-                    className="w-full bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900"
+                    className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90"
                     >
                     <Link href={selectedRole === 'seller' ? '/sync-data' : '/log-income'}>
                         Continue

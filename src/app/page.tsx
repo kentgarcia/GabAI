@@ -24,7 +24,7 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 const Ripple = ({ ripples }: { ripples: { x: number, y: number, id: number }[] }) => {
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden rounded-2xl">
       {ripples.map(ripple => (
         <motion.div
           key={ripple.id}
@@ -58,19 +58,11 @@ export default function OnboardingPage() {
 
   return (
     <motion.main 
-      className="relative flex flex-col h-screen text-foreground"
+      className="relative flex flex-col flex-grow h-full text-foreground"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      <Image
-        src="https://placehold.co/400x800.png"
-        alt="Abstract background"
-        layout="fill"
-        objectFit="cover"
-        className="z-0"
-        data-ai-hint="abstract 3d shapes"
-      />
       <div className="relative z-10 flex flex-col flex-grow h-full p-6">
         <motion.header
           initial={{ opacity: 0, y: -20 }}
@@ -102,7 +94,7 @@ export default function OnboardingPage() {
         >
           <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
             <p className="font-semibold text-accent-foreground/80 text-lg">Your all-in-one financial co-pilot.</p>
-            <h1 className="text-3xl font-bold leading-tight tracking-tighter">
+            <h1 className="text-3xl font-bold leading-tight tracking-tighter text-foreground">
               Mula sa sales tracking hanggang sa tax, nandito kami para i-guide ka.
             </h1>
           </motion.div>
