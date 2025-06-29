@@ -205,20 +205,22 @@ export default function DashboardPage() {
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
-                    <Card className="w-full bg-background/40 backdrop-blur-lg border-border/10 rounded-3xl">
-                        <CardContent className="p-6 flex flex-col items-center justify-center">
-                            <h2 className="text-lg font-bold mb-2">Your Financial Health</h2>
-                            <FinancialHealthGauge
-                                score={750}
-                                maxScore={1000}
-                                status="Healthy"
-                                trend="up"
-                            />
-                            <p className="text-center text-xs text-muted-foreground mt-2 max-w-xs">
-                                This score reflects your profitability, cash flow, and growth. Keep it up!
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <Link href="/growth-path">
+                        <Card className="w-full bg-background/40 backdrop-blur-lg border-border/10 rounded-3xl cursor-pointer transition-transform hover:scale-105 hover:shadow-xl">
+                            <CardContent className="p-6 flex flex-col items-center justify-center">
+                                <h2 className="text-lg font-bold mb-2">Your Financial Health</h2>
+                                <FinancialHealthGauge
+                                    score={750}
+                                    maxScore={1000}
+                                    status="Healthy"
+                                    trend="up"
+                                />
+                                <p className="text-center text-xs text-muted-foreground mt-2 max-w-xs">
+                                    This score reflects your profitability, cash flow, and growth. Tap to see your growth path!
+                                </p>
+                            </CardContent>
+                        </Card>
+                    </Link>
                 </motion.div>
 
                 <motion.div variants={itemVariants} className="space-y-4">
