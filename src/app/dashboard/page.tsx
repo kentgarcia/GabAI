@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
-type Activity = { type: 'income' | 'expense'; name: string; date: string; value: number; };
+type Activity = { id: number; type: 'income' | 'expense'; name: string; date: string; value: number; project?: string; };
 type BreakdownItem = { name: string; value: number; };
 type PeriodData = {
   netProfit: number;
@@ -43,9 +43,9 @@ const mockData: MockData = {
       ],
     },
     activity: [
-      { type: 'income', name: 'Stripe Payout', date: 'Just now', value: 800 },
-      { type: 'expense', name: 'Canva Subscription', date: '1 day ago', value: 150 },
-      { type: 'income', name: 'Adsense Payout', date: '3 days ago', value: 950 },
+      { id: 1, type: 'income', name: 'Stripe Payout', date: 'Just now', value: 800, project: 'Website Redesign' },
+      { id: 2, type: 'expense', name: 'Canva Subscription', date: '1 day ago', value: 150 },
+      { id: 3, type: 'income', name: 'Adsense Payout', date: '3 days ago', value: 950, project: 'Youtube Ads' },
     ],
   },
   month: {
@@ -63,9 +63,9 @@ const mockData: MockData = {
       ],
     },
     activity: [
-      { type: 'income', name: 'Client Payment', date: 'Today', value: 5000 },
-      { type: 'expense', name: 'Internet Bill', date: 'Yesterday', value: 799 },
-      { type: 'income', name: 'Shopee Payout', date: '2 days ago', value: 1250 },
+      { id: 4, type: 'income', name: 'Client Payment', date: 'Today', value: 5000, project: 'Logo Design Package' },
+      { id: 5, type: 'expense', name: 'Internet Bill', date: 'Yesterday', value: 799 },
+      { id: 6, type: 'income', name: 'Shopee Payout', date: '2 days ago', value: 1250, project: 'Q2 Online Sales' },
     ],
   },
   quarter: {
@@ -83,9 +83,9 @@ const mockData: MockData = {
       ],
     },
     activity: [
-       { type: 'income', name: 'Q1 Project Milestone', date: '1 week ago', value: 15000 },
-       { type: 'expense', name: 'Tax Payment', date: '2 weeks ago', value: 8500 },
-       { type: 'income', name: 'Lazada Payout', date: '3 weeks ago', value: 7500 },
+       { id: 7, type: 'income', name: 'Q1 Project Milestone', date: '1 week ago', value: 15000, project: 'Enterprise App Dev' },
+       { id: 8, type: 'expense', name: 'Tax Payment', date: '2 weeks ago', value: 8500 },
+       { id: 9, type: 'income', name: 'Lazada Payout', date: '3 weeks ago', value: 7500, project: 'Q1 Gadget Sales' },
     ],
   },
 };
@@ -256,29 +256,45 @@ export default function DashboardPage() {
                         </Link>
                     </div>
                     <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
-                        <CardContent className="p-4 space-y-4">
-                            {data.activity.map((item, index) => (
-                                <div key={index} className="flex items-center gap-4">
-                                    <div className={cn(
-                                        "w-10 h-10 rounded-full flex items-center justify-center",
-                                        item.type === 'income' ? "bg-emerald-500/20" : "bg-red-500/20"
-                                    )}>
-                                        {item.type === 'income' ? <TrendingUp className="w-5 h-5 text-emerald-500" /> : <TrendingDown className="w-5 h-5 text-red-500" />}
+                        <CardContent className="p-4 space-y-2">
+                            {data.activity.map((item, index) => {
+                                const activityItem = (
+                                    <div className="flex items-center gap-4">
+                                        <div className={cn(
+                                            "w-10 h-10 rounded-full flex items-center justify-center",
+                                            item.type === 'income' ? "bg-emerald-500/20" : "bg-red-500/20"
+                                        )}>
+                                            {item.type === 'income' ? <TrendingUp className="w-5 h-5 text-emerald-500" /> : <TrendingDown className="w-5 h-5 text-red-500" />}
+                                        </div>
+                                        <div className="flex-grow">
+                                            <p className="font-semibold">{item.name}</p>
+                                            <p className="text-sm text-muted-foreground">{item.date}</p>
+                                        </div>
+                                        <AnimatedNumber 
+                                          value={item.value} 
+                                          prefix={item.type === 'income' ? '+' : '-'}
+                                          className={cn(
+                                            "font-semibold text-lg",
+                                            item.type === 'income' ? "text-emerald-500" : "text-red-500"
+                                          )}
+                                        />
                                     </div>
-                                    <div className="flex-grow">
-                                        <p className="font-semibold">{item.name}</p>
-                                        <p className="text-sm text-muted-foreground">{item.date}</p>
+                                );
+
+                                return item.type === 'income' ? (
+                                    <Link
+                                        key={item.id}
+                                        href={`/transaction/${item.id}?name=${encodeURIComponent(item.name)}&value=${item.value}&date=${encodeURIComponent(item.date)}&project=${encodeURIComponent(item.project || 'N/A')}`}
+                                        className="p-2 -m-2 rounded-lg cursor-pointer transition-colors hover:bg-muted/40 block"
+                                    >
+                                        {activityItem}
+                                    </Link>
+                                ) : (
+                                    <div key={item.id} className="p-2 -m-2">
+                                        {activityItem}
                                     </div>
-                                    <AnimatedNumber 
-                                      value={item.value} 
-                                      prefix={item.type === 'income' ? '+' : '-'}
-                                      className={cn(
-                                        "font-semibold text-lg",
-                                        item.type === 'income' ? "text-emerald-500" : "text-red-500"
-                                      )}
-                                    />
-                                </div>
-                            ))}
+                                );
+                            })}
                         </CardContent>
                     </Card>
                 </motion.div>
@@ -289,20 +305,20 @@ export default function DashboardPage() {
       
       <footer className="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 z-20">
         <div className="bg-black rounded-full h-16 flex justify-around items-center shadow-lg">
-          <Link href="#" className="flex flex-col items-center text-primary hover:text-primary/90 transition-colors">
-            <Home className="w-5 h-5" />
+          <Link href="/dashboard" className="flex flex-col items-center text-primary hover:text-primary/90 transition-colors">
+            <Home className="w-6 h-6" />
           </Link>
           <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Bitcoin className="w-5 h-5" />
+            <Bitcoin className="w-6 h-6" />
           </Link>
           <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors">
             <Bot className="w-6 h-6 text-primary-foreground" />
           </div>
           <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Gift className="w-5 h-5" />
+            <Gift className="w-6 h-6" />
           </Link>
           <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Trophy className="w-5 h-5" />
+            <Trophy className="w-6 h-6" />
           </Link>
         </div>
       </footer>
