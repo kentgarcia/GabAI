@@ -126,7 +126,7 @@ export default function OnboardingPage() {
 
             {/* Gradient Blobs */}
             <motion.div 
-                className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-[#bad6eb] to-[#334eac] rounded-full opacity-50"
+                className="absolute -top-56 -right-56 w-96 h-96 bg-gradient-to-br from-[#bad6eb] to-[#334eac] rounded-full opacity-30"
                 initial={{ scale: 0, y: 100 }}
                 animate={{ scale: 1, y: 0 }}
                 transition={{ duration: 1.5, type: 'spring' }}
