@@ -59,7 +59,7 @@ export default function SyncDataPage() {
           animate="visible"
         >
           <ChatBubble>
-            <p>Great choice! We'll upload a sales report to instantly see your numbers. Don't worry, I'll show you exactly how.</p>
+            <p>Perfect! Now for the magic. Let's upload your latest sales report. I'll do the rest.</p>
           </ChatBubble>
 
           <motion.div variants={itemVariants} className="flex justify-center items-center gap-4 my-8">
