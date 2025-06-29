@@ -5,17 +5,16 @@ import Link from 'next/link';
 import {
   MessageSquare,
   Mic,
-  User,
   Bot,
   Sparkles,
   ChevronRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { AppFooter } from '@/components/layout/AppFooter';
+import { AppHeader } from '@/components/layout/AppHeader';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -71,20 +70,16 @@ export default function ChatHubPage() {
           animate="visible"
           className="space-y-8"
         >
-            <motion.header variants={itemVariants} className="flex items-start justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Hi there, I'm Gabi.</h1>
-                    <h2 className="text-2xl font-bold tracking-tight text-muted-foreground">
-                        Your financial co-pilot. How can I help?
-                    </h2>
-                </div>
-                <Avatar className="h-10 w-10">
-                    <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person avatar" />
-                    <AvatarFallback>
-                        <User />
-                    </AvatarFallback>
-                </Avatar>
-            </motion.header>
+            <motion.div variants={itemVariants}>
+                <AppHeader userName="Juan dela Cruz" />
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+                <h1 className="text-3xl font-bold tracking-tight">Hi there, I'm Gabi.</h1>
+                <h2 className="text-2xl font-bold tracking-tight text-muted-foreground">
+                    Your financial co-pilot. How can I help?
+                </h2>
+            </motion.div>
 
             <motion.section variants={itemVariants}>
                 <div className="grid grid-cols-2 gap-4 h-40">

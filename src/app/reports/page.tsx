@@ -27,6 +27,7 @@ import {
 import { Line, LineChart, Pie, PieChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend, Cell } from "recharts";
 import { motion } from 'framer-motion';
 import { AppFooter } from '@/components/layout/AppFooter';
+import { AppHeader } from '@/components/layout/AppHeader';
 
 const reportOptions = [
   {
@@ -124,6 +125,10 @@ export default function ReportsPage() {
             animate="visible"
             className="space-y-6"
         >
+            <motion.div variants={itemVariants}>
+                <AppHeader userName="Juan dela Cruz" />
+            </motion.div>
+            
             <motion.div variants={itemVariants}>
                 <h1 className="text-3xl font-bold tracking-tight">Reports & Insights</h1>
             </motion.div>
