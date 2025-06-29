@@ -80,7 +80,7 @@ export default function LearnPage() {
                     </div>
                     <div>
                         <CardTitle className="text-lg">BIR Basics for Freelancers</CardTitle>
-                        <p className="text-sm text-primary/80 mt-1">Next: 2. Understanding Your P&L</p>
+                        <p className="text-sm text-primary/80 mt-1">Next: How to Issue Official Receipts</p>
                     </div>
                 </CardHeader>
                 <CardContent className="px-4 pb-2">
@@ -88,7 +88,9 @@ export default function LearnPage() {
                     <p className="text-xs text-muted-foreground mt-1 text-right">50% Complete</p>
                 </CardContent>
                 <CardFooter className="p-4 pt-2">
-                     <Button className="w-full bg-black text-white rounded-full">Continue Learning</Button>
+                     <Button asChild className="w-full bg-black text-white rounded-full">
+                       <Link href="/learn/lesson/bir-basics-lesson-3?course=bir-basics-for-freelancers">Continue Learning</Link>
+                     </Button>
                 </CardFooter>
               </Card>
           </motion.section>
