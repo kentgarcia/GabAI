@@ -31,18 +31,18 @@ const itemVariants = {
 
 const mockCourses: { [key: string]: any[] } = {
   'finance-tax': [
-    { title: 'BIR Basics for Freelancers', partner: 'JuanTax', level: 'Beginner', duration: '1.5 hours', access: 'Free' },
-    { title: 'Advanced Bookkeeping', partner: 'Gabi Academy', level: 'Intermediate', duration: '3 hours', access: 'Pro' },
-    { title: 'Understanding Your P&L', partner: 'Gabi Academy', level: 'Beginner', duration: '30 mins', access: 'Free' },
+    { slug: 'bir-basics-for-freelancers', title: 'BIR Basics for Freelancers', partner: 'JuanTax', level: 'Beginner', duration: '1.5 hours', access: 'Free' },
+    { slug: 'advanced-bookkeeping', title: 'Advanced Bookkeeping', partner: 'Gabi Academy', level: 'Intermediate', duration: '3 hours', access: 'Pro' },
+    { slug: 'understanding-your-pnl', title: 'Understanding Your P&L', partner: 'Gabi Academy', level: 'Beginner', duration: '30 mins', access: 'Free' },
   ],
   'marketing': [
-    { title: 'Social Media Marketing 101', partner: 'AdSpark', level: 'Beginner', duration: '2 hours', access: 'Free' },
+    { slug: 'social-media-marketing-101', title: 'Social Media Marketing 101', partner: 'AdSpark', level: 'Beginner', duration: '2 hours', access: 'Free' },
   ],
   'business-ops': [
-    { title: 'Advanced Inventory Management', partner: 'Gabi Academy', level: 'Intermediate', duration: '1 hour', access: 'Pro' },
+    { slug: 'advanced-inventory-management', title: 'Advanced Inventory Management', partner: 'Gabi Academy', level: 'Intermediate', duration: '1 hour', access: 'Pro' },
   ],
   'legal': [
-    { title: 'DTI & Business Registration', partner: 'Gabi Academy', level: 'Beginner', duration: '45 mins', access: 'Free' },
+    { slug: 'dti-business-registration', title: 'DTI & Business Registration', partner: 'Gabi Academy', level: 'Beginner', duration: '45 mins', access: 'Free' },
   ]
 };
 
@@ -107,7 +107,9 @@ export default function CourseCategoryPage() {
                                     <span>{course.duration}</span>
                                 </div>
                             </div>
-                            <Button variant="link" className="p-0 h-auto">View Course</Button>
+                            <Button asChild variant="link" className="p-0 h-auto">
+                                <Link href={`/learn/course/${course.slug}`}>View Course</Link>
+                            </Button>
                         </CardFooter>
                     </Card>
                 ))}
