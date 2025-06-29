@@ -17,29 +17,6 @@ const TeardropIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
-const OaletLogo = () => (
-  <div className="relative w-[250px] h-[250px] flex items-center justify-center">
-    <svg className="absolute w-full h-full" viewBox="0 0 250 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="ring-gradient" x1="0" y1="0" x2="250" y2="250" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#AFFFDF"/>
-          <stop offset="1" stopColor="#D9BFFF"/>
-        </linearGradient>
-      </defs>
-      <ellipse cx="125" cy="125" rx="70" ry="110" stroke="url(#ring-gradient)" strokeWidth="2" transform="rotate(-15 125 125)" />
-      <ellipse cx="125" cy="125" rx="75" ry="115" stroke="url(#ring-gradient)" strokeWidth="2" transform="rotate(-10 125 125)" />
-      <ellipse cx="125" cy="125" rx="80" ry="120" stroke="url(#ring-gradient)" strokeWidth="2" transform="rotate(-5 125 125)" />
-      <ellipse cx="125" cy="125" rx="85" ry="125" stroke="url(#ring-gradient)" strokeWidth="2" transform="rotate(0 125 125)" />
-      <ellipse cx="125" cy="125" rx="90" ry="130" stroke="url(#ring-gradient)" strokeWidth="2" transform="rotate(5 125 125)" />
-      <ellipse cx="125" cy="125" rx="95" ry="135" stroke="url(#ring-gradient)" strokeWidth="2" transform="rotate(10 125 125)" />
-    </svg>
-    
-    <div className="relative w-[100px] h-[180px] bg-black rounded-[50px] flex items-center justify-center">
-      <span className="text-white text-2xl font-bold tracking-widest">OALET</span>
-    </div>
-  </div>
-);
-
 export default function OnboardingPage() {
   const containerVariants = {
     hidden: { opacity: 1 },
@@ -102,14 +79,11 @@ export default function OnboardingPage() {
       
       {/* Main Content */}
       <motion.div 
-        className="relative z-10 flex flex-col items-center w-full"
+        className="relative z-10 flex flex-col items-center w-full mb-20"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        <motion.div className="scale-90" variants={itemVariants}>
-            <OaletLogo />
-        </motion.div>
         <motion.div className="text-center w-full mt-4" variants={itemVariants}>
             <h1 className="text-5xl font-bold leading-tight">
               {titleLines[0]}<br/>
