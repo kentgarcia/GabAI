@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -113,7 +114,6 @@ export default function TalkPage() {
             // No speech detected, restart listening if we are not speaking
             if (status !== 'speaking') {
                 setStatus('idle');
-                recognitionRef.current?.start();
             }
           }
         };
@@ -164,8 +164,6 @@ export default function TalkPage() {
         setAiResponse('');
         setTranscript('');
         setStatus('idle');
-        // Restart listening after speaking
-        recognitionRef.current?.start();
       };
       speechSynthesis.speak(utterance);
     }
