@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -160,33 +161,34 @@ export default function RoleSelectionPage() {
                 animate="visible"
                 className="grid grid-cols-1 gap-3"
             >
-                 {roles.map((role) => (
+                {roles.map((role) => (
                     <motion.div
                         key={role.id}
                         variants={itemVariants}
                         whileTap={!selectedRole ? { scale: 0.97 } : {}}
                     >
-                        <Card
-                        onClick={() => handleRoleSelect(role.id)}
-                        className={cn(
-                            'transition-all duration-200 text-left overflow-hidden border',
-                            !selectedRole && 'cursor-pointer hover:shadow-md hover:-translate-y-0.5',
-                            selectedRole === role.id
-                            ? 'bg-primary text-primary-foreground ring-2 ring-offset-2 ring-primary'
-                            : 'bg-background/30 backdrop-blur-md',
-                            selectedRole && selectedRole !== role.id && 'opacity-50'
-                        )}
-                        >
-                        <CardContent className="flex items-center p-4">
-                            <role.icon className="h-8 w-8 mr-4 flex-shrink-0" />
-                            <div>
-                            <p className="font-semibold">{role.title}</p>
-                            {role.subtitle && (
-                                <p className="text-sm opacity-70">{role.subtitle}</p>
+                        <Button
+                            onClick={() => handleRoleSelect(role.id)}
+                            variant="outline"
+                            disabled={!!selectedRole}
+                            className={cn(
+                                'h-auto w-full justify-start rounded-2xl p-4 text-left transition-all duration-200',
+                                selectedRole === role.id
+                                    ? 'border-transparent bg-primary text-primary-foreground ring-2 ring-offset-2 ring-primary hover:bg-primary/90'
+                                    : 'border-border bg-background/30 backdrop-blur-md hover:bg-muted/50'
                             )}
+                        >
+                            <role.icon className="mr-4 h-8 w-8 flex-shrink-0" />
+                            <div>
+                                <p className="font-semibold">{role.title}</p>
+                                <p className={cn(
+                                    'text-sm',
+                                    selectedRole === role.id ? 'text-primary-foreground/80' : 'text-muted-foreground'
+                                )}>
+                                    {role.subtitle}
+                                </p>
                             </div>
-                        </CardContent>
-                        </Card>
+                        </Button>
                     </motion.div>
                 ))}
             </motion.div>
@@ -232,7 +234,7 @@ export default function RoleSelectionPage() {
                             {question2.options.map(option => (
                                 <Button 
                                     key={option}
-                                    variant={selectedItems.includes(option) ? "default" : "outline"}
+                                    variant={selectedItems.includes(option) ? 'default' : 'outline'}
                                     className="rounded-full h-auto py-2 transition-all duration-200"
                                     onClick={() => handleItemSelect(option)}
                                 >
