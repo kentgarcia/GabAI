@@ -2,15 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bot, Home, FileText, Plus, Settings } from 'lucide-react';
+import { Bot, Home, FileText, Plus, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
   { href: '/reports', icon: FileText, label: 'Reports' },
-  { href: '/add', icon: Plus, label: 'Add' },
+  { href: '/add', icon: Plus, label: 'Actions' },
   { href: '/chat', icon: Bot, label: 'Gabi' },
-  { href: '/settings', icon: Settings, label: 'Settings' },
+  { href: '/learn', icon: BookOpen, label: 'Learn' },
 ];
 
 export function AppFooter() {
