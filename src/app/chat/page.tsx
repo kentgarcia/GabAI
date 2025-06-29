@@ -1,7 +1,6 @@
 
 'use client';
 
-import { gabiChat, GabiChatMessage } from '@/ai/flows/chat-flow';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -10,6 +9,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, Bot, SendHoriz, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+
+// Type definition for a chat message, kept for structure.
+export type GabiChatMessage = {
+  role: 'user' | 'model';
+  content: string;
+};
 
 const suggestedPrompts = [
   "What's my profit this month?",
@@ -54,6 +59,41 @@ export default function ChatPage() {
       });
     }
   }, [messages]);
+  
+  const getGabiResponse = (message: string, currentTaxPref: string | null): string => {
+    const lowerCaseMessage = message.toLowerCase();
+
+    if (lowerCaseMessage.includes('how much should i set aside for tax?')) {
+      if (!currentTaxPref) {
+        return "Good question! To give you a good estimate, I need to know your preferred tax rate. In the Philippines, freelancers and small businesses can often choose between two types:\n\n- 8% Flat Tax: Simple. You pay 8% on your gross income after the first ₱250,000.\n- Graduated Income Tax: More complex, rates vary from 0% to 35% depending on your profit.\n\nWhich would you like me to use for estimates?";
+      } else if (currentTaxPref === '8_percent') {
+        return `Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, and using the 8% tax rate, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()} for your taxes. Remember to keep saving for your quarterly payments!`;
+      } else {
+        return "Because you've chosen the Graduated Income Tax rate, I'll need to know your business expenses for this month to give you an accurate estimate. Let's start tracking them!";
+      }
+    }
+    
+    if (lowerCaseMessage.includes("okay, let's use the")) {
+         if (currentTaxPref === '8_percent') {
+            return `Got it! Using the 8% Flat Tax rate. Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()}.`;
+        } else {
+            return "Sounds good. With the Graduated rate, we'll need to track your expenses to get an accurate tax amount. You can start logging expenses from the main dashboard.";
+        }
+    }
+
+    if (lowerCaseMessage.includes("what's my profit this month?")) {
+        return "Your net profit for this month is ₱12,345.67. This is calculated from your total income of ₱20,000.00 minus your expenses of ₱7,654.33. Keep up the great work!";
+    }
+    if (lowerCaseMessage.includes('create a payment reminder for a client.')) {
+        return "Of course. Who is the reminder for, and what's the amount? I can draft a message for you.";
+    }
+    if (lowerCaseMessage.includes('is it a good time to run a promo?')) {
+        return "That's a great idea! Based on your current sales trend, running a promo this weekend could boost your engagement. I can help you draft an announcement.";
+    }
+
+    return "Sorry, I'm just a demo version. I can only respond to the suggested prompts. Please try one of those!";
+  };
+
 
   const handleSendMessage = async (messageContent: string) => {
     if (!messageContent.trim() || isLoading) return;
@@ -64,47 +104,27 @@ export default function ChatPage() {
       role: 'user',
       content: messageContent,
     };
-    const newMessages = [...messages, newHumanMessage];
-    setMessages(newMessages);
+    setMessages(prev => [...prev, newHumanMessage]);
     setInput('');
     setIsLoading(true);
 
-    // Add a placeholder for the AI response
-    setMessages((prev) => [...prev, { role: 'model', content: '' }]);
-
-    try {
-      const chatRequest = {
-        messages: newMessages,
-        monthlyIncome: mockMonthlyIncome, // Using mock data for now
-        ...(taxPreference && { taxPreference }),
-      };
-      const stream = await gabiChat(chatRequest);
-
-      let fullResponse = '';
-      for await (const chunk of stream) {
-        fullResponse += chunk;
-        setMessages((prev) =>
-          prev.map((msg, i) =>
-            i === prev.length - 1 ? { ...msg, content: fullResponse } : msg
-          )
-        );
-      }
-      
-      // After the stream is complete, check for keywords
-       if (fullResponse.toLowerCase().includes("which would you like me to use")) {
-          setShowTaxChoice(true);
-       }
-
-    } catch (error) {
-      console.error('Error calling Gabi chat flow:', error);
-      setMessages((prev) =>
-          prev.map((msg, i) =>
-            i === prev.length - 1 ? { ...msg, content: "Sorry, I'm having trouble connecting right now." } : msg
-          )
-        );
-    } finally {
-      setIsLoading(false);
+    // Simulate Gabi thinking
+    await new Promise(res => setTimeout(res, 1500));
+    
+    const gabiResponse = getGabiResponse(messageContent, taxPreference);
+    
+    const newGabiMessage: GabiChatMessage = {
+      role: 'model',
+      content: gabiResponse,
+    };
+    setMessages(prev => [...prev, newGabiMessage]);
+    
+    // Check if Gabi is asking for tax preference
+    if (gabiResponse.includes('Which would you like me to use for estimates?')) {
+        setShowTaxChoice(true);
     }
+
+    setIsLoading(false);
   };
 
   const handleTaxChoice = (choice: string) => {
@@ -180,14 +200,38 @@ export default function ChatPage() {
                   >
                     <p className="whitespace-pre-wrap">
                       {message.content}
-                      {isLoading &&
-                        index === messages.length - 1 && (
-                          <span className="animate-pulse">|</span>
-                        )}
                     </p>
                   </div>
                 </motion.div>
               ))}
+               {isLoading && (
+                 <motion.div
+                    key="typing"
+                    layout
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className='flex items-start gap-3'
+                >
+                    <div className="p-2 bg-accent/20 rounded-full self-end">
+                      <Bot className="h-6 w-6 text-accent" />
+                    </div>
+                     <div className='bg-background/30 rounded-2xl rounded-bl-none p-4 max-w-sm'>
+                        <motion.div 
+                            className="flex gap-1.5"
+                            initial="start"
+                            animate="end"
+                            variants={{
+                                start: { transition: { staggerChildren: 0.2 }},
+                                end: { transition: { staggerChildren: 0.2 }}
+                            }}
+                        >
+                            <motion.div className="w-2 h-2 bg-muted-foreground rounded-full" variants={{start: {y: '0%'}, end: {y: '100%'}}} transition={{duration: 0.5, repeat: Infinity, repeatType: 'reverse'}} />
+                            <motion.div className="w-2 h-2 bg-muted-foreground rounded-full" variants={{start: {y: '0%'}, end: {y: '100%'}}} transition={{duration: 0.5, repeat: Infinity, repeatType: 'reverse', delay: 0.2}} />
+                            <motion.div className="w-2 h-2 bg-muted-foreground rounded-full" variants={{start: {y: '0%'}, end: {y: '100%'}}} transition={{duration: 0.5, repeat: Infinity, repeatType: 'reverse', delay: 0.4}} />
+                        </motion.div>
+                    </div>
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         </ScrollArea>
@@ -195,7 +239,7 @@ export default function ChatPage() {
 
       <footer className="p-4 border-t shrink-0 bg-background">
         <AnimatePresence>
-          {showSuggested && (
+          {showSuggested && !showTaxChoice && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -209,6 +253,7 @@ export default function ChatPage() {
                   size="sm"
                   className="rounded-full shrink-0"
                   onClick={() => handleSendMessage(prompt)}
+                  disabled={isLoading}
                 >
                   {prompt}
                 </Button>
@@ -229,6 +274,7 @@ export default function ChatPage() {
                   size="sm"
                   className="rounded-full shrink-0"
                   onClick={() => handleTaxChoice(prompt)}
+                  disabled={isLoading}
                 >
                   {prompt}
                 </Button>
