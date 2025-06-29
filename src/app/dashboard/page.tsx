@@ -179,21 +179,21 @@ export default function DashboardPage() {
 
       
       <footer className="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 z-20">
-        <div className="bg-black rounded-full h-20 flex justify-around items-center shadow-lg">
-          <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Home className="w-6 h-6" />
+        <div className="bg-black rounded-full h-16 flex justify-around items-center shadow-lg">
+          <Link href="#" className="flex flex-col items-center text-primary hover:text-primary/90 transition-colors">
+            <Home className="w-5 h-5" />
           </Link>
           <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Bitcoin className="w-6 h-6" />
+            <Bitcoin className="w-5 h-5" />
           </Link>
-          <Link href="#" className="w-16 h-16 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors">
-            <Bot className="w-7 h-7 text-primary-foreground" />
-          </Link>
-          <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Gift className="w-6 h-6" />
+          <Link href="#" className="w-14 h-14 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors">
+            <Bot className="w-6 h-6 text-primary-foreground" />
           </Link>
           <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Trophy className="w-6 h-6" />
+            <Gift className="w-5 h-5" />
+          </Link>
+          <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+            <Trophy className="w-5 h-5" />
           </Link>
         </div>
       </footer>
