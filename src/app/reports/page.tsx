@@ -390,7 +390,7 @@ export default function ReportsPage() {
                 </TabsContent>
 
                 <TabsContent value="generate">
-                    <motion.div variants={itemVariants} className="space-y-2">
+                    <motion.div variants={itemVariants} className="space-y-4">
                       <h2 className="text-lg font-semibold mb-2">Create a Document</h2>
                       {reportOptions.map((option) => (
                           <Link href={option.href} key={option.title}>
