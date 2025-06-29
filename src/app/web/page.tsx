@@ -1,6 +1,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import {
   SidebarProvider,
   Sidebar,
@@ -44,7 +45,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { Line, LineChart, Pie, PieChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend, Cell } from "recharts";
+import { Line, LineChart, Pie, PieChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend, Cell, ComposedChart, Area } from "recharts";
 
 
 // --- Mock Data ---
@@ -136,39 +137,44 @@ export default function WebAppPage() {
                     <SidebarGroupLabel>Main Navigation</SidebarGroupLabel>
                     <SidebarMenu>
                         <SidebarMenuItem>
-                            <SidebarMenuButton tooltip="Dashboard" isActive>
-                                <Home />
-                                <span>Dashboard</span>
-                            </SidebarMenuButton>
+                            <Link href="/web">
+                                <SidebarMenuButton tooltip="Dashboard" isActive>
+                                    <Home />
+                                    <span>Web Dashboard</span>
+                                </SidebarMenuButton>
+                            </Link>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                            <SidebarMenuButton tooltip="Reports">
-                                <BarChart2 />
-                                <span>Reports</span>
-                            </SidebarMenuButton>
+                            <Link href="/web/reports">
+                                <SidebarMenuButton tooltip="Reports" asChild>
+                                    <BarChart2 />
+                                    <span>Web Reports</span>
+                                </SidebarMenuButton>
+                            </Link>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <SidebarMenuButton tooltip="Actions">
                                 <PlusCircle />
-                                <span>Actions</span>
+                                <span>Web Actions</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <SidebarMenuButton tooltip="Invoices">
                                 <FileText />
-                                <span>Invoices</span>
+                                <span>Web Invoices</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
                             <SidebarMenuButton tooltip="Learn">
                                 <BookOpen />
-                                <span>Learn</span>
+                                <span>Web Learn</span>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarGroup>
                 <SidebarSeparator />
-                <SidebarMenu>
+                <SidebarGroup>
+                    <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton tooltip="Web Gabi">
                             <Sparkles />
@@ -182,8 +188,8 @@ export default function WebAppPage() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
-            </SidebarContent>
-            <SidebarFooter>
+                </SidebarGroup>
+                <SidebarSeparator />
                 <SidebarGroup>
                     <SidebarGroupLabel>User & App Controls</SidebarGroupLabel>
                     <SidebarMenu>
@@ -201,7 +207,7 @@ export default function WebAppPage() {
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarGroup>
-            </SidebarFooter>
+            </SidebarContent>
         </Sidebar>
         <SidebarInset className="p-8 bg-transparent text-foreground">
              <header className="flex items-center justify-between mb-8">
