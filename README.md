@@ -45,9 +45,7 @@ GabAI is an all-in-one financial co-pilot designed for Filipino freelancers and 
 ## 🛠️ Tech Stack
 
 - **Framework**: [Next.js](https://nextjs.org/) (with App Router)
-- **AI**: [Google's Gemini models](https://ai.google.dev/) via [Genkit](https://firebase.google.com/docs/genkit)
 - **UI**: [React](https://react.dev/) & [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Components**: [ShadCN UI](https://ui.shadcn.com/)
-- **PWA**: [@ducanh2912/next-pwa](https://www.npmjs.com/package/@ducanh2912/next-pwa)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
