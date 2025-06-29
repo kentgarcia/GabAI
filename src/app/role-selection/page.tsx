@@ -1,17 +1,27 @@
+
 'use client';
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { ShoppingCart, Laptop, Copy, ArrowRight, Bot } from 'lucide-react';
+import { ShoppingCart, Laptop, ArrowRight, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog';
+
 
 const roles = [
-  { id: 'seller', label: 'Online Seller', description: '(Shopee, FB, etc.)', icon: ShoppingCart },
-  { id: 'freelancer', label: 'Freelancer', description: '(VA, Writer, Designer, etc.)', icon: Laptop },
-  { id: 'both', label: 'Both!', icon: Copy },
+  { id: 'seller', title: 'Online Seller', subtitle: 'I sell products on Shopee, Lazada, TikTok, etc.', icon: ShoppingCart },
+  { id: 'freelancer', title: 'Freelancer / Service Provider', subtitle: 'I offer services like design, writing, virtual assistance, etc.', icon: Laptop },
 ];
 
 const sellingPlatforms = [
@@ -92,7 +102,7 @@ export default function RoleSelectionPage() {
   };
 
   const getQuestion2 = () => {
-    if (selectedRole === 'seller' || selectedRole === 'both') {
+    if (selectedRole === 'seller') {
         return {
             greeting: "Awesome! Para mas maintindihan ko ang business mo...",
             question: "What's your main selling platform?",
@@ -121,11 +131,11 @@ export default function RoleSelectionPage() {
             animate="visible"
         >
             <ChatBubble>
-                <p className="font-semibold">Hi there! So nice to meet you.</p>
-                <p>Para ma-personalize ko ang experience mo, tell me a bit about yourself.</p>
+                <p className="font-semibold">Hi there, welcome aboard!</p>
+                <p>To give you the best guidance, let's quickly set up your profile.</p>
             </ChatBubble>
 
-            <Question>What best describes you?</Question>
+            <Question>What is the main focus of your hustle?</Question>
             
             <OptionsGrid>
                  {roles.map((role) => (
@@ -148,9 +158,9 @@ export default function RoleSelectionPage() {
                         <CardContent className="flex items-center p-4">
                             <role.icon className="h-8 w-8 mr-4 flex-shrink-0" />
                             <div>
-                            <p className="font-semibold">{role.label}</p>
-                            {role.description && (
-                                <p className="text-sm opacity-70">{role.description}</p>
+                            <p className="font-semibold">{role.title}</p>
+                            {role.subtitle && (
+                                <p className="text-sm opacity-70">{role.subtitle}</p>
                             )}
                             </div>
                         </CardContent>
@@ -158,6 +168,28 @@ export default function RoleSelectionPage() {
                     </motion.div>
                 ))}
             </OptionsGrid>
+            
+            <motion.div variants={itemVariants} className="text-center">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="link" className="text-gray-600 text-sm">What if I'm both?</Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>No worries!</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-2">
+                      <p className="text-gray-700">Pick your main focus for now. You can track both inside the app.</p>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button type="button" className="w-full">Got it</Button>
+                        </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+            </motion.div>
+
 
             <AnimatePresence>
                 {question2 && (
