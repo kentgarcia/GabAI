@@ -23,6 +23,12 @@ const mockMonthlyIncome = 20000;
 const getGabiResponse = (message: string): string => {
     const lowerCaseMessage = message.toLowerCase();
 
+    if (lowerCaseMessage.includes('inventory') && lowerCaseMessage.includes('low')) {
+        return "I see you're looking at the 'Holographic Cat Sticker'. You have 12 left and sell about 5 per week. I've added 'Restock Holo Cat Sticker' to your to-do list.";
+    }
+    if (lowerCaseMessage.includes('reply') && lowerCaseMessage.includes('email')) {
+        return "Okay, I've drafted a reply based on the email on your screen. It says: 'Got it, the design will be ready by Friday.' Send it?";
+    }
     if (lowerCaseMessage.includes('profit')) {
         return `Your net profit for this month is ₱12,345.67. This is calculated from your total income of ₱${mockMonthlyIncome.toLocaleString()} minus your expenses of ₱7,654.33. Keep up the great work!`;
     }
@@ -31,9 +37,6 @@ const getGabiResponse = (message: string): string => {
     }
     if (lowerCaseMessage.includes('expenses')) {
         return "Your top expense category this month is Product Costs. You can view a full breakdown on the reports page.";
-    }
-    if (lowerCaseMessage.includes('email') || lowerCaseMessage.includes('client')) {
-        return "I can certainly help with that. What is the main point of the email you'd like to send?";
     }
     if (lowerCaseMessage.includes('tax')) {
         return `Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, and using the 8% tax rate, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()} for your taxes. Remember, this is just an estimate!`;
@@ -50,6 +53,7 @@ export default function TalkPage() {
   const [aiResponse, setAiResponse] = useState('');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const recognitionRef = useRef<any>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
 
   const statusText = {
@@ -66,8 +70,6 @@ export default function TalkPage() {
         try {
             recognitionRef.current.start();
         } catch(err) {
-            // This can happen if recognition is already starting.
-            // It's safe to ignore in this context.
             console.error("Speech recognition already started.");
         }
     }
@@ -75,11 +77,14 @@ export default function TalkPage() {
 
 
   useEffect(() => {
-    // This effect runs only once to initialize Speech Recognition
-    const initSpeechRecognition = async () => {
+    const initPermissionsAndRecognition = async () => {
       try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
         setHasPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
@@ -100,23 +105,31 @@ export default function TalkPage() {
         recognitionRef.current = recognition;
 
       } catch (error) {
-        console.error('Error accessing microphone:', error);
+        console.error('Error accessing media devices:', error);
         setHasPermission(false);
+         toast({
+          variant: 'destructive',
+          title: 'Permissions Denied',
+          description: 'Please enable camera and microphone permissions in your browser settings to use this app.',
+        });
       }
     };
 
-    initSpeechRecognition();
+    initPermissionsAndRecognition();
 
     return () => {
       speechSynthesis.cancel();
       if (recognitionRef.current) {
         recognitionRef.current.abort();
       }
+       if (videoRef.current && videoRef.current.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach(track => track.stop());
+        }
     };
   }, [toast]);
 
   useEffect(() => {
-    // This effect manages the speech recognition event handlers
     if (!hasPermission || !recognitionRef.current) return;
 
     const recognition = recognitionRef.current;
@@ -140,7 +153,7 @@ export default function TalkPage() {
     };
     
     recognition.onend = async () => {
-        setStatus('idle'); // Go back to idle first
+        setStatus('idle');
         if (finalTranscript.trim()) {
             setStatus('thinking');
             await new Promise(res => setTimeout(res, 1500));
@@ -162,7 +175,6 @@ export default function TalkPage() {
   }, [hasPermission, toast]);
 
   useEffect(() => {
-    // This effect handles speaking the AI response
     if (aiResponse) {
       setStatus('speaking');
       const utterance = new SpeechSynthesisUtterance(aiResponse);
@@ -178,8 +190,13 @@ export default function TalkPage() {
   }, [aiResponse]);
 
   return (
-    <main className="flex flex-col h-screen bg-background text-foreground p-6 overflow-hidden">
-        <header className="flex items-center justify-start w-full">
+    <main className="relative flex flex-col h-screen bg-background text-foreground p-6 overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+            <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+        </div>
+
+        <header className="relative z-10 flex items-center justify-start w-full">
             <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2">
             <div onClick={() => router.back()}>
                 <ArrowLeft />
@@ -187,7 +204,7 @@ export default function TalkPage() {
             </Button>
         </header>
 
-        <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8">
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center space-y-8">
             <motion.div
                 onClick={handleListen}
                 className={cn(
@@ -227,11 +244,11 @@ export default function TalkPage() {
             </div>
             
             {hasPermission === false && (
-                <Alert variant="destructive" className="max-w-sm">
+                <Alert variant="destructive" className="max-w-sm bg-background/80">
                     <AlertTriangle className="h-4 w-4" />
-                    <AlertTitle>Microphone Access Denied</AlertTitle>
+                    <AlertTitle>Mic & Camera Access Denied</AlertTitle>
                     <AlertDescription>
-                    Please enable microphone permissions in your browser settings to use voice commands.
+                    Please enable permissions in your browser settings to use voice commands.
                     </AlertDescription>
                 </Alert>
             )}

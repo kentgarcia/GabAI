@@ -18,7 +18,7 @@ export type GabiChatMessage = {
 
 const suggestedPrompts = [
   "What's my profit this month?",
-  'Create a payment reminder for a client.',
+  "Create an invoice for 'Client X' for ₱50,000",
   'Is it a good time to run a promo?',
   'How much should I set aside for tax?',
 ];
@@ -84,8 +84,8 @@ export default function ChatSessionPage() {
     if (lowerCaseMessage.includes("what's my profit this month?")) {
         return "Your net profit for this month is ₱12,345.67. This is calculated from your total income of ₱20,000.00 minus your expenses of ₱7,654.33. Keep up the great work!";
     }
-    if (lowerCaseMessage.includes('create a payment reminder for a client.')) {
-        return "Of course. Who is the reminder for, and what's the amount? I can draft a message for you.";
+    if (lowerCaseMessage.includes('create an invoice for')) {
+        return "Done. I've created a draft invoice for 'Client X' for ₱50,000, due in 15 days. You can review and send it from the Reports > Receipt History page.";
     }
     if (lowerCaseMessage.includes('is it a good time to run a promo?')) {
         return "That's a great idea! Based on your current sales trend, running a promo this weekend could boost your engagement. I can help you draft an announcement.";
