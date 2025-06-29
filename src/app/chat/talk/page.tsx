@@ -187,7 +187,6 @@ export default function TalkPage() {
   return (
     <main className="relative flex flex-col h-screen bg-background text-foreground p-6 overflow-hidden">
         
-        {/* Animated Gradient Blobs */}
         <div className="absolute inset-0 -z-10">
             <div className="absolute top-0 -left-40 w-96 h-96 bg-accent/30 rounded-full filter blur-2xl animate-blob opacity-50"></div>
             <div className="absolute top-0 -right-40 w-96 h-96 bg-primary/30 rounded-full filter blur-2xl animate-blob animation-delay-2000 opacity-50"></div>
