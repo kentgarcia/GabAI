@@ -4,7 +4,6 @@ import { useRef, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import { ArrowLeft, Check } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -56,37 +55,39 @@ export default function ReceiptPreviewPage() {
         
         setIsLoading(true);
 
-        const canvas = await html2canvas(receiptRef.current, { scale: 2 });
-        const imgData = canvas.toDataURL('image/png');
+        try {
+            const canvas = await html2canvas(receiptRef.current, { scale: 2 });
+            const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
 
-        const pdf = new jsPDF({
-            orientation: 'p',
-            unit: 'px',
-            format: [canvas.width, canvas.height]
-        });
+            if (!blob) {
+                throw new Error("Could not create image blob.");
+            }
 
-        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-        
-        const pdfBlob = pdf.getBlob();
-        const fileName = `Official_Receipt_${receiptNumber}.pdf`;
-        const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+            const fileName = `Official_Receipt_${receiptNumber}.png`;
+            const file = new File([blob], fileName, { type: 'image/png' });
 
-        if (navigator.share) {
-            try {
+            if (navigator.share) {
                 await navigator.share({
                     title: `Official Receipt ${receiptNumber}`,
                     text: `Here is the official receipt for ${transaction.project}.`,
-                    files: [pdfFile],
+                    files: [file],
                 });
-            } catch (error) {
-                console.error('Error sharing:', error);
-                pdf.save(fileName);
+            } else {
+                // Fallback to download
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(link.href);
             }
-        } else {
-            pdf.save(fileName);
+        } catch (error) {
+            console.error('Error generating or sharing receipt:', error);
+            // In a real app, you might want to show a toast notification here
+        } finally {
+            setIsLoading(false);
         }
-
-        setIsLoading(false);
     };
 
      const formatCurrency = (value: string) => {
