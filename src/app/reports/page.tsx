@@ -362,7 +362,7 @@ export default function ReportsPage() {
                          </Card>
                          <div className="flex items-start justify-center gap-3 text-sm text-muted-foreground bg-foreground/5 p-3 rounded-b-2xl -mt-1">
                             <Lightbulb className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-0.5" />
-                            <p><span className="font-semibold text-foreground/80">Gabi's Insight:</span> Based on your current trend, I predict your income for next month will be between ₱22k and ₱28k. The upcoming 11.11 sale could boost this significantly!</p>
+                            <p><span className="font-semibold text-foreground/80">Gabi's Insight:</span> The predicted dip in July is consistent with your past two years of data. Don't worry, sales usually pick up again in August.</p>
                         </div>
                     </motion.div>
                      <motion.div variants={itemVariants}>

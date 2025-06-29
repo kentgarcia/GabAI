@@ -51,19 +51,19 @@ export default function NotificationSettingsPage() {
                 <NotificationItem 
                     id="tax-reminders"
                     label="Tax & Filing Reminders"
-                    description="Get alerts for quarterly tax deadlines."
+                    description="Gabi will remind you about upcoming tax deadlines."
                 />
                 <Separator />
                 <NotificationItem 
                     id="weekly-summary"
                     label="Weekly Summary"
-                    description="A push notification every Monday with your profit summary."
+                    description="Gabi will send your weekly profit summary every Monday."
                 />
                  <Separator />
                 <NotificationItem 
                     id="growth-milestones"
                     label="Growth Milestone Alerts"
-                    description="Get notified when you unlock a new achievement."
+                    description="Gabi will celebrate your growth milestones with you."
                 />
             </motion.div>
         </main>

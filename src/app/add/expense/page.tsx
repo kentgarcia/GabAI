@@ -142,7 +142,7 @@ export default function AddExpensePage() {
                         {formData.vendor && (
                             <div className="flex items-start justify-center gap-3 text-sm text-muted-foreground bg-foreground/5 p-3 rounded-lg">
                                 <Bot className="h-6 w-6 text-accent flex-shrink-0 mt-0.5" />
-                                <p><span className="font-semibold text-foreground/80">Gabi suggests:</span> Based on the vendor '{formData.vendor}', this might be <span className="font-bold">Software & Subs</span>.</p>
+                                <p><span className="font-semibold text-foreground/80">Gabi suggests:</span> I see you entered '{formData.vendor}'. I can categorize this under <span className="font-bold">Software & Subs</span> for you.</p>
                             </div>
                         )}
                         
