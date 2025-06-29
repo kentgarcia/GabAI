@@ -25,7 +25,7 @@ export function AppFooter() {
           return (
             <Link
               key={item.label}
-              href={item.href === '/settings' ? '#' : item.href}
+              href={item.href}
               aria-label={item.label}
               className={cn(
                 'flex items-center justify-center w-12 h-12 rounded-full transition-colors',
