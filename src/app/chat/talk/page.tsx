@@ -61,6 +61,7 @@ const getGabiResponse = (message: string): AiResponse => {
         };
     }
 
+    // Main commands
     if (lowerCaseMessage.includes('profit')) {
         return {
             type: 'dataCard',
@@ -120,6 +121,33 @@ const getGabiResponse = (message: string): AiResponse => {
             followUps: ["What were my top expenses?", "Show my income sources."]
         };
     }
+    if (lowerCaseMessage.includes('what were my income sources')) {
+        return {
+            type: 'text',
+            spokenResponse: "Your main income sources this month were a project with 'Innovate Corp' and several sales from your Shopee store. Would you like me to generate a full sales report?",
+            key,
+            content: null,
+            followUps: ["Show my top expenses."]
+        };
+    }
+     if (lowerCaseMessage.includes('show all my expenses')) {
+        return {
+            type: 'text',
+            spokenResponse: "I can generate a full expense report for you. Would you like me to create a P&L statement or an expense-only document?",
+            key,
+            content: null,
+            followUps: ["What's my profit this month?", "Which expense grew the most?"]
+        };
+    }
+     if (lowerCaseMessage.includes('which expense grew the most')) {
+        return {
+            type: 'text',
+            spokenResponse: "Your marketing spend grew the most compared to last month, up by 25%. This was mostly due to the new ad campaign you launched.",
+            key,
+            content: null,
+            followUps: ["What were my top expenses?", "Show all my expenses."]
+        };
+    }
      if (lowerCaseMessage.includes('yes, send it')) {
         return {
             type: 'text',
@@ -142,7 +170,21 @@ const getGabiResponse = (message: string): AiResponse => {
             followUps: ["Yes, send it.", "Go back to the first draft."]
         };
     }
+     if (lowerCaseMessage.includes('go back to the first draft')) {
+        return {
+            type: 'task',
+            spokenResponse: "No problem, here is the original friendly reminder.",
+            key,
+            content: {
+                title: "Drafted Reminder",
+                text: "Hi Client,\n\nJust a friendly reminder that Invoice #123 is due next week. Please let me know if you have any questions.\n\nThanks,\nJuan",
+                actionLabel: "Send Reminder"
+            },
+            followUps: ["Yes, send it.", "Make it sound more urgent."]
+        };
+    }
 
+    // Fallback response
     return {
         type: 'text',
         key,
@@ -246,35 +288,41 @@ export default function TalkPage() {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const recognitionRef = useRef<any>(null);
 
-  const startNewInteraction = () => {
+  const startNewInteraction = useCallback(() => {
     setAiResponse(null);
     setTranscript('');
     setDisplayedText('');
     setSuggestedFollowUps([]);
     setIsResponseVisible(false);
-  };
+    setStatus('listening');
+  }, []);
 
   const handleListen = useCallback(() => {
-    if (status === 'listening' || status === 'thinking') return;
+    if (status === 'thinking' || status === 'listening') return;
+    
     startNewInteraction();
+
     if (recognitionRef.current) {
         try {
             recognitionRef.current.start();
         } catch(err) {
-             // Speech recognition may already be started, which is fine.
+            // Speech recognition may already be started, which is fine.
         }
     }
-  }, [status]);
+  }, [status, startNewInteraction]);
 
-  const processRequest = (text: string) => {
+  const processRequest = useCallback((text: string) => {
     setStatus('thinking');
     setTimeout(() => {
         const gabiResponse = getGabiResponse(text);
         setAiResponse(gabiResponse);
-        setStatus('speaking');
+        if(gabiResponse.type === 'goodbye') {
+            setTimeout(() => router.back(), 2000);
+        }
         setIsResponseVisible(true);
+        setStatus('speaking');
     }, 1200);
-  };
+  }, [router]);
   
   const handleFollowUpClick = (prompt: string) => {
     if (status !== 'idle') return;
@@ -282,7 +330,6 @@ export default function TalkPage() {
     setTranscript(prompt);
     processRequest(prompt);
   };
-
 
   useEffect(() => {
     const initPermissionsAndRecognition = async () => {
@@ -321,7 +368,7 @@ export default function TalkPage() {
         }
         setTranscript(finalTranscript || interimTranscript);
     };
-    recognition.onend = async () => {
+    recognition.onend = () => {
         const trimmedTranscript = finalTranscript.trim();
         if (trimmedTranscript) {
             setTranscript(trimmedTranscript);
@@ -331,7 +378,7 @@ export default function TalkPage() {
         }
     };
     recognition.onerror = (event: any) => { if (event.error !== 'aborted' && event.error !== 'no-speech') { toast({ variant: "destructive", title: "Speech Error", description: `An error occurred: ${event.error}` }); } setStatus('idle'); };
-  }, [hasPermission, toast]);
+  }, [hasPermission, toast, processRequest]);
 
   useEffect(() => {
     if (status !== 'speaking' || !aiResponse) return;
@@ -344,7 +391,9 @@ export default function TalkPage() {
       i++;
       if (i >= textToType.length) {
         clearInterval(timer);
-        setSuggestedFollowUps(aiResponse.followUps);
+        if (aiResponse.followUps.length > 0) {
+            setSuggestedFollowUps(aiResponse.followUps);
+        }
         setStatus('idle');
       }
     }, 30);
@@ -357,6 +406,8 @@ export default function TalkPage() {
     thinking: "Thinking...",
     speaking: "Gabi is responding...",
   };
+
+  const currentText = status === 'listening' ? transcript : displayedText;
 
   return (
     <main className="flex flex-col h-screen bg-transparent text-foreground p-6 overflow-hidden">
@@ -402,7 +453,7 @@ export default function TalkPage() {
                 <Card className="w-full min-h-[128px] flex flex-col justify-center items-center bg-background/40 backdrop-blur-lg border-border/10 rounded-2xl p-4 text-center">
                     <p className="text-xl font-semibold mb-2">{statusTextMap[status]}</p>
                      <p className="text-muted-foreground text-lg min-h-[2.5em]">
-                      {status === 'speaking' || (status === 'idle' && aiResponse) ? displayedText : transcript}
+                      {currentText}
                     </p>
                 </Card>
             </motion.div>
