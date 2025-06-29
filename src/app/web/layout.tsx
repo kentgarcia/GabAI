@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -81,8 +82,8 @@ export default function WebLayout({ children }: { children: React.ReactNode }) {
                             </Link>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                             <Link href="/learn">
-                                <SidebarMenuButton tooltip="Learn">
+                             <Link href="/web/learn">
+                                <SidebarMenuButton tooltip="Learn" isActive={pathname.startsWith('/web/learn')}>
                                     <BookOpen />
                                     <span>Learn</span>
                                 </SidebarMenuButton>
