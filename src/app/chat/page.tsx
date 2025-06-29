@@ -50,12 +50,12 @@ const historyItems = [
   {
     prompt: 'Show my top expenses.',
     response: 'Your top expense was Product Costs at ₱8,500...',
-    href: '#',
+    href: '/chat/session',
   },
   {
-    prompt: 'Draft a payment reminder.',
-    response: 'Subject: Friendly Reminder: Invoice #123 Due',
-    href: '#',
+    prompt: 'Draft an invoice reminder.',
+    response: 'Okay, here is the draft of your invoice...',
+    href: '/chat/session',
   },
 ];
 

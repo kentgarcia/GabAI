@@ -220,6 +220,10 @@ export default function ChatSessionPage() {
             });
         }
     } 
+    // == Contextual Follow-up ==
+    else if (lowerCaseMessage.includes("how does that compare to last month")) {
+        addGabiMessage({ content: "Last month's profit was ₱15,200. You're up by 21% this month!" });
+    }
     // == Standalone Commands ==
     else if (lowerCaseMessage.includes('create an invoice for')) {
         const clientMatch = messageContent.match(/for (.*)/i);
