@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { ShoppingCart, Laptop, ArrowRight, Bot } from 'lucide-react';
@@ -94,6 +94,9 @@ export default function RoleSelectionPage() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [secondarySelection, setSecondarySelection] = useState<string | null>(null);
 
+  const question2Ref = useRef<HTMLDivElement>(null);
+  const finalBubbleRef = useRef<HTMLDivElement>(null);
+
   const handleRoleSelect = (roleId: string) => {
     if (!selectedRole) setSelectedRole(roleId);
   };
@@ -101,6 +104,22 @@ export default function RoleSelectionPage() {
   const handleSecondarySelect = (selectionId: string) => {
     if (!secondarySelection) setSecondarySelection(selectionId);
   };
+
+  useEffect(() => {
+    if (selectedRole) {
+      setTimeout(() => {
+        question2Ref.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
+  }, [selectedRole]);
+
+  useEffect(() => {
+    if (secondarySelection) {
+      setTimeout(() => {
+        finalBubbleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 300);
+    }
+  }, [secondarySelection]);
 
   const getQuestion2 = () => {
     if (selectedRole === 'seller') {
@@ -124,9 +143,9 @@ export default function RoleSelectionPage() {
 
   return (
     <main className="flex flex-col flex-grow p-6 text-foreground">
-      <div className="flex-grow w-full max-w-sm mx-auto flex flex-col justify-center">
+      <div className="flex-grow w-full max-w-sm mx-auto flex flex-col justify-center overflow-y-auto no-scrollbar">
         <motion.div
-            className="space-y-6"
+            className="space-y-6 py-4"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -195,6 +214,7 @@ export default function RoleSelectionPage() {
             <AnimatePresence>
                 {question2 && (
                     <motion.div
+                        ref={question2Ref}
                         className="space-y-6"
                         initial="hidden"
                         animate="visible"
@@ -235,6 +255,7 @@ export default function RoleSelectionPage() {
              <AnimatePresence>
                 {secondarySelection && (
                      <motion.div
+                        ref={finalBubbleRef}
                         className="space-y-6"
                         initial="hidden"
                         animate="visible"
