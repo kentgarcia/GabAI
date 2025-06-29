@@ -39,7 +39,7 @@ export default function DashboardPage() {
             </Tabs>
         </div>
 
-        <Card className="w-full bg-gradient-to-br from-primary to-blue-800 text-primary-foreground border-none shadow-xl rounded-3xl">
+        <Card className="w-full bg-gradient-to-b from-primary-dark to-primary text-primary-foreground border-none shadow-xl rounded-3xl">
           <CardContent className="p-6 flex flex-col items-center">
             <p className="text-sm font-medium text-primary-foreground/80 tracking-widest">NET PROFIT</p>
             <p className="text-6xl font-bold my-2 tracking-tighter">
