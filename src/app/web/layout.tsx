@@ -103,10 +103,12 @@ export default function WebLayout({ children }: { children: React.ReactNode }) {
                         </Link>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="Integrations">
-                            <Plug />
-                            <span>Integrations</span>
-                        </SidebarMenuButton>
+                        <Link href="/web/integrations">
+                            <SidebarMenuButton tooltip="Integrations" isActive={pathname.startsWith('/web/integrations')}>
+                                <Plug />
+                                <span>Integrations</span>
+                            </SidebarMenuButton>
+                        </Link>
                     </SidebarMenuItem>
                 </SidebarMenu>
                 </SidebarGroup>
