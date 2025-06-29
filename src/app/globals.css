@@ -102,4 +102,10 @@
   .animation-delay-4000 {
     animation-delay: 4s;
   }
+  .web-view .mobile-app-container {
+    max-width: none;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+  }
 }
