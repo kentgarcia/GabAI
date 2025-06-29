@@ -39,7 +39,7 @@ const reportOptions = [
     icon: Landmark,
     title: 'Tax Data Summary',
     description: 'To help with BIR filings.',
-    href: '#',
+    href: '/reports/generate/tax-summary',
   },
   {
     icon: BarChart3,
