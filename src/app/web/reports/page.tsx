@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { addDays, format } from "date-fns";
 import type { DateRange } from "react-day-picker";
-import { Area, Bar, CartesianGrid, ComposedChart, Line, LineChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis, Cell } from 'recharts';
+import { Area, Bar, BarChart, CartesianGrid, ComposedChart, Line, LineChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis, Cell } from 'recharts';
 import {
     Download, Mail as MailIcon, Printer, Sparkles, SlidersHorizontal, BarChart as BarChartIcon, FileText, Landmark, ScrollText,
     Calendar as CalendarIcon
@@ -231,15 +231,17 @@ export default function WebReportsPage() {
                         </CardHeader>
                         <CardContent className="h-[350px] pr-6">
                             <ChartContainer config={chartConfig} className="w-full h-full">
-                                <LineChart data={cashFlowData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                                    <CartesianGrid vertical={false} />
-                                    <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-                                    <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
-                                    <ChartTooltip content={<ChartTooltipContent />} />
-                                    <ChartLegend content={<ChartLegendContent />} />
-                                    <Line type="monotone" dataKey="income" stroke="var(--color-income)" strokeWidth={2.5} dot={false} />
-                                    <Line type="monotone" dataKey="expenses" stroke="var(--color-expenses)" strokeWidth={2.5} dot={false} />
-                                </LineChart>
+                                <ResponsiveContainer>
+                                    <LineChart data={cashFlowData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                                        <CartesianGrid vertical={false} />
+                                        <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+                                        <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
+                                        <ChartTooltip content={<ChartTooltipContent />} />
+                                        <ChartLegend content={<ChartLegendContent />} />
+                                        <Line type="monotone" dataKey="income" stroke="var(--color-income)" strokeWidth={2.5} dot={false} />
+                                        <Line type="monotone" dataKey="expenses" stroke="var(--color-expenses)" strokeWidth={2.5} dot={false} />
+                                    </LineChart>
+                                </ResponsiveContainer>
                             </ChartContainer>
                         </CardContent>
                     </Card>
@@ -250,13 +252,15 @@ export default function WebReportsPage() {
                             </CardHeader>
                             <CardContent className="h-[250px]">
                                  <ChartContainer config={chartConfig} className="w-full h-full">
-                                    <PieChart>
-                                        <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
-                                        <Pie data={expenseBreakdownData} dataKey="value" nameKey="name" innerRadius="50%" strokeWidth={2}>
-                                            {expenseBreakdownData.map(entry => <Cell key={entry.name} fill={entry.fill} />)}
-                                        </Pie>
-                                        <ChartLegend content={<ChartLegendContent nameKey="name" />} />
-                                    </PieChart>
+                                    <ResponsiveContainer>
+                                        <PieChart>
+                                            <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                                            <Pie data={expenseBreakdownData} dataKey="value" nameKey="name" innerRadius="50%" strokeWidth={2}>
+                                                {expenseBreakdownData.map(entry => <Cell key={entry.name} fill={entry.fill} />)}
+                                            </Pie>
+                                            <ChartLegend content={<ChartLegendContent nameKey="name" />} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
                                  </ChartContainer>
                             </CardContent>
                         </Card>
@@ -266,13 +270,15 @@ export default function WebReportsPage() {
                             </CardHeader>
                             <CardContent className="h-[250px]">
                                  <ChartContainer config={chartConfig} className="w-full h-full">
-                                    <PieChart>
-                                        <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
-                                        <Pie data={incomeBreakdownData} dataKey="value" nameKey="name" innerRadius="50%" strokeWidth={2}>
-                                            {incomeBreakdownData.map(entry => <Cell key={entry.name} fill={entry.fill} />)}
-                                        </Pie>
-                                        <ChartLegend content={<ChartLegendContent nameKey="name" />} />
-                                    </PieChart>
+                                    <ResponsiveContainer>
+                                        <PieChart>
+                                            <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                                            <Pie data={incomeBreakdownData} dataKey="value" nameKey="name" innerRadius="50%" strokeWidth={2}>
+                                                {incomeBreakdownData.map(entry => <Cell key={entry.name} fill={entry.fill} />)}
+                                            </Pie>
+                                            <ChartLegend content={<ChartLegendContent nameKey="name" />} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
                                  </ChartContainer>
                             </CardContent>
                         </Card>
@@ -318,16 +324,18 @@ export default function WebReportsPage() {
                         </CardHeader>
                         <CardContent className="h-[350px] pr-6">
                             <ChartContainer config={chartConfig}>
-                                <ComposedChart data={forecastChartData}>
-                                    <CartesianGrid vertical={false} />
-                                    <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-                                    <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
-                                    <ChartTooltip content={<ChartTooltipContent />} />
-                                    <ChartLegend content={<ChartLegendContent />} />
-                                    <Area type="monotone" dataKey="confidence" fill="var(--color-confidence)" stroke="none" />
-                                    <Line dataKey="actual" type="monotone" stroke="var(--color-actual)" strokeWidth={2} dot={true} />
-                                    <Line dataKey="predicted" type="monotone" stroke="var(--color-predicted)" strokeWidth={2} strokeDasharray="5 5" dot={true} />
-                                </ComposedChart>
+                                <ResponsiveContainer>
+                                    <ComposedChart data={forecastChartData}>
+                                        <CartesianGrid vertical={false} />
+                                        <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+                                        <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
+                                        <ChartTooltip content={<ChartTooltipContent />} />
+                                        <ChartLegend content={<ChartLegendContent />} />
+                                        <Area type="monotone" dataKey="confidence" fill="var(--color-confidence)" stroke="none" />
+                                        <Line dataKey="actual" type="monotone" stroke="var(--color-actual)" strokeWidth={2} dot={true} />
+                                        <Line dataKey="predicted" type="monotone" stroke="var(--color-predicted)" strokeWidth={2} strokeDasharray="5 5" dot={true} />
+                                    </ComposedChart>
+                                </ResponsiveContainer>
                             </ChartContainer>
                         </CardContent>
                     </Card>
