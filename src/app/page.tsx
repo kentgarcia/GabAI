@@ -101,11 +101,9 @@ export default function OnboardingPage() {
           }}
         >
           <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-            <p className="font-semibold text-accent-foreground/80 text-lg">Take control of your finances.</p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tighter">
-              Income, taxes,
-              <br />
-              and <span className="text-accent">planning.</span>
+            <p className="font-semibold text-accent-foreground/80 text-lg">Your all-in-one financial co-pilot.</p>
+            <h1 className="text-3xl font-bold leading-tight tracking-tighter">
+              Mula sa sales tracking hanggang sa tax, nandito kami para i-guide ka.
             </h1>
           </motion.div>
 
