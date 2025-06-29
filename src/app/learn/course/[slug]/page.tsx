@@ -38,8 +38,7 @@ const itemVariants = {
 const mockCourseData = {
     title: 'BIR Basics for Freelancers',
     description: 'Understand your tax obligations and learn how to file properly with the Bureau of Internal Revenue. This course simplifies the process, from registration to filing your first return.',
-    image: 'https://placehold.co/600x400',
-    hint: 'business documents taxes',
+    image: 'https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg',
     modules: [
         {
             title: 'Module 1: Getting Started',
@@ -111,7 +110,7 @@ export default function CourseDetailPage() {
           className="space-y-6"
         >
           <motion.div variants={itemVariants} className="relative">
-             <Image src={course.image} width={400} height={225} alt={course.title} className="w-full aspect-[16/9] object-cover" data-ai-hint={course.hint}/>
+             <Image src={course.image} width={400} height={225} alt={course.title} className="w-full aspect-[16/9] object-cover"/>
              <div className="absolute top-0 left-0 p-4">
                 <Button asChild variant="ghost" size="icon" className="bg-black/30 hover:bg-black/50 text-white rounded-full">
                     <Link href="/learn/category/finance-tax">

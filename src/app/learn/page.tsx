@@ -45,9 +45,9 @@ const learningPath = [
 ];
 
 const recommendations = [
-    { title: 'Finding & Cutting Business Costs', image: 'https://placehold.co/300x160.png', hint: 'money savings' },
-    { title: 'Why Registering with BIR is Smart', image: 'https://placehold.co/300x160.png', hint: 'government building' },
-    { title: 'Advanced Inventory Management', image: 'https://placehold.co/300x160.png', hint: 'warehouse inventory' },
+    { title: 'Finding & Cutting Business Costs', image: 'https://images.pexels.com/photos/3184416/pexels-photo-3184416.jpeg' },
+    { title: 'Why Registering with BIR is Smart', image: 'https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg' },
+    { title: 'Advanced Inventory Management', image: 'https://images.pexels.com/photos/1797428/pexels-photo-1797428.jpeg' },
 ];
 
 const categories = ['Finance & Tax', 'Marketing', 'Business Ops', 'Legal'];
@@ -76,7 +76,7 @@ export default function LearnPage() {
               <Card className="rounded-2xl border bg-primary/10 backdrop-blur-lg border-primary/20">
                 <CardHeader className="flex flex-row items-start gap-4 p-4">
                     <div className="w-20 h-20 bg-primary rounded-lg flex-shrink-0">
-                         <Image src="https://placehold.co/200x200.png" width={80} height={80} alt="Course" className="rounded-lg" data-ai-hint="finance course" />
+                         <Image src="https://images.pexels.com/photos/814544/pexels-photo-814544.jpeg" width={80} height={80} alt="Course" className="rounded-lg object-cover" />
                     </div>
                     <div>
                         <CardTitle className="text-lg">BIR Basics for Freelancers</CardTitle>
@@ -129,7 +129,7 @@ export default function LearnPage() {
                     {recommendations.map((rec, index) => (
                         <CarouselItem key={index} className="pl-2 basis-3/4">
                             <Card className="rounded-xl border bg-background/40 backdrop-blur-lg border-border/10 overflow-hidden">
-                                <Image src={rec.image} width={300} height={160} alt={rec.title} className="aspect-video object-cover" data-ai-hint={rec.hint}/>
+                                <Image src={rec.image} width={300} height={160} alt={rec.title} className="aspect-video object-cover"/>
                                 <CardContent className="p-3">
                                     <p className="font-semibold truncate">{rec.title}</p>
                                 </CardContent>
