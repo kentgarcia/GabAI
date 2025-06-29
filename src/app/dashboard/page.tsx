@@ -43,13 +43,13 @@ export default function DashboardPage() {
           <CardContent className="p-6 space-y-4">
             <div className="flex justify-between items-center w-full">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-black/20 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
                         <span className="font-bold text-xl text-white">₱</span>
                     </div>
                     <p className="font-semibold tracking-wider text-primary-foreground/80">NET PROFIT</p>
                 </div>
-                <Button variant="ghost" className="text-primary-foreground/80 hover:bg-white/10 hover:text-primary-foreground h-auto px-3 py-1 text-xs rounded-full">
-                    More Details
+                <Button className="bg-black text-primary-foreground/80 hover:bg-black/90 h-auto px-3 py-1 text-xs rounded-full flex items-center gap-1">
+                    More Details <ArrowRight className="w-3 h-3" />
                 </Button>
             </div>
             
