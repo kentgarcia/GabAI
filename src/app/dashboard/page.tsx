@@ -1,12 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Bot, Gift, Home, Trophy, Bitcoin, ArrowRight } from 'lucide-react';
+import { Bot, Gift, Home, Trophy, Bitcoin, ArrowRight, Package, Briefcase, ShoppingCart, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from 'next/link';
-import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 
 export default function DashboardPage() {
@@ -32,7 +31,7 @@ export default function DashboardPage() {
         
         <div className="flex justify-center">
             <Tabs defaultValue="month" className="w-auto">
-                <TabsList className="grid w-full grid-cols-3 bg-muted/60 p-1.5 rounded-full">
+                <TabsList className="grid w-full grid-cols-3 bg-muted/60 p-1.5 rounded-full backdrop-blur-lg">
                     <TabsTrigger value="week" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">This Week</TabsTrigger>
                     <TabsTrigger value="month" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">This Month</TabsTrigger>
                     <TabsTrigger value="quarter" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">This Quarter</TabsTrigger>
@@ -85,31 +84,47 @@ export default function DashboardPage() {
                             <TabsTrigger value="expenses" className="rounded-lg">Top Expenses</TabsTrigger>
                         </TabsList>
                         <TabsContent value="products" className="mt-4">
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-center text-sm">
-                                    <span>Product A</span>
-                                    <span className="font-semibold">₱8,000</span>
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
+                                        <Package className="w-5 h-5 text-primary-foreground" />
+                                    </div>
+                                    <div className="flex-grow">
+                                        <p className="font-semibold">Product A</p>
+                                    </div>
+                                    <p className="font-semibold text-lg">₱8,000</p>
                                 </div>
-                                <Progress value={100} />
-                                <div className="flex justify-between items-center text-sm">
-                                    <span>Service B</span>
-                                    <span className="font-semibold">₱6,000</span>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
+                                        <Briefcase className="w-5 h-5 text-primary-foreground" />
+                                    </div>
+                                    <div className="flex-grow">
+                                        <p className="font-semibold">Service B</p>
+                                    </div>
+                                    <p className="font-semibold text-lg">₱6,000</p>
                                 </div>
-                                <Progress value={75} />
                             </div>
                         </TabsContent>
                         <TabsContent value="expenses" className="mt-4">
-                            <div className="space-y-3">
-                                <div className="flex justify-between items-center text-sm">
-                                    <span>Product Costs</span>
-                                    <span className="font-semibold">₱4,000</span>
+                            <div className="space-y-4">
+                               <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
+                                        <ShoppingCart className="w-5 h-5 text-primary-foreground" />
+                                    </div>
+                                    <div className="flex-grow">
+                                        <p className="font-semibold">Product Costs</p>
+                                    </div>
+                                    <p className="font-semibold text-lg">₱4,000</p>
                                 </div>
-                                <Progress value={100} className="[&>div]:bg-destructive" />
-                                <div className="flex justify-between items-center text-sm">
-                                    <span>Shipping Fees</span>
-                                    <span className="font-semibold">₱1,500</span>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
+                                        <Truck className="w-5 h-5 text-primary-foreground" />
+                                    </div>
+                                    <div className="flex-grow">
+                                        <p className="font-semibold">Shipping Fees</p>
+                                    </div>
+                                    <p className="font-semibold text-lg">₱1,500</p>
                                 </div>
-                                <Progress value={37.5} className="[&>div]:bg-destructive" />
                             </div>
                         </TabsContent>
                     </Tabs>
