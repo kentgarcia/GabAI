@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
-import { ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, ArrowLeftRight } from 'lucide-react';
+import { ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, ArrowLeftRight, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { FinancialHealthGauge } from '@/components/ui/financial-health-gauge';
 import { AppFooter } from '@/components/layout/AppFooter';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 type Activity = { id: number; type: 'income' | 'expense'; name: string; date: string; value: number; project?: string; };
 type BreakdownItem = { name: string; value: number; };
@@ -149,19 +150,41 @@ export default function DashboardPage() {
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
       <main className="flex-1 px-4 py-6 space-y-6 overflow-y-auto no-scrollbar pb-28">
         
-        <div className="flex justify-center">
-            <Tabs 
-                defaultValue="month" 
-                className="w-auto"
-                onValueChange={(value) => setPeriod(value as 'week' | 'month' | 'quarter')}
-            >
-                <TabsList className="grid w-full grid-cols-3 bg-muted/60 p-1.5 rounded-full backdrop-blur-lg">
-                    <TabsTrigger value="week" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">This Week</TabsTrigger>
-                    <TabsTrigger value="month" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">This Month</TabsTrigger>
-                    <TabsTrigger value="quarter" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">This Quarter</TabsTrigger>
-                </TabsList>
-            </Tabs>
-        </div>
+        <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="space-y-6"
+        >
+            <motion.header variants={itemVariants} className="flex items-center justify-between">
+              <div>
+                <p className="text-muted-foreground">Welcome back,</p>
+                <h1 className="text-2xl font-bold">Juan dela Cruz</h1>
+              </div>
+              <Link href="/settings/profile">
+                  <Avatar className="h-12 w-12 cursor-pointer">
+                    <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person avatar" />
+                    <AvatarFallback>
+                      <User />
+                    </AvatarFallback>
+                  </Avatar>
+              </Link>
+            </motion.header>
+
+            <motion.div variants={itemVariants} className="flex justify-center">
+                <Tabs 
+                    defaultValue="month" 
+                    className="w-auto"
+                    onValueChange={(value) => setPeriod(value as 'week' | 'month' | 'quarter')}
+                >
+                    <TabsList className="grid w-full grid-cols-3 bg-muted/60 p-1.5 rounded-full backdrop-blur-lg">
+                        <TabsTrigger value="week" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">This Week</TabsTrigger>
+                        <TabsTrigger value="month" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">This Month</TabsTrigger>
+                        <TabsTrigger value="quarter" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">This Quarter</TabsTrigger>
+                    </TabsList>
+                </Tabs>
+            </motion.div>
+        </motion.div>
 
         <AnimatePresence mode="wait">
             <motion.div
