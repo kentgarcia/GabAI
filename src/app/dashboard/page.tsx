@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { Progress } from '@/components/ui/progress';
 
 export default function DashboardPage() {
   const [period, setPeriod] = useState('month');
@@ -65,6 +66,46 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
+
+        <div className="space-y-4">
+            <h2 className="font-bold text-lg">This Month's Breakdown</h2>
+            <Card className="rounded-2xl border">
+                <CardContent className="p-4 space-y-4">
+                    <div>
+                        <h3 className="text-sm font-semibold text-muted-foreground mb-2">Top Products/Services</h3>
+                        <div className="space-y-3">
+                            <div className="flex justify-between items-center text-sm">
+                                <span>Product A</span>
+                                <span className="font-semibold">₱8,000</span>
+                            </div>
+                            <Progress value={100} />
+                            <div className="flex justify-between items-center text-sm">
+                                <span>Service B</span>
+                                <span className="font-semibold">₱6,000</span>
+                            </div>
+                            <Progress value={75} />
+                        </div>
+                    </div>
+                    <div className="border-t border-border my-4"></div>
+                    <div>
+                        <h3 className="text-sm font-semibold text-muted-foreground mb-2">Top Expenses</h3>
+                        <div className="space-y-3">
+                             <div className="flex justify-between items-center text-sm">
+                                <span>Product Costs</span>
+                                <span className="font-semibold">₱4,000</span>
+                            </div>
+                            <Progress value={100} className="[&>div]:bg-destructive" />
+                             <div className="flex justify-between items-center text-sm">
+                                <span>Shipping Fees</span>
+                                <span className="font-semibold">₱1,500</span>
+                            </div>
+                            <Progress value={37.5} className="[&>div]:bg-destructive" />
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+
 
         <div className="space-y-4">
             <div className="flex justify-between items-center">
