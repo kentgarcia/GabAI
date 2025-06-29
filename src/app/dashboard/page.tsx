@@ -54,7 +54,7 @@ export default function DashboardPage() {
             </div>
             
             <div className="text-center">
-                <p className="text-6xl font-bold my-2 tracking-tighter text-primary-foreground">
+                <p className="text-6xl font-bold my-2 tracking-tighter text-primary-foreground whitespace-nowrap">
                   {formatCurrency(data.netProfit)}
                 </p>
             </div>
@@ -186,8 +186,8 @@ export default function DashboardPage() {
           <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
             <Bitcoin className="w-5 h-5" />
           </Link>
-          <Link href="#" className="w-12 h-12 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors">
-            <Bot className="w-5 h-5 text-primary-foreground" />
+          <Link href="#" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors">
+            <Bot className="w-4 h-4 text-primary-foreground" />
           </Link>
           <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
             <Gift className="w-5 h-5" />
