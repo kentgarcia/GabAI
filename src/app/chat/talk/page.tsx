@@ -7,7 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Mic, Loader2, Bot, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { gabiChat } from '@/ai/flows/chat-flow';
 import { useToast } from '@/hooks/use-toast';
 
 // Extend the window interface for the SpeechRecognition API
@@ -19,6 +18,28 @@ declare global {
 }
 
 const mockMonthlyIncome = 20000;
+
+const getGabiResponse = (message: string): string => {
+    const lowerCaseMessage = message.toLowerCase();
+
+    if (lowerCaseMessage.includes('profit')) {
+        return `Your net profit for this month is ₱12,345.67. This is calculated from your total income of ₱${mockMonthlyIncome.toLocaleString()} minus your expenses of ₱7,654.33. Keep up the great work!`;
+    }
+    if (lowerCaseMessage.includes('receipt') || lowerCaseMessage.includes('sale')) {
+        return "Of course. Who is the receipt for and what is the amount? I can create one for you.";
+    }
+    if (lowerCaseMessage.includes('expenses')) {
+        return "Your top expense category this month is Product Costs. You can view a full breakdown on the reports page.";
+    }
+    if (lowerCaseMessage.includes('email') || lowerCaseMessage.includes('client')) {
+        return "I can certainly help with that. What is the main point of the email you'd like to send?";
+    }
+    if (lowerCaseMessage.includes('tax')) {
+        return `Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, and using the 8% tax rate, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()} for your taxes. Remember, this is just an estimate!`;
+    }
+
+    return "I'm sorry, I didn't quite catch that. Could you try asking in a different way? You can ask about profit, expenses, or creating receipts.";
+};
 
 export default function TalkPage() {
   const router = useRouter();
@@ -117,21 +138,12 @@ export default function TalkPage() {
       if (finalTranscript && status === 'idle') {
         setStatus('thinking');
 
-        try {
-          const stream = await gabiChat({
-            messages: [{ role: 'user', content: finalTranscript }],
-            monthlyIncome: mockMonthlyIncome,
-          });
+        // Simulate thinking delay
+        await new Promise(res => setTimeout(res, 1500));
+        
+        const gabiResponse = getGabiResponse(finalTranscript);
+        setAiResponse(gabiResponse);
 
-          let fullResponse = '';
-          for await (const chunk of stream) {
-            fullResponse += chunk;
-          }
-          setAiResponse(fullResponse);
-        } catch (error) {
-            console.error("AI Error:", error);
-            setAiResponse("Sorry, I had trouble connecting. Please try again.");
-        }
       } else if (status === 'idle') {
           // If no speech was detected, restart listening
           recognition.start();
