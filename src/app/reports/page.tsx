@@ -51,7 +51,7 @@ const reportOptions = [
     icon: ScrollText,
     title: 'Receipt & Invoice History',
     description: 'A central archive of all generated receipts.',
-    href: '#',
+    href: '/reports/history/receipts',
   },
 ];
 
