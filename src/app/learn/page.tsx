@@ -15,7 +15,8 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { Check, Lock, PlayCircle } from 'lucide-react';
+import { Award, Check, Lock, PlayCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -37,9 +38,10 @@ const itemVariants = {
 };
 
 const learningPath = [
-    { title: 'Setting Up Your Business', status: 'completed', icon: Check },
-    { title: 'Mastering Your Finances', status: 'in-progress', icon: PlayCircle },
-    { title: 'Scaling with Digital Marketing', status: 'locked', icon: Lock },
+    { title: 'The Foundation', status: 'certified', icon: Award },
+    { title: 'Building Consistency', status: 'in-progress', icon: PlayCircle },
+    { title: 'Formalizing & Optimizing', status: 'locked', icon: Lock },
+    { title: 'Scaling Smart', status: 'locked', icon: Lock },
 ];
 
 const recommendations = [
@@ -77,7 +79,7 @@ export default function LearnPage() {
                          <Image src="https://placehold.co/200x200" width={80} height={80} alt="Course" className="rounded-lg" data-ai-hint="finance course" />
                     </div>
                     <div>
-                        <CardTitle className="text-lg">Financial Literacy 101</CardTitle>
+                        <CardTitle className="text-lg">BIR Basics for Freelancers</CardTitle>
                         <p className="text-sm text-primary/80 mt-1">Next: 2. Understanding Your P&L</p>
                     </div>
                 </CardHeader>
@@ -96,17 +98,23 @@ export default function LearnPage() {
               <h2 className="text-lg font-semibold">Your Growth Journey</h2>
               <div className="space-y-2">
                 {learningPath.map((item, index) => (
-                    <Card key={index} className="rounded-xl border bg-background/40 backdrop-blur-lg border-border/10">
-                        <CardContent className="p-3 flex items-center gap-4">
-                            <div className="p-2 bg-black rounded-lg">
-                                <item.icon className="w-5 h-5 text-primary-foreground" />
-                            </div>
-                            <div className="flex-grow">
-                                <p className="font-semibold">{item.title}</p>
-                            </div>
-                            {item.status === 'in-progress' && <Badge variant="default" className="bg-primary/80">In Progress</Badge>}
-                        </CardContent>
-                    </Card>
+                    <Link href="/growth-path" key={index}>
+                        <Card className="rounded-xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
+                            <CardContent className="p-3 flex items-center gap-4">
+                                <div className={cn(
+                                    "p-2 rounded-lg",
+                                    item.status === 'certified' ? 'bg-emerald-500' : 'bg-black'
+                                )}>
+                                    <item.icon className="w-5 h-5 text-primary-foreground" />
+                                </div>
+                                <div className="flex-grow">
+                                    <p className="font-semibold">{item.title}</p>
+                                </div>
+                                {item.status === 'in-progress' && <Badge variant="default" className="bg-primary/80">In Progress</Badge>}
+                                {item.status === 'certified' && <Badge variant="outline" className="text-emerald-600 border-emerald-500">Certified</Badge>}
+                            </CardContent>
+                        </Card>
+                    </Link>
                 ))}
               </div>
           </motion.section>
