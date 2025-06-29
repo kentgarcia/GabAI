@@ -6,52 +6,133 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Bot, SendHorizontal, Sparkles } from 'lucide-react';
+import { ArrowLeft, Bot, SendHorizontal, Sparkles, FileText, Edit, X, Link as LinkIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
+import { addDays, format } from 'date-fns';
 
-// Type definition for a chat message, kept for structure.
-export type GabiChatMessage = {
-  role: 'user' | 'model';
-  content: string;
+// --- Type Definitions ---
+type ChatAction = {
+  label: string;
+  action: string;
+  variant?: 'default' | 'outline' | 'destructive';
+  icon?: React.ElementType;
 };
 
+type MessageComponent = 
+  | { type: 'profit-card', data: { income: number; expenses: number; } }
+  | { type: 'invoice-preview', data: { client: string; amount: number; dueDate: Date; project: string; } };
+
+type ChatMessage = {
+  id: string;
+  role: 'user' | 'model';
+  content: string;
+  component?: MessageComponent;
+  actions?: ChatAction[];
+};
+
+type ConversationFlow = {
+  type: 'idle' | 'creating_invoice';
+  step: 'awaiting_amount' | 'awaiting_due_date' | 'awaiting_confirmation';
+  data: {
+    client?: string;
+    amount?: number;
+    project?: string;
+    dueDate?: Date;
+  };
+};
+
+// --- Initial Data ---
 const suggestedPrompts = [
   "What's my profit this month?",
   'Show my top expenses',
-  'Create a receipt',
+  'Create an invoice for Innovate Corp',
   "What's my tax estimate?",
 ];
 
-const taxChoicePrompts = ['8% Flat Tax', 'Graduated Income Tax'];
+const mockMonthlyIncome = 30000;
+const mockMonthlyExpenses = 11500;
+const mockNetProfit = mockMonthlyIncome - mockMonthlyExpenses;
 
-const mockMonthlyIncome = 20000;
+// --- Helper Functions ---
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('en-PH', {
+    style: 'currency',
+    currency: 'PHP',
+  }).format(value);
+};
 
+// --- Sub-components for Rich Messages ---
+const ProfitCard = ({ data }: { data: { income: number; expenses: number } }) => (
+  <Card className="mt-2 bg-background/50 border-primary/20">
+    <CardContent className="p-3 space-y-2">
+      <div className="flex justify-between text-sm">
+        <p className="text-muted-foreground">Income</p>
+        <p className="font-semibold text-emerald-500">{formatCurrency(data.income)}</p>
+      </div>
+      <div className="flex justify-between text-sm">
+        <p className="text-muted-foreground">Expenses</p>
+        <p className="font-semibold text-red-500">{formatCurrency(data.expenses)}</p>
+      </div>
+       <div className="text-right pt-2">
+            <Button asChild variant="link" size="sm" className="text-xs h-auto p-0">
+                <Link href="/reports">View Report</Link>
+            </Button>
+        </div>
+    </CardContent>
+  </Card>
+);
+
+const InvoicePreview = ({ data }: { data: any }) => (
+    <Card className="mt-2 bg-background/50 border-primary/20">
+        <CardContent className="p-3 space-y-2 text-sm">
+            <p className="font-bold text-base text-center mb-2">Invoice Draft</p>
+             <div className="flex justify-between">
+                <p className="text-muted-foreground">Client:</p>
+                <p className="font-semibold">{data.client}</p>
+            </div>
+             <div className="flex justify-between">
+                <p className="text-muted-foreground">Amount:</p>
+                <p className="font-semibold">{formatCurrency(data.amount)}</p>
+            </div>
+             <div className="flex justify-between">
+                <p className="text-muted-foreground">For:</p>
+                <p className="font-semibold">{data.project}</p>
+            </div>
+             <div className="flex justify-between">
+                <p className="text-muted-foreground">Due Date:</p>
+                <p className="font-semibold">{format(data.dueDate, "PPP")}</p>
+            </div>
+        </CardContent>
+    </Card>
+);
+
+
+// --- Main Page Component ---
 export default function ChatSessionPage() {
-  const [messages, setMessages] = useState<GabiChatMessage[]>([]);
+  const { toast } = useToast();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [taxPreference, setTaxPreference] = useState<string | null>(null);
-  const [showSuggested, setShowSuggested] = useState(true);
-  const [showTaxChoice, setShowTaxChoice] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [showSuggested, setShowSuggested] = useState(true);
+  const [conversationFlow, setConversationFlow] = useState<ConversationFlow>({ type: 'idle', step: 'awaiting_amount', data: {} });
 
+  // Initial Gabi Greeting
   useEffect(() => {
-    const savedPreference = localStorage.getItem('taxPreference');
-    if (savedPreference) {
-      setTaxPreference(savedPreference);
-    }
-    // Gabi's initial greeting
     setMessages([
       {
+        id: 'gabi-init',
         role: 'model',
-        content: "Hi there! I'm Gabi. How can I help you today?",
+        content: "Hi there, I'm Gabi! How can I help you today?",
       },
     ]);
   }, []);
 
+  // Auto-scroll on new message
   useEffect(() => {
-    // Auto-scroll to bottom
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
         top: scrollAreaRef.current.scrollHeight,
@@ -59,79 +140,110 @@ export default function ChatSessionPage() {
       });
     }
   }, [messages]);
-  
-  const getGabiResponse = (message: string, currentTaxPref: string | null): string => {
-    const lowerCaseMessage = message.toLowerCase();
 
-    if (lowerCaseMessage.includes("what's my tax estimate?")) {
-      if (!currentTaxPref) {
-        return "Good question! To give you a good estimate, I need to know your preferred tax rate. In the Philippines, freelancers and small businesses can often choose between two types:\n\n- 8% Flat Tax: Simple. You pay 8% on your gross income after the first ₱250,000.\n- Graduated Income Tax: More complex, rates vary from 0% to 35% depending on your profit.\n\nWhich would you like me to use for estimates?";
-      } else if (currentTaxPref === '8_percent') {
-        return `Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, and using the 8% tax rate, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()} for your taxes. Remember to keep saving for your quarterly payments!`;
-      } else {
-        return "Because you've chosen the Graduated Income Tax rate, I'll need to know your business expenses for this month to give you an accurate estimate. Let's start tracking them!";
-      }
-    }
-    
-    if (lowerCaseMessage.includes("okay, let's use the")) {
-         if (currentTaxPref === '8_percent') {
-            return `Got it! Using the 8% Flat Tax rate. Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()}.`;
-        } else {
-            return "Sounds good. With the Graduated rate, we'll need to track your expenses to get an accurate tax amount. You can start logging expenses from the main dashboard.";
-        }
-    }
-
-    if (lowerCaseMessage.includes("what's my profit this month?")) {
-        return "Your net profit for this month is ₱12,345.67. This is calculated from your total income of ₱20,000.00 minus your expenses of ₱7,654.33. Keep up the great work!";
-    }
-    if (lowerCaseMessage.includes('show my top expenses')) {
-        return "Your top expenses this month are:\n1. Product Costs: ₱7,654.33\n2. Marketing & Ads: ₱5,500.00\n3. Shipping & Fees: ₱1,500.00";
-    }
-    if (lowerCaseMessage.includes('create a receipt')) {
-        return "Sure! To create a receipt, I need a bit more info. You can tell me the client's name and amount, or I can pull the details from a recent transaction. Which would you prefer?";
-    }
-
-    return "Sorry, I'm just a demo version. I can only respond to the suggested prompts. Please try one of those!";
+  const addGabiMessage = (message: Omit<ChatMessage, 'id' | 'role'>) => {
+    const gabiMessage: ChatMessage = {
+      id: `gabi-${Date.now()}`,
+      role: 'model',
+      ...message,
+    };
+    setMessages(prev => [...prev, gabiMessage]);
   };
+  
+  const handleActionClick = (action: ChatAction) => {
+    // Remove the message with the buttons
+    setMessages(prev => prev.filter(m => !m.actions));
 
+    if (action.action === 'send_invoice') {
+        toast({ title: '✅ Invoice Sent!', description: `The invoice has been sent to ${conversationFlow.data.client}` });
+        addGabiMessage({ content: `Done! I've sent the invoice to ${conversationFlow.data.client} and marked it as 'Sent'. I'll let you know when they view it.` });
+        setConversationFlow({ type: 'idle', step: 'awaiting_amount', data: {} });
+    }
+    if (action.action === 'edit_invoice') {
+        addGabiMessage({ content: "No problem. What would you like to change?" });
+    }
+     if (action.action === 'cancel_invoice') {
+        addGabiMessage({ content: "Okay, I've cancelled that draft." });
+        setConversationFlow({ type: 'idle', step: 'awaiting_amount', data: {} });
+    }
+  }
 
   const handleSendMessage = async (messageContent: string) => {
     if (!messageContent.trim() || isLoading) return;
 
     setShowSuggested(false);
-    setShowTaxChoice(false);
-    const newHumanMessage: GabiChatMessage = {
+    const newHumanMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
       role: 'user',
       content: messageContent,
     };
     setMessages(prev => [...prev, newHumanMessage]);
     setInput('');
     setIsLoading(true);
-
-    // Simulate Gabi thinking
+    
+    // --- Mock Gabi Thinking ---
     await new Promise(res => setTimeout(res, 1500));
     
-    const gabiResponse = getGabiResponse(messageContent, taxPreference);
-    
-    const newGabiMessage: GabiChatMessage = {
-      role: 'model',
-      content: gabiResponse,
-    };
-    setMessages(prev => [...prev, newGabiMessage]);
-    
-    // Check if Gabi is asking for tax preference
-    if (gabiResponse.includes('Which would you like me to use for estimates?')) {
-        setShowTaxChoice(true);
+    // --- Conversation Logic ---
+    const lowerCaseMessage = messageContent.toLowerCase();
+
+    // == Invoice Creation Flow ==
+    if (conversationFlow.type === 'creating_invoice') {
+        if (conversationFlow.step === 'awaiting_amount') {
+            const amountMatch = messageContent.match(/₱?([\d,]+(\.\d{1,2})?)/);
+            const amount = amountMatch ? parseFloat(amountMatch[1].replace(/,/g, '')) : 0;
+            const projectMatch = messageContent.match(/for (.*)/i);
+            const project = projectMatch ? projectMatch[1] : 'Not specified';
+            
+            if (amount > 0) {
+                setConversationFlow(prev => ({ ...prev, step: 'awaiting_due_date', data: { ...prev.data, amount, project } }));
+                addGabiMessage({ content: "Got it. And what's the payment due date?" });
+            } else {
+                addGabiMessage({ content: "I'm sorry, I didn't catch the amount. Could you please provide it? For example: '₱20,000 for a branding project'." });
+            }
+        } else if (conversationFlow.step === 'awaiting_due_date') {
+            // Simplified date parsing
+            const daysMatch = messageContent.match(/(\d+)\s*days/);
+            const dueDate = daysMatch ? addDays(new Date(), parseInt(daysMatch[1])) : addDays(new Date(), 15);
+            
+            const finalInvoiceData = { ...conversationFlow.data, dueDate };
+            setConversationFlow(prev => ({ ...prev, step: 'awaiting_confirmation', data: finalInvoiceData }));
+
+            addGabiMessage({
+                content: "Okay, here is the draft of your invoice.",
+                component: { type: 'invoice-preview', data: finalInvoiceData as any },
+                actions: [
+                    { label: "Send Invoice", action: "send_invoice", icon: SendHorizontal },
+                    { label: "Edit Details", action: "edit_invoice", variant: 'outline', icon: Edit },
+                    { label: "Cancel", action: "cancel_invoice", variant: 'destructive', icon: X }
+                ]
+            });
+        }
+    } 
+    // == Standalone Commands ==
+    else if (lowerCaseMessage.includes('create an invoice for')) {
+        const clientMatch = messageContent.match(/for (.*)/i);
+        const client = clientMatch ? clientMatch[1] : 'a client';
+        setConversationFlow({ type: 'creating_invoice', step: 'awaiting_amount', data: { client } });
+        addGabiMessage({ content: `I can do that! What's the amount for the invoice for ${client}?` });
+    }
+    else if (lowerCaseMessage.includes("what's my profit this month?")) {
+        addGabiMessage({ 
+            content: `Your net profit for this month is ${formatCurrency(mockNetProfit)}.`,
+            component: { type: 'profit-card', data: { income: mockMonthlyIncome, expenses: mockMonthlyExpenses } }
+        });
+    }
+    else if (lowerCaseMessage.includes('show my top expenses')) {
+        addGabiMessage({ content: "Your top expenses this month are:\n1. Product Costs: ₱7,654.33\n2. Marketing & Ads: ₱5,500.00\n3. Shipping & Fees: ₱1,500.00" });
+    }
+     else if (lowerCaseMessage.includes("what's my tax estimate?")) {
+        addGabiMessage({ content: `Based on your income of ₱${mockMonthlyIncome.toLocaleString()} this month, and using the 8% tax rate, you should consider setting aside approximately ₱${(mockMonthlyIncome * 0.08).toLocaleString()} for your taxes. Remember to keep saving for your quarterly payments!` });
+    }
+    else {
+        addGabiMessage({ content: "Sorry, I'm just a demo version. I can only respond to the suggested prompts. Please try one of those!" });
     }
 
     setIsLoading(false);
-  };
-
-  const handleTaxChoice = (choice: string) => {
-    const preference = choice === '8% Flat Tax' ? '8_percent' : 'graduated';
-    localStorage.setItem('taxPreference', preference);
-    setTaxPreference(preference);
-    handleSendMessage(`Okay, let's use the ${choice}.`);
   };
 
   return (
@@ -172,9 +284,9 @@ export default function ChatSessionPage() {
         <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="p-6 space-y-6">
             <AnimatePresence>
-              {messages.map((message, index) => (
+              {messages.map((message) => (
                 <motion.div
-                  key={index}
+                  key={message.id}
                   layout
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -182,26 +294,37 @@ export default function ChatSessionPage() {
                   transition={{ duration: 0.3 }}
                   className={cn(
                     'flex items-start gap-3',
-                    message.role === 'user' && 'justify-end'
+                    message.role === 'user' ? 'justify-end' : 'flex-col items-start'
                   )}
                 >
-                  {message.role === 'model' && (
-                    <div className="p-2 bg-accent/20 rounded-full self-end">
-                      <Bot className="h-6 w-6 text-accent" />
+                  {message.role === 'user' && (
+                     <div className='bg-primary text-primary-foreground rounded-2xl rounded-br-none p-4 max-w-sm backdrop-blur-md'>
+                        <p className="whitespace-pre-wrap">{message.content}</p>
                     </div>
                   )}
-                  <div
-                    className={cn(
-                      'rounded-2xl p-4 max-w-sm backdrop-blur-md',
-                      message.role === 'model'
-                        ? 'bg-background/40 rounded-bl-none'
-                        : 'bg-primary text-primary-foreground rounded-br-none'
-                    )}
-                  >
-                    <p className="whitespace-pre-wrap">
-                      {message.content}
-                    </p>
-                  </div>
+
+                  {message.role === 'model' && (
+                    <div className="flex items-start gap-3 w-full max-w-sm">
+                         <div className="p-2 bg-accent/20 rounded-full self-end">
+                            <Bot className="h-6 w-6 text-accent" />
+                        </div>
+                        <div className='bg-background/40 rounded-2xl rounded-bl-none p-4 w-full backdrop-blur-md'>
+                           <p className="whitespace-pre-wrap">{message.content}</p>
+                           {message.component?.type === 'profit-card' && <ProfitCard data={message.component.data} />}
+                           {message.component?.type === 'invoice-preview' && <InvoicePreview data={message.component.data} />}
+                           {message.actions && (
+                                <div className="mt-3 grid gap-2">
+                                    {message.actions.map(action => (
+                                         <Button key={action.label} variant={action.variant || 'default'} className={cn("w-full", action.variant !== 'outline' && "bg-black text-white")} onClick={() => handleActionClick(action)}>
+                                            {action.icon && <action.icon className="mr-2 h-4 w-4" />}
+                                            {action.label}
+                                        </Button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                  )}
                 </motion.div>
               ))}
                {isLoading && (
@@ -239,7 +362,7 @@ export default function ChatSessionPage() {
 
       <footer className="p-4 border-t shrink-0 bg-background/80 backdrop-blur-md">
         <AnimatePresence>
-          {showSuggested && !showTaxChoice && (
+          {showSuggested && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -253,27 +376,6 @@ export default function ChatSessionPage() {
                   size="sm"
                   className="rounded-full shrink-0 bg-background/50"
                   onClick={() => handleSendMessage(prompt)}
-                  disabled={isLoading}
-                >
-                  {prompt}
-                </Button>
-              ))}
-            </motion.div>
-          )}
-          {showTaxChoice && (
-             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="flex gap-2 overflow-x-auto no-scrollbar pb-3"
-            >
-              {taxChoicePrompts.map((prompt) => (
-                 <Button
-                  key={prompt}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full shrink-0 bg-background/50"
-                  onClick={() => handleTaxChoice(prompt)}
                   disabled={isLoading}
                 >
                   {prompt}
