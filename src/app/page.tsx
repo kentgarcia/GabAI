@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, type MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -17,7 +18,16 @@ const TeardropIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
+type Ripple = {
+  x: number;
+  y: number;
+  size: number;
+  id: number;
+};
+
 export default function OnboardingPage() {
+  const [ripples, setRipples] = useState<Ripple[]>([]);
+
   const containerVariants = {
     hidden: { opacity: 1 },
     visible: { 
@@ -38,6 +48,27 @@ export default function OnboardingPage() {
   };
 
   const titleLines = ["Kumusta, ka-GabAI!", "Let’s grow", "your hustle."];
+
+  const createRipple = (event: MouseEvent<HTMLAnchorElement>) => {
+    const link = event.currentTarget;
+    const rect = link.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+    
+    const newRipple = {
+      x,
+      y,
+      size,
+      id: Date.now(),
+    };
+    
+    setRipples(prevRipples => [...prevRipples, newRipple]);
+  };
+
+  const onRippleAnimationEnd = (id: number) => {
+    setRipples(prevRipples => prevRipples.filter(r => r.id !== id));
+  };
 
   return (
     <main className="bg-white text-black min-h-screen flex flex-col justify-end p-6 relative overflow-hidden">
@@ -102,11 +133,24 @@ export default function OnboardingPage() {
             </h1>
         </motion.div>
         <motion.div variants={itemVariants} className="w-full">
-          <Button asChild className="w-full mt-8 bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900">
-          <Link href="/dashboard">
-              Get Started
-              <ArrowRight className="ml-2" />
-          </Link>
+          <Button asChild className="w-full mt-8 bg-black text-white rounded-full h-16 text-lg font-semibold hover:bg-gray-800 active:bg-gray-900 relative overflow-hidden">
+            <Link href="/dashboard" onClick={createRipple}>
+                Get Started
+                <ArrowRight className="ml-2" />
+                {ripples.map((ripple) => (
+                  <span
+                    key={ripple.id}
+                    className="absolute rounded-full scale-0 animate-ripple bg-white/70"
+                    style={{
+                      width: ripple.size,
+                      height: ripple.size,
+                      left: ripple.x,
+                      top: ripple.y,
+                    }}
+                    onAnimationEnd={() => onRippleAnimationEnd(ripple.id)}
+                  />
+                ))}
+            </Link>
           </Button>
         </motion.div>
       </motion.div>
