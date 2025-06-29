@@ -95,7 +95,7 @@ export default function ChatHubPage() {
                             <p className="text-xs text-primary/80 mt-1">Type your questions and commands.</p>
                         </Card>
                     </Link>
-                    <Link href="#">
+                    <Link href="/chat/talk">
                          <Card className="h-full bg-primary/10 border-primary/20 rounded-2xl relative group transition-transform hover:scale-105 flex flex-col justify-center items-center text-center p-4">
                             <Mic className="w-10 h-10 text-primary mb-2" />
                             <h3 className="text-lg font-semibold text-primary">Talk to Gabi</h3>
