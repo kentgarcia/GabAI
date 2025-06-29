@@ -161,9 +161,13 @@ export default function TalkPage() {
       utteranceRef.current = utterance;
 
       utterance.onend = () => {
+        // Clear the text content from the screen
         setAiResponse('');
         setTranscript('');
-        setStatus('idle');
+        // Wait for a moment before transitioning to idle, which will restart the listening loop
+        setTimeout(() => {
+          setStatus('idle');
+        }, 1200);
       };
       speechSynthesis.speak(utterance);
     }
