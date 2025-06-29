@@ -28,7 +28,7 @@ const mockLessonData: { [key: string]: any } = {
     },
     'bir-basics-lesson-3': {
         title: 'How to Issue Official Receipts',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Placeholder video
+        videoUrl: 'https://www.youtube.com/embed/HacUNa9x8d0',
         transcript: `(Intro music plays)
 
 Hello, freelancers and business owners! Welcome back to the Gabi Learn Hub. Today, we're tackling a super important topic: how to properly issue an official receipt, or OR.
