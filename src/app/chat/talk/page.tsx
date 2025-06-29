@@ -23,11 +23,11 @@ const mockMonthlyIncome = 20000;
 const getGabiResponse = (message: string): string => {
     const lowerCaseMessage = message.toLowerCase();
 
-    if (lowerCaseMessage.includes('inventory') && lowerCaseMessage.includes('low')) {
-        return "I see you're looking at the 'Holographic Cat Sticker'. You have 12 left and sell about 5 per week. I've added 'Restock Holo Cat Sticker' to your to-do list.";
+    if (lowerCaseMessage.includes('how many') && lowerCaseMessage.includes('cat stickers') && lowerCaseMessage.includes('left')) {
+        return "You have 12 'Holographic Cat Sticker' units left. You sell about 5 per week. I can add a reminder to restock them for you.";
     }
-    if (lowerCaseMessage.includes('reply') && lowerCaseMessage.includes('email')) {
-        return "Okay, I've drafted a reply based on the email on your screen. It says: 'Got it, the design will be ready by Friday.' Send it?";
+    if (lowerCaseMessage.includes('draft an email') && lowerCaseMessage.includes('ready by friday')) {
+        return "Okay, I've drafted an email confirming the design will be ready by Friday. Ready to send?";
     }
     if (lowerCaseMessage.includes('profit')) {
         return `Your net profit for this month is ₱12,345.67. This is calculated from your total income of ₱${mockMonthlyIncome.toLocaleString()} minus your expenses of ₱7,654.33. Keep up the great work!`;
@@ -53,7 +53,6 @@ export default function TalkPage() {
   const [aiResponse, setAiResponse] = useState('');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const recognitionRef = useRef<any>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
 
   const statusText = {
@@ -79,12 +78,8 @@ export default function TalkPage() {
   useEffect(() => {
     const initPermissionsAndRecognition = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+        await navigator.mediaDevices.getUserMedia({ audio: true });
         setHasPermission(true);
-
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
@@ -110,7 +105,7 @@ export default function TalkPage() {
          toast({
           variant: 'destructive',
           title: 'Permissions Denied',
-          description: 'Please enable camera and microphone permissions in your browser settings to use this app.',
+          description: 'Please enable microphone permissions in your browser settings to use this feature.',
         });
       }
     };
@@ -122,10 +117,6 @@ export default function TalkPage() {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
       }
-       if (videoRef.current && videoRef.current.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach(track => track.stop());
-        }
     };
   }, [toast]);
 
@@ -190,14 +181,9 @@ export default function TalkPage() {
   }, [aiResponse]);
 
   return (
-    <main className="relative flex flex-col h-screen bg-background text-foreground p-6 overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-            <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
-            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
-        </div>
-
+    <main className="relative flex flex-col h-screen bg-black text-white p-6 overflow-hidden">
         <header className="relative z-10 flex items-center justify-start w-full">
-            <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2">
+            <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2 text-white hover:bg-white/10">
             <div onClick={() => router.back()}>
                 <ArrowLeft />
             </div>
@@ -208,7 +194,7 @@ export default function TalkPage() {
             <motion.div
                 onClick={handleListen}
                 className={cn(
-                    "w-48 h-48 bg-primary/10 rounded-full flex items-center justify-center transition-transform",
+                    "w-48 h-48 bg-primary/20 rounded-full flex items-center justify-center transition-transform",
                     status === 'idle' && 'cursor-pointer active:scale-95'
                 )}
             >
@@ -219,7 +205,7 @@ export default function TalkPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.3 }}
-                    className="w-36 h-36 bg-primary/20 rounded-full flex items-center justify-center"
+                    className="w-36 h-36 bg-primary/30 rounded-full flex items-center justify-center"
                 >
                     <motion.div
                         className="flex items-center justify-center"
@@ -238,17 +224,17 @@ export default function TalkPage() {
 
             <div className="h-24">
                 <p className="text-2xl font-semibold mb-2">{statusText[status]}</p>
-                <p className="text-muted-foreground min-h-[2.5em]">
+                <p className="text-gray-400 min-h-[2.5em]">
                     {transcript || aiResponse}
                 </p>
             </div>
             
             {hasPermission === false && (
-                <Alert variant="destructive" className="max-w-sm bg-background/80">
+                <Alert variant="destructive" className="max-w-sm bg-destructive/20 text-destructive-foreground border-destructive">
                     <AlertTriangle className="h-4 w-4" />
-                    <AlertTitle>Mic & Camera Access Denied</AlertTitle>
+                    <AlertTitle>Microphone Access Denied</AlertTitle>
                     <AlertDescription>
-                    Please enable permissions in your browser settings to use voice commands.
+                    Please enable microphone permissions in your browser to use voice commands.
                     </AlertDescription>
                 </Alert>
             )}
