@@ -103,7 +103,7 @@ export default function AuthPage() {
             </Button>
              <Button variant="outline" className={cn(
                 "w-full h-14 rounded-full text-lg font-semibold border bg-background/30 backdrop-blur-md transition-all duration-300 overflow-hidden",
-                status === 'signing-up' && 'bg-primary text-primary-foreground border-primary',
+                status === 'signing-up' && 'bg-black text-primary-foreground border-black',
                 status === 'success' && 'bg-emerald-500 text-white border-emerald-500'
             )}>
                 <AnimatePresence mode="wait">

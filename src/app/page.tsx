@@ -185,7 +185,7 @@ export default function OnboardingPage() {
             <Button variant="ghost" size="icon" className="w-14 h-14 bg-white/50 backdrop-blur-lg border border-primary/20 rounded-2xl text-primary">
                 <GoogleIcon className="w-6 h-6" />
             </Button>
-            <Button asChild className="relative flex-grow h-14 bg-primary text-primary-foreground rounded-2xl overflow-hidden" onClick={handleRipple}>
+            <Button asChild className="relative flex-grow h-14 bg-black text-primary-foreground rounded-2xl overflow-hidden" onClick={handleRipple}>
               <Link href="/upload-intro">
                 <Ripple ripples={ripples} />
                 <span className="z-10">Get started</span>

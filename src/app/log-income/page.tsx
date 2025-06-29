@@ -115,7 +115,7 @@ export default function LogIncomePage() {
             transition={{ delay: 0.5, duration: 0.5 }}
        >
         <div className="space-y-3">
-             <Button asChild className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90">
+             <Button asChild className="w-full bg-black text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-black/90">
                 <Link href="/processing?from=freelancer">
                     + Log Income
                 </Link>

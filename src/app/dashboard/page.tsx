@@ -137,7 +137,7 @@ export default function DashboardPage() {
         
         <Button 
             onClick={handleAddExpenseClick}
-            className="rounded-full w-16 h-16 bg-primary text-primary-foreground shadow-lg"
+            className="rounded-full w-16 h-16 bg-black text-primary-foreground shadow-lg"
             aria-label="Add Transaction"
         >
             <Plus className="h-8 w-8" />
@@ -178,7 +178,7 @@ export default function DashboardPage() {
           <DialogFooter>
             <Button 
               type="button" 
-              className="w-full bg-primary text-primary-foreground"
+              className="w-full bg-black text-primary-foreground"
               onClick={handleSaveExpense}
             >
               Save Expense

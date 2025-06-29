@@ -203,7 +203,7 @@ export default function RoleSelectionPage() {
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button type="button" className="w-full bg-primary text-primary-foreground">Got it</Button>
+                            <Button type="button" className="w-full bg-black text-primary-foreground">Got it</Button>
                         </DialogClose>
                     </DialogFooter>
                   </DialogContent>
@@ -282,7 +282,7 @@ export default function RoleSelectionPage() {
                 >
                     <Button
                     asChild
-                    className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90"
+                    className="w-full bg-black text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-black/90"
                     >
                     <Link href={selectedRole === 'seller' ? '/sync-data' : '/log-income'}>
                         Continue
