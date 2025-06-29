@@ -2,35 +2,147 @@
 'use client';
 
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
-import { AppFooter } from '@/components/layout/AppFooter';
-import { AppHeader } from '@/components/layout/AppHeader';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { AppHeader } from '@/components/layout/AppHeader';
+import { AppFooter } from '@/components/layout/AppFooter';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { Check, Lock, PlayCircle } from 'lucide-react';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: 'spring', stiffness: 100 },
+  },
+};
+
+const learningPath = [
+    { title: 'Setting Up Your Business', status: 'completed', icon: Check },
+    { title: 'Mastering Your Finances', status: 'in-progress', icon: PlayCircle },
+    { title: 'Scaling with Digital Marketing', status: 'locked', icon: Lock },
+];
+
+const recommendations = [
+    { title: 'Finding & Cutting Business Costs', image: 'https://placehold.co/300x160', hint: 'money savings' },
+    { title: 'Why Registering with BIR is Smart', image: 'https://placehold.co/300x160', hint: 'government building' },
+    { title: 'Advanced Inventory Management', image: 'https://placehold.co/300x160', hint: 'warehouse inventory' },
+];
+
+const categories = ['Finance & Tax', 'Marketing', 'Business Ops', 'Legal'];
 
 export default function LearnPage() {
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
-        <main className="flex-1 p-6 space-y-8 overflow-y-auto no-scrollbar pb-28">
+      <main className="flex-1 p-6 space-y-8 overflow-y-auto no-scrollbar pb-28">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-8"
+        >
+          <motion.div variants={itemVariants}>
             <AppHeader userName="Juan dela Cruz" />
-            <div className="flex-grow flex items-center justify-center flex-col text-center">
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ type: 'spring', stiffness: 100 }}
-                >
-                    <h1 className="text-2xl font-bold mb-4">Learn Hub</h1>
-                    <p className="text-muted-foreground mb-8 max-w-xs">This page is under construction. Come back soon for helpful articles and guides!</p>
-                    <Button asChild>
-                        <Link href="/dashboard">
-                            <ArrowLeft className="mr-2" />
-                            Back to Dashboard
-                        </Link>
-                    </Button>
-                </motion.div>
-            </div>
-        </main>
-        <AppFooter />
+          </motion.div>
+          
+          <motion.div variants={itemVariants}>
+              <h1 className="text-3xl font-bold tracking-tight">Learn Hub</h1>
+          </motion.div>
+
+          {/* Widget 1: Continue Learning */}
+          <motion.section variants={itemVariants}>
+              <h2 className="text-lg font-semibold mb-3">Pick Up Where You Left Off</h2>
+              <Card className="rounded-2xl border bg-primary/10 backdrop-blur-lg border-primary/20">
+                <CardHeader className="flex flex-row items-start gap-4 p-4">
+                    <div className="w-20 h-20 bg-primary rounded-lg flex-shrink-0">
+                         <Image src="https://placehold.co/200x200" width={80} height={80} alt="Course" className="rounded-lg" data-ai-hint="finance course" />
+                    </div>
+                    <div>
+                        <CardTitle className="text-lg">Financial Literacy 101</CardTitle>
+                        <p className="text-sm text-primary/80 mt-1">Next: 2. Understanding Your P&L</p>
+                    </div>
+                </CardHeader>
+                <CardContent className="px-4 pb-2">
+                    <Progress value={50} className="h-2" />
+                    <p className="text-xs text-muted-foreground mt-1 text-right">50% Complete</p>
+                </CardContent>
+                <CardFooter className="p-4 pt-2">
+                     <Button className="w-full bg-black text-white rounded-full">Continue Learning</Button>
+                </CardFooter>
+              </Card>
+          </motion.section>
+
+          {/* Widget 2: My Learning Path */}
+           <motion.section variants={itemVariants} className="space-y-3">
+              <h2 className="text-lg font-semibold">Your Growth Journey</h2>
+              <div className="space-y-2">
+                {learningPath.map((item, index) => (
+                    <Card key={index} className="rounded-xl border bg-background/40 backdrop-blur-lg border-border/10">
+                        <CardContent className="p-3 flex items-center gap-4">
+                            <div className="p-2 bg-black rounded-lg">
+                                <item.icon className="w-5 h-5 text-primary-foreground" />
+                            </div>
+                            <div className="flex-grow">
+                                <p className="font-semibold">{item.title}</p>
+                            </div>
+                            {item.status === 'in-progress' && <Badge variant="default" className="bg-primary/80">In Progress</Badge>}
+                        </CardContent>
+                    </Card>
+                ))}
+              </div>
+          </motion.section>
+
+          {/* Widget 3: Recommended For You */}
+           <motion.section variants={itemVariants} className="space-y-3">
+              <h2 className="text-lg font-semibold">Gabi Recommends...</h2>
+               <Carousel opts={{ align: "start", loop: false }} className="w-full">
+                <CarouselContent className="-ml-2">
+                    {recommendations.map((rec, index) => (
+                        <CarouselItem key={index} className="pl-2 basis-3/4">
+                            <Card className="rounded-xl border bg-background/40 backdrop-blur-lg border-border/10 overflow-hidden">
+                                <Image src={rec.image} width={300} height={160} alt={rec.title} className="aspect-video object-cover" data-ai-hint={rec.hint}/>
+                                <CardContent className="p-3">
+                                    <p className="font-semibold truncate">{rec.title}</p>
+                                </CardContent>
+                            </Card>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                </Carousel>
+          </motion.section>
+
+          {/* Widget 4: Browse by Category */}
+           <motion.section variants={itemVariants} className="space-y-3">
+                <h2 className="text-lg font-semibold">Browse by Category</h2>
+                <div className="flex flex-wrap gap-2">
+                    {categories.map(cat => (
+                        <Button key={cat} variant="outline" className="rounded-full bg-background/40 backdrop-blur-lg border-border/10">{cat}</Button>
+                    ))}
+                </div>
+            </motion.section>
+
+        </motion.div>
+      </main>
+      <AppFooter />
     </div>
   );
 }
