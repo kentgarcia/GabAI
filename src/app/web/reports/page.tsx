@@ -6,12 +6,10 @@ import { addDays, format } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import { Area, Bar, CartesianGrid, ComposedChart, Line, LineChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis, Cell } from 'recharts';
 import {
-    ChevronDown, Download, Mail as MailIcon, Printer, Sparkles, SlidersHorizontal, BarChart, FileText, Landmark, ScrollText,
-    Calendar as CalendarIcon, Package, Briefcase, CheckCircle, AlertTriangle, Lightbulb
+    Download, Mail as MailIcon, Printer, Sparkles, SlidersHorizontal, BarChart, FileText, Landmark, ScrollText,
+    Calendar as CalendarIcon
 } from 'lucide-react';
-import {
-    SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel, SidebarSeparator, SidebarInset
-} from '@/components/ui/sidebar';
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -176,293 +174,287 @@ export default function WebReportsPage() {
     );
 
     return (
-        <SidebarProvider>
-            <Sidebar variant="floating" collapsible="icon">
-                {/* This sidebar is a placeholder and would be part of a layout in a real app */}
-            </Sidebar>
-            <SidebarInset className="p-4 md:p-8 bg-muted/40 text-foreground">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                    <h1 className="text-3xl font-bold">Reports & Insights</h1>
-                    <div className="flex items-center gap-2 mt-4 md:mt-0">
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    id="date"
-                                    variant="outline"
-                                    className={cn(
-                                        "w-[260px] justify-start text-left font-normal bg-background/50",
-                                        !date && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {date?.from ? (
-                                        date.to ? (
-                                            <>
-                                                {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
-                                            </>
-                                        ) : (
-                                            format(date.from, "LLL dd, y")
-                                        )
+        <>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <h1 className="text-3xl font-bold">Reports & Insights</h1>
+                <div className="flex items-center gap-2 mt-4 md:mt-0">
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                id="date"
+                                variant="outline"
+                                className={cn(
+                                    "w-[260px] justify-start text-left font-normal bg-background/50",
+                                    !date && "text-muted-foreground"
+                                )}
+                            >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {date?.from ? (
+                                    date.to ? (
+                                        <>
+                                            {format(date.from, "LLL dd, y")} - {format(date.to, "LLL dd, y")}
+                                        </>
                                     ) : (
-                                        <span>Pick a date</span>
-                                    )}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="end">
-                                <Calendar
-                                    initialFocus
-                                    mode="range"
-                                    defaultMonth={date?.from}
-                                    selected={date}
-                                    onSelect={setDate}
-                                    numberOfMonths={2}
-                                />
-                            </PopoverContent>
-                        </Popover>
-                    </div>
+                                        format(date.from, "LLL dd, y")
+                                    )
+                                ) : (
+                                    <span>Pick a date</span>
+                                )}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="end">
+                            <Calendar
+                                initialFocus
+                                mode="range"
+                                defaultMonth={date?.from}
+                                selected={date}
+                                onSelect={setDate}
+                                numberOfMonths={2}
+                            />
+                        </PopoverContent>
+                    </Popover>
                 </div>
+            </div>
 
-                <Tabs defaultValue="insights" className="w-full">
-                    <TabsList className="mb-4">
-                        <TabsTrigger value="insights">Insights</TabsTrigger>
-                        <TabsTrigger value="forecast">Forecast <Badge variant="secondary" className="ml-2 bg-primary/20 text-primary">✨ Pro</Badge></TabsTrigger>
-                        <TabsTrigger value="generate">Generate</TabsTrigger>
-                    </TabsList>
+            <Tabs defaultValue="insights" className="w-full">
+                <TabsList className="mb-4">
+                    <TabsTrigger value="insights">Insights</TabsTrigger>
+                    <TabsTrigger value="forecast">Forecast <Badge variant="secondary" className="ml-2 bg-primary/20 text-primary">✨ Pro</Badge></TabsTrigger>
+                    <TabsTrigger value="generate">Generate</TabsTrigger>
+                </TabsList>
 
-                    {/* INSIGHTS TAB */}
-                    <TabsContent value="insights" className="space-y-6">
+                {/* INSIGHTS TAB */}
+                <TabsContent value="insights" className="space-y-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Income vs. Expense Trend</CardTitle>
+                        </CardHeader>
+                        <CardContent className="h-[350px] pr-6">
+                            <ChartContainer config={chartConfig} className="w-full h-full">
+                                <LineChart data={cashFlowData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                                    <CartesianGrid vertical={false} />
+                                    <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+                                    <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
+                                    <ChartTooltip content={<ChartTooltipContent />} />
+                                    <ChartLegend content={<ChartLegendContent />} />
+                                    <Line type="monotone" dataKey="income" stroke="var(--color-income)" strokeWidth={2.5} dot={false} />
+                                    <Line type="monotone" dataKey="expenses" stroke="var(--color-expenses)" strokeWidth={2.5} dot={false} />
+                                </LineChart>
+                            </ChartContainer>
+                        </CardContent>
+                    </Card>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Income vs. Expense Trend</CardTitle>
+                                <CardTitle>Expense Breakdown</CardTitle>
                             </CardHeader>
-                            <CardContent className="h-[350px] pr-6">
-                                <ChartContainer config={chartConfig} className="w-full h-full">
-                                    <LineChart data={cashFlowData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                                        <CartesianGrid vertical={false} />
-                                        <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-                                        <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
-                                        <ChartTooltip content={<ChartTooltipContent />} />
-                                        <ChartLegend content={<ChartLegendContent />} />
-                                        <Line type="monotone" dataKey="income" stroke="var(--color-income)" strokeWidth={2.5} dot={false} />
-                                        <Line type="monotone" dataKey="expenses" stroke="var(--color-expenses)" strokeWidth={2.5} dot={false} />
-                                    </LineChart>
-                                </ChartContainer>
+                            <CardContent className="h-[250px]">
+                                 <ChartContainer config={chartConfig} className="w-full h-full">
+                                    <PieChart>
+                                        <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                                        <Pie data={expenseBreakdownData} dataKey="value" nameKey="name" innerRadius="50%" strokeWidth={2}>
+                                            {expenseBreakdownData.map(entry => <Cell key={entry.name} fill={entry.fill} />)}
+                                        </Pie>
+                                        <ChartLegend content={<ChartLegendContent nameKey="name" />} />
+                                    </PieChart>
+                                 </ChartContainer>
                             </CardContent>
                         </Card>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Expense Breakdown</CardTitle>
-                                </CardHeader>
-                                <CardContent className="h-[250px]">
-                                     <ChartContainer config={chartConfig} className="w-full h-full">
-                                        <PieChart>
-                                            <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
-                                            <Pie data={expenseBreakdownData} dataKey="value" nameKey="name" innerRadius="50%" strokeWidth={2}>
-                                                {expenseBreakdownData.map(entry => <Cell key={entry.name} fill={entry.fill} />)}
-                                            </Pie>
-                                            <ChartLegend content={<ChartLegendContent nameKey="name" />} />
-                                        </PieChart>
-                                     </ChartContainer>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Income Breakdown</CardTitle>
-                                </CardHeader>
-                                <CardContent className="h-[250px]">
-                                     <ChartContainer config={chartConfig} className="w-full h-full">
-                                        <PieChart>
-                                            <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
-                                            <Pie data={incomeBreakdownData} dataKey="value" nameKey="name" innerRadius="50%" strokeWidth={2}>
-                                                {incomeBreakdownData.map(entry => <Cell key={entry.name} fill={entry.fill} />)}
-                                            </Pie>
-                                            <ChartLegend content={<ChartLegendContent nameKey="name" />} />
-                                        </PieChart>
-                                     </ChartContainer>
-                                </CardContent>
-                            </Card>
-                        </div>
                         <Card>
                             <CardHeader>
-                                <CardTitle>All Transactions</CardTitle>
-                                <CardDescription>Transactions within the selected date range. Click a chart segment to filter.</CardDescription>
+                                <CardTitle>Income Breakdown</CardTitle>
                             </CardHeader>
-                            <CardContent>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Date</TableHead>
-                                            <TableHead>Description</TableHead>
-                                            <TableHead>Category</TableHead>
-                                            <TableHead className="text-right">Amount</TableHead>
+                            <CardContent className="h-[250px]">
+                                 <ChartContainer config={chartConfig} className="w-full h-full">
+                                    <PieChart>
+                                        <ChartTooltip content={<ChartTooltipContent nameKey="name" />} />
+                                        <Pie data={incomeBreakdownData} dataKey="value" nameKey="name" innerRadius="50%" strokeWidth={2}>
+                                            {incomeBreakdownData.map(entry => <Cell key={entry.name} fill={entry.fill} />)}
+                                        </Pie>
+                                        <ChartLegend content={<ChartLegendContent nameKey="name" />} />
+                                    </PieChart>
+                                 </ChartContainer>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>All Transactions</CardTitle>
+                            <CardDescription>Transactions within the selected date range. Click a chart segment to filter.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Description</TableHead>
+                                        <TableHead>Category</TableHead>
+                                        <TableHead className="text-right">Amount</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {transactionsData.map(tx => (
+                                        <TableRow key={tx.id}>
+                                            <TableCell>{tx.date}</TableCell>
+                                            <TableCell className="font-medium">{tx.description}</TableCell>
+                                            <TableCell><Badge variant="outline">{tx.category}</Badge></TableCell>
+                                            <TableCell className={`text-right font-medium ${tx.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
+                                                {formatCurrency(tx.amount)}
+                                            </TableCell>
                                         </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {transactionsData.map(tx => (
-                                            <TableRow key={tx.id}>
-                                                <TableCell>{tx.date}</TableCell>
-                                                <TableCell className="font-medium">{tx.description}</TableCell>
-                                                <TableCell><Badge variant="outline">{tx.category}</Badge></TableCell>
-                                                <TableCell className={`text-right font-medium ${tx.type === 'income' ? 'text-emerald-600' : 'text-red-600'}`}>
-                                                    {formatCurrency(tx.amount)}
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
 
-                    {/* FORECAST TAB */}
-                    <TabsContent value="forecast" className="space-y-6">
+                {/* FORECAST TAB */}
+                <TabsContent value="forecast" className="space-y-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>AI Revenue Forecast</CardTitle>
+                            <CardDescription>Your projected income for the next 3 months.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="h-[350px] pr-6">
+                            <ChartContainer config={chartConfig}>
+                                <ComposedChart data={forecastChartData}>
+                                    <CartesianGrid vertical={false} />
+                                    <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+                                    <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
+                                    <ChartTooltip content={<ChartTooltipContent />} />
+                                    <ChartLegend content={<ChartLegendContent />} />
+                                    <Area type="monotone" dataKey="confidence" fill="var(--color-confidence)" stroke="none" />
+                                    <Line dataKey="actual" type="monotone" stroke="var(--color-actual)" strokeWidth={2} dot={true} />
+                                    <Line dataKey="predicted" type="monotone" stroke="var(--color-predicted)" strokeWidth={2} strokeDasharray="5 5" dot={true} />
+                                </ComposedChart>
+                            </ChartContainer>
+                        </CardContent>
+                    </Card>
+                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <Card>
                             <CardHeader>
-                                <CardTitle>AI Revenue Forecast</CardTitle>
-                                <CardDescription>Your projected income for the next 3 months.</CardDescription>
+                                <CardTitle>Cash Flow Projection</CardTitle>
                             </CardHeader>
-                            <CardContent className="h-[350px] pr-6">
-                                <ChartContainer config={chartConfig}>
-                                    <ComposedChart data={forecastChartData}>
-                                        <CartesianGrid vertical={false} />
-                                        <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-                                        <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
-                                        <ChartTooltip content={<ChartTooltipContent />} />
-                                        <ChartLegend content={<ChartLegendContent />} />
-                                        <Area type="monotone" dataKey="confidence" fill="var(--color-confidence)" stroke="none" />
-                                        <Line dataKey="actual" type="monotone" stroke="var(--color-actual)" strokeWidth={2} dot={true} />
-                                        <Line dataKey="predicted" type="monotone" stroke="var(--color-predicted)" strokeWidth={2} strokeDasharray="5 5" dot={true} />
-                                    </ComposedChart>
+                            <CardContent className="h-[250px]">
+                                <ChartContainer config={{ value: {label: 'Balance'} }}>
+                                     <ResponsiveContainer width="100%" height="100%">
+                                        <BarChart data={cashProjectionData} margin={{ top: 20, right: 20, left: -20, bottom: 5 }}>
+                                            <CartesianGrid vertical={false} />
+                                            <XAxis dataKey="name" />
+                                            <YAxis tickFormatter={formatCurrencyForChart} />
+                                            <ChartTooltip content={<ChartTooltipContent />} />
+                                            <Bar dataKey="value" fill="var(--color-income)" radius={4} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
                                 </ChartContainer>
                             </CardContent>
                         </Card>
-                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle>Cash Flow Projection</CardTitle>
-                                </CardHeader>
-                                <CardContent className="h-[250px]">
-                                    <ChartContainer config={{ value: {label: 'Balance'} }}>
-                                         <ResponsiveContainer width="100%" height="100%">
-                                            <BarChart data={cashProjectionData} margin={{ top: 20, right: 20, left: -20, bottom: 5 }}>
-                                                <CartesianGrid vertical={false} />
-                                                <XAxis dataKey="name" />
-                                                <YAxis tickFormatter={formatCurrencyForChart} />
-                                                <ChartTooltip content={<ChartTooltipContent />} />
-                                                <Bar dataKey="value" fill="var(--color-income)" radius={4} />
-                                            </BarChart>
-                                        </ResponsiveContainer>
-                                    </ChartContainer>
-                                </CardContent>
-                            </Card>
-                             <Card>
-                                <CardHeader>
-                                    <CardTitle>Smart Inventory Planner</CardTitle>
-                                </CardHeader>
-                                <CardContent className="space-y-4">
-                                    {inventoryData.map(item => (
-                                        <div key={item.product} className="grid grid-cols-3 items-center text-sm gap-2">
-                                            <p className="font-medium truncate">{item.product}</p>
-                                            <p className="text-muted-foreground">{item.velocity}</p>
-                                            <p className={`font-semibold text-right ${item.status === 'Urgent' ? 'text-red-500' : item.status === 'Reorder Soon' ? 'text-yellow-600' : ''}`}>{item.stockOut}</p>
-                                        </div>
-                                    ))}
-                                </CardContent>
-                            </Card>
-                        </div>
                          <Card>
                             <CardHeader>
-                                <CardTitle>What If? Scenario</CardTitle>
-                                <CardDescription>See how changes might affect your forecast.</CardDescription>
+                                <CardTitle>Smart Inventory Planner</CardTitle>
                             </CardHeader>
-                             <CardContent className="space-y-4">
-                                 <div>
-                                    <Label>Marketing Spend Increase</Label>
-                                    <Slider defaultValue={[10]} max={100} step={5} />
-                                 </div>
-                                <p className="text-sm text-center text-muted-foreground">Adjusting marketing spend by <strong>+10%</strong> may increase your Q3 revenue forecast by <strong>~{formatCurrency(3200)}</strong>.</p>
-                             </CardContent>
+                            <CardContent className="space-y-4">
+                                {inventoryData.map(item => (
+                                    <div key={item.product} className="grid grid-cols-3 items-center text-sm gap-2">
+                                        <p className="font-medium truncate">{item.product}</p>
+                                        <p className="text-muted-foreground">{item.velocity}</p>
+                                        <p className={`font-semibold text-right ${item.status === 'Urgent' ? 'text-red-500' : item.status === 'Reorder Soon' ? 'text-yellow-600' : ''}`}>{item.stockOut}</p>
+                                    </div>
+                                ))}
+                            </CardContent>
+                        </Card>
+                    </div>
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>What If? Scenario</CardTitle>
+                            <CardDescription>See how changes might affect your forecast.</CardDescription>
+                        </CardHeader>
+                         <CardContent className="space-y-4">
+                             <div>
+                                <Label>Marketing Spend Increase</Label>
+                                <Slider defaultValue={[10]} max={100} step={5} />
+                             </div>
+                            <p className="text-sm text-center text-muted-foreground">Adjusting marketing spend by <strong>+10%</strong> may increase your Q3 revenue forecast by <strong>~{formatCurrency(3200)}</strong>.</p>
+                         </CardContent>
+                     </Card>
+                </TabsContent>
+                
+                {/* GENERATE TAB */}
+                <TabsContent value="generate">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                       <div className="md:col-span-1">
+                         <Card>
+                           <CardHeader>
+                             <CardTitle>Document Center</CardTitle>
+                           </CardHeader>
+                           <CardContent className="flex flex-col gap-2">
+                             {reportTemplates.map(template => (
+                                 <Button
+                                    key={template.name}
+                                    variant={selectedReport === template.name ? "default" : "ghost"}
+                                    className="justify-start gap-2"
+                                    onClick={() => setSelectedReport(template.name)}
+                                    disabled={template.isPro && !isProUser}
+                                 >
+                                    <template.icon className="w-4 h-4" />
+                                    <span>{template.name}</span>
+                                    {template.isPro && <Badge variant="secondary" className="ml-auto bg-primary/20 text-primary">✨ Pro</Badge>}
+                                    {template.isNew && <Badge variant="secondary" className="ml-auto">New</Badge>}
+                                 </Button>
+                             ))}
+                           </CardContent>
                          </Card>
-                    </TabsContent>
-                    
-                    {/* GENERATE TAB */}
-                    <TabsContent value="generate">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                           <div className="md:col-span-1">
-                             <Card>
-                               <CardHeader>
-                                 <CardTitle>Document Center</CardTitle>
-                               </CardHeader>
-                               <CardContent className="flex flex-col gap-2">
-                                 {reportTemplates.map(template => (
-                                     <Button
-                                        key={template.name}
-                                        variant={selectedReport === template.name ? "default" : "ghost"}
-                                        className="justify-start gap-2"
-                                        onClick={() => setSelectedReport(template.name)}
-                                        disabled={template.isPro && !isProUser}
-                                     >
-                                        <template.icon className="w-4 h-4" />
-                                        <span>{template.name}</span>
-                                        {template.isPro && <Badge variant="secondary" className="ml-auto bg-primary/20 text-primary">✨ Pro</Badge>}
-                                        {template.isNew && <Badge variant="secondary" className="ml-auto">New</Badge>}
-                                     </Button>
-                                 ))}
-                               </CardContent>
-                             </Card>
-                           </div>
-                           <div className="md:col-span-2">
-                                <Card>
-                                     <CardHeader>
-                                        <CardTitle>Configuration & Preview</CardTitle>
-                                        <CardDescription>Configure and preview your '{selectedReport}'.</CardDescription>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="space-y-4 p-4 border rounded-lg mb-4">
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-2">
-                                                    <Label>Date Range</Label>
-                                                    <Select defaultValue="last-quarter">
-                                                        <SelectTrigger><SelectValue /></SelectTrigger>
-                                                        <SelectContent>
-                                                            <SelectItem value="last-quarter">Last Quarter</SelectItem>
-                                                            <SelectItem value="last-month">Last Month</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <Label>Compare to</Label>
-                                                    <Select defaultValue="none">
-                                                        <SelectTrigger><SelectValue /></SelectTrigger>
-                                                        <SelectContent>
-                                                            <SelectItem value="none">None</SelectItem>
-                                                            <SelectItem value="prev-quarter">Previous Quarter</SelectItem>
-                                                        </SelectContent>
-                                                    </Select>
-                                                </div>
-                                            </div>
-                                             <div className="space-y-2">
-                                                <Label>Accounting Basis</Label>
-                                                <Select defaultValue="cash">
+                       </div>
+                       <div className="md:col-span-2">
+                            <Card>
+                                 <CardHeader>
+                                    <CardTitle>Configuration & Preview</CardTitle>
+                                    <CardDescription>Configure and preview your '{selectedReport}'.</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-4 p-4 border rounded-lg mb-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label>Date Range</Label>
+                                                <Select defaultValue="last-quarter">
                                                     <SelectTrigger><SelectValue /></SelectTrigger>
                                                     <SelectContent>
-                                                        <SelectItem value="cash">Cash</SelectItem>
-                                                        <SelectItem value="accrual">Accrual</SelectItem>
+                                                        <SelectItem value="last-quarter">Last Quarter</SelectItem>
+                                                        <SelectItem value="last-month">Last Month</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             </div>
-                                            <Button className="w-full">Run Report</Button>
+                                            <div className="space-y-2">
+                                                <Label>Compare to</Label>
+                                                <Select defaultValue="none">
+                                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="none">None</SelectItem>
+                                                        <SelectItem value="prev-quarter">Previous Quarter</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
                                         </div>
-                                        <PnlPreview />
-                                    </CardContent>
-                                </Card>
-                           </div>
-                        </div>
-                    </TabsContent>
-                </Tabs>
-            </SidebarInset>
-        </SidebarProvider>
+                                         <div className="space-y-2">
+                                            <Label>Accounting Basis</Label>
+                                            <Select defaultValue="cash">
+                                                <SelectTrigger><SelectValue /></SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="cash">Cash</SelectItem>
+                                                    <SelectItem value="accrual">Accrual</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <Button className="w-full">Run Report</Button>
+                                    </div>
+                                    <PnlPreview />
+                                </CardContent>
+                            </Card>
+                       </div>
+                    </div>
+                </TabsContent>
+            </Tabs>
+        </>
     );
 }
-
