@@ -32,25 +32,25 @@ const reportOptions = [
   {
     icon: FileText,
     title: 'Profit & Loss Statement (P&L)',
-    description: 'Your official income, expenses, and net profit. Perfect for business check-ups and loan applications.',
+    description: 'For business health checks & loan applications.',
     href: '#',
   },
   {
     icon: Landmark,
     title: 'Tax Data Summary',
-    description: 'A summary of your gross income and tax-deductible expenses to help you with BIR filings.',
+    description: 'To help with BIR filings.',
     href: '#',
   },
   {
     icon: BarChart3,
     title: 'Sales Report',
-    description: "Breakdown of sales by product or platform to see what's selling best.",
+    description: 'Breakdown of all sales (for Sellers).',
     href: '#',
   },
   {
     icon: ScrollText,
     title: 'Receipt & Invoice History',
-    description: "View, resend, or download all the official receipts you've created.",
+    description: 'A central archive of all generated receipts.',
     href: '#',
   },
 ];
@@ -285,24 +285,25 @@ export default function ReportsPage() {
 
                 <TabsContent value="generate">
                     <motion.div variants={itemVariants} className="space-y-4">
-                    {reportOptions.map((option) => (
-                        <Link href={option.href} key={option.title}>
-                        <motion.div whileTap={{ scale: 0.98 }}>
-                            <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
-                            <CardContent className="p-4 flex items-center gap-4">
-                                <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center flex-shrink-0">
-                                <option.icon className="w-6 h-6 text-foreground" />
-                                </div>
-                                <div className="flex-grow">
-                                <p className="font-semibold">{option.title}</p>
-                                <p className="text-sm text-muted-foreground">{option.description}</p>
-                                </div>
-                                <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                            </CardContent>
-                            </Card>
-                        </motion.div>
-                        </Link>
-                    ))}
+                      <h2 className="text-lg font-semibold">Create a Document</h2>
+                      {reportOptions.map((option) => (
+                          <Link href={option.href} key={option.title}>
+                          <motion.div whileTap={{ scale: 0.98 }}>
+                              <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
+                              <CardContent className="p-4 flex items-center gap-4">
+                                  <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center flex-shrink-0">
+                                  <option.icon className="w-6 h-6 text-foreground" />
+                                  </div>
+                                  <div className="flex-grow">
+                                  <p className="font-semibold">{option.title}</p>
+                                  <p className="text-sm text-muted-foreground">{option.description}</p>
+                                  </div>
+                                  <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                              </CardContent>
+                              </Card>
+                          </motion.div>
+                          </Link>
+                      ))}
                     </motion.div>
                 </TabsContent>
             </Tabs>
