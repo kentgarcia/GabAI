@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
-import { ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, ArrowLeftRight, User } from 'lucide-react';
+import { ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { FinancialHealthGauge } from '@/components/ui/financial-health-gauge';
 import { AppFooter } from '@/components/layout/AppFooter';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AppHeader } from '@/components/layout/AppHeader';
 
 type Activity = { id: number; type: 'income' | 'expense'; name: string; date: string; value: number; project?: string; };
 type BreakdownItem = { name: string; value: number; };
@@ -146,6 +146,10 @@ export default function DashboardPage() {
     setData(mockData[period]);
   }, [period]);
 
+  const handleFlip = () => {
+    setIsFlipped(prev => !prev);
+  }
+
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
       <main className="flex-1 px-4 py-6 space-y-6 overflow-y-auto no-scrollbar pb-28">
@@ -156,20 +160,9 @@ export default function DashboardPage() {
             animate="visible"
             className="space-y-6"
         >
-            <motion.header variants={itemVariants} className="flex items-center justify-between">
-              <div>
-                <p className="text-muted-foreground">Welcome back,</p>
-                <h1 className="text-2xl font-bold">Juan dela Cruz</h1>
-              </div>
-              <Link href="/settings/profile">
-                  <Avatar className="h-12 w-12 cursor-pointer">
-                    <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person avatar" />
-                    <AvatarFallback>
-                      <User />
-                    </AvatarFallback>
-                  </Avatar>
-              </Link>
-            </motion.header>
+            <motion.div variants={itemVariants}>
+                <AppHeader userName="Juan dela Cruz" />
+            </motion.div>
 
             <motion.div variants={itemVariants} className="flex justify-center">
                 <Tabs 
@@ -205,7 +198,7 @@ export default function DashboardPage() {
                       {/* Front: Net Profit */}
                       <div
                         className="absolute w-full h-full [backface-visibility:hidden] cursor-pointer"
-                        onClick={() => setIsFlipped(true)}
+                        onClick={handleFlip}
                       >
                         <Card className="w-full h-full bg-gradient-to-b from-primary-dark to-primary text-primary-foreground shadow-xl rounded-3xl">
                           <CardContent className="p-6 flex flex-col justify-between h-full">
@@ -242,7 +235,7 @@ export default function DashboardPage() {
                       {/* Back: Financial Health */}
                       <div
                         className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] cursor-pointer"
-                        onClick={() => setIsFlipped(false)}
+                        onClick={handleFlip}
                       >
                         <Card className="w-full h-full bg-background/40 backdrop-blur-lg border-border/10 rounded-3xl">
                             <CardContent className="p-6 flex flex-col items-center justify-center h-full relative">
