@@ -1,4 +1,6 @@
 
+'use client';
+
 import { Suspense } from 'react';
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -39,8 +41,6 @@ const ChatBubble = ({ children }: { children: React.ReactNode }) => (
 );
 
 function ProcessingContent() {
-  'use client';
-  
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get('from') || 'seller'; // Default to seller
