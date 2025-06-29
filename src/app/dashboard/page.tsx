@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from 'next/link';
 import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 
 export default function DashboardPage() {
   const [period, setPeriod] = useState('month');
@@ -26,7 +27,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground font-sans">
+    <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
       <main className="flex-1 px-4 py-6 space-y-6 overflow-y-auto no-scrollbar pb-28">
         
         <div className="flex justify-center">
@@ -39,14 +40,14 @@ export default function DashboardPage() {
             </Tabs>
         </div>
 
-        <Card className="w-full bg-gradient-to-b from-primary-dark to-primary text-primary-foreground border-none shadow-xl rounded-3xl">
+        <Card className="w-full bg-background/40 backdrop-blur-lg border border-border/10 shadow-xl rounded-3xl">
           <CardContent className="p-6 space-y-4">
             <div className="flex justify-between items-center w-full">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
                         <span className="font-bold text-xl text-white">₱</span>
                     </div>
-                    <p className="font-semibold tracking-wider text-primary-foreground/80">NET PROFIT</p>
+                    <p className="font-semibold tracking-wider text-muted-foreground">NET PROFIT</p>
                 </div>
                 <Button className="bg-black text-primary-foreground/80 hover:bg-black/90 h-10 px-3 text-xs rounded-full flex items-center gap-1">
                     More Details <ArrowRight className="w-3 h-3" />
@@ -54,21 +55,24 @@ export default function DashboardPage() {
             </div>
             
             <div className="text-center">
-                <p className="text-6xl font-bold my-2 tracking-tighter">
+                <p className={cn(
+                  "text-6xl font-bold my-2 tracking-tighter",
+                  data.netProfit >= 0 ? 'text-chart-2' : 'text-destructive'
+                )}>
                   {formatCurrency(data.netProfit)}
                 </p>
             </div>
             
-            <div className="w-full border-t border-primary-foreground/20"></div>
+            <div className="w-full border-t border-border/20"></div>
 
             <div className="grid grid-cols-2 gap-4 w-full text-center">
               <div>
-                <p className="text-sm text-primary-foreground/80">Income</p>
-                <p className="text-2xl font-semibold">{formatCurrency(data.income)}</p>
+                <p className="text-sm text-muted-foreground">Income</p>
+                <p className="text-2xl font-semibold text-foreground">{formatCurrency(data.income)}</p>
               </div>
               <div>
-                <p className="text-sm text-primary-foreground/80">Expenses</p>
-                <p className="text-2xl font-semibold">{formatCurrency(data.expenses)}</p>
+                <p className="text-sm text-muted-foreground">Expenses</p>
+                <p className="text-2xl font-semibold text-foreground">{formatCurrency(data.expenses)}</p>
               </div>
             </div>
           </CardContent>
@@ -76,10 +80,10 @@ export default function DashboardPage() {
 
         <div className="space-y-4">
             <h2 className="font-bold text-lg">This Month's Breakdown</h2>
-            <Card className="rounded-2xl border">
+            <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
                 <CardContent className="p-4">
                     <Tabs defaultValue="products" className="w-full">
-                        <TabsList className="grid w-full grid-cols-2 bg-muted/60 p-1.5 rounded-2xl">
+                        <TabsList className="grid w-full grid-cols-2 bg-muted/30 p-1.5 rounded-2xl">
                             <TabsTrigger value="products" className="rounded-lg">Top Products/Services</TabsTrigger>
                             <TabsTrigger value="expenses" className="rounded-lg">Top Expenses</TabsTrigger>
                         </TabsList>
@@ -124,7 +128,7 @@ export default function DashboardPage() {
                 See all <ArrowRight className="w-4 h-4" />
                 </Link>
             </div>
-            <div className="text-center py-10 bg-card rounded-2xl border">
+            <div className="text-center py-10 bg-background/40 backdrop-blur-lg rounded-2xl border border-border/10">
                 <p className="text-muted-foreground">No recent transactions yet.</p>
             </div>
         </div>

@@ -22,9 +22,9 @@ export default function RootLayout({
       <body className="font-body antialiased bg-background">
         <div className="relative z-10 mx-auto flex min-h-screen max-w-sm flex-col border-x border-border bg-background shadow-2xl overflow-hidden">
           <div className="absolute inset-0 -z-10">
-            <div className="absolute top-0 -left-36 w-72 h-72 bg-accent/20 rounded-full filter blur-2xl animate-blob"></div>
-            <div className="absolute top-0 -right-36 w-72 h-72 bg-primary/20 rounded-full filter blur-2xl animate-blob animation-delay-2000"></div>
-            <div className="absolute -bottom-32 left-10 w-72 h-72 bg-secondary/20 rounded-full filter blur-2xl animate-blob animation-delay-4000"></div>
+            <div className="absolute top-0 -left-40 w-96 h-96 bg-accent/40 rounded-full filter blur-xl animate-blob"></div>
+            <div className="absolute top-0 -right-40 w-96 h-96 bg-primary/40 rounded-full filter blur-xl animate-blob animation-delay-2000"></div>
+            <div className="absolute -bottom-40 left-20 w-96 h-96 bg-accent/40 rounded-full filter blur-xl animate-blob animation-delay-4000"></div>
           </div>
           {children}
         </div>
