@@ -106,10 +106,10 @@ export default function WebAppPage() {
 
 
   return (
-    <SidebarProvider>
-        <Sidebar variant="sidebar" collapsible="icon">
+    <SidebarProvider defaultOpen={false}>
+        <Sidebar variant="floating" collapsible="icon">
             <SidebarHeader>
-                 <h2 className="text-xl font-bold p-2 group-data-[collapsible=icon]:hidden">dappr</h2>
+                 <h2 className="text-xl font-bold p-2 group-data-[collapsible=icon]:hidden">GabAI</h2>
             </SidebarHeader>
             <SidebarContent>
                  <SidebarMenu>
@@ -162,7 +162,7 @@ export default function WebAppPage() {
                 </SidebarMenu>
             </SidebarFooter>
         </Sidebar>
-        <SidebarInset className="p-8 bg-[hsl(var(--background))] text-foreground">
+        <SidebarInset className="p-8 bg-transparent text-foreground">
              <header className="flex items-center justify-between mb-8">
                 <h1 className="text-3xl font-bold">Good morning, James!</h1>
                 <div className="flex items-center gap-4">
@@ -186,7 +186,7 @@ export default function WebAppPage() {
                 <main className="lg:col-span-2 space-y-6">
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
                         {statCards.map((card, index) => (
-                             <Card key={index} className="bg-card/60 border-none rounded-xl">
+                             <Card key={index} className="bg-background/40 backdrop-blur-lg border-border/10 rounded-xl">
                                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                                     <card.icon className="w-6 h-6 text-muted-foreground" />
                                     <Button variant="ghost" size="icon" className="w-6 h-6"><MoreVertical className="w-4 h-4" /></Button>
@@ -199,7 +199,7 @@ export default function WebAppPage() {
                         ))}
                     </div>
 
-                    <Card className="bg-card/60 border-none rounded-xl">
+                    <Card className="bg-background/40 backdrop-blur-lg border-border/10 rounded-xl">
                         <CardHeader>
                             <div className="flex justify-between items-center">
                                 <CardTitle>Revenue</CardTitle>
@@ -222,7 +222,7 @@ export default function WebAppPage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         {clientCards.map((card, index) => (
-                             <Card key={index} className="bg-card/60 border-none rounded-xl">
+                             <Card key={index} className="bg-background/40 backdrop-blur-lg border-border/10 rounded-xl">
                                 <CardContent className="p-6">
                                     <p className="text-sm text-muted-foreground">{card.title}</p>
                                     <div className="flex items-baseline gap-4 mt-2">
@@ -239,7 +239,7 @@ export default function WebAppPage() {
                         ))}
                     </div>
                     
-                    <Card className="bg-card/60 border-none rounded-xl">
+                    <Card className="bg-background/40 backdrop-blur-lg border-border/10 rounded-xl">
                         <CardHeader>
                             <CardTitle>Recent emails</CardTitle>
                         </CardHeader>
