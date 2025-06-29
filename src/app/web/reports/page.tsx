@@ -6,7 +6,7 @@ import { addDays, format } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import { Area, Bar, CartesianGrid, ComposedChart, Line, LineChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis, Cell } from 'recharts';
 import {
-    Download, Mail as MailIcon, Printer, Sparkles, SlidersHorizontal, BarChart, FileText, Landmark, ScrollText,
+    Download, Mail as MailIcon, Printer, Sparkles, SlidersHorizontal, BarChart as BarChartIcon, FileText, Landmark, ScrollText,
     Calendar as CalendarIcon
 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
@@ -104,7 +104,7 @@ const chartConfig: ChartConfig = {
 const reportTemplates = [
     { name: 'Profit & Loss Statement', icon: FileText },
     { name: 'Balance Sheet', icon: Landmark, isNew: true },
-    { name: 'Cash Flow Statement', icon: BarChart },
+    { name: 'Cash Flow Statement', icon: BarChartIcon },
     { name: 'Full Tax & Contributions Summary', icon: Sparkles, isPro: true },
     { name: 'Detailed Sales Report', icon: ScrollText },
     { name: 'Custom Report Builder', icon: SlidersHorizontal, isPro: true },
@@ -338,15 +338,13 @@ export default function WebReportsPage() {
                             </CardHeader>
                             <CardContent className="h-[250px]">
                                 <ChartContainer config={{ value: {label: 'Balance'} }}>
-                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={cashProjectionData} margin={{ top: 20, right: 20, left: -20, bottom: 5 }}>
-                                            <CartesianGrid vertical={false} />
-                                            <XAxis dataKey="name" />
-                                            <YAxis tickFormatter={formatCurrencyForChart} />
-                                            <ChartTooltip content={<ChartTooltipContent />} />
-                                            <Bar dataKey="value" fill="var(--color-income)" radius={4} />
-                                        </BarChart>
-                                    </ResponsiveContainer>
+                                    <BarChart data={cashProjectionData} margin={{ top: 20, right: 20, left: -20, bottom: 5 }}>
+                                        <CartesianGrid vertical={false} />
+                                        <XAxis dataKey="name" />
+                                        <YAxis tickFormatter={formatCurrencyForChart} />
+                                        <ChartTooltip content={<ChartTooltipContent />} />
+                                        <Bar dataKey="value" fill="var(--color-income)" radius={4} />
+                                    </BarChart>
                                 </ChartContainer>
                             </CardContent>
                         </Card>
