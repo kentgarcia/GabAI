@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   Bot, Gift, Home, Trophy, FileText, Landmark, BarChart3, ScrollText,
-  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase
+  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase, DollarSign, Package
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,9 +21,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   ChartConfig,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from "recharts";
+import { Line, LineChart, Pie, PieChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend, Cell } from "recharts";
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 const reportOptions = [
   {
@@ -52,7 +55,7 @@ const reportOptions = [
   },
 ];
 
-const chartData = [
+const lineChartData = [
   { month: "Jan", income: 18600, expenses: 8000 },
   { month: "Feb", income: 30500, expenses: 20000 },
   { month: "Mar", income: 23700, expenses: 12000 },
@@ -61,21 +64,26 @@ const chartData = [
   { month: "Jun", income: 21400, expenses: 14000 },
 ];
 
+const donutData = [
+  { name: 'Product Costs', value: 400, fill: 'var(--color-productCosts)' },
+  { name: 'Marketing', value: 300, fill: 'var(--color-marketing)' },
+  { name: 'Fees', value: 200, fill: 'var(--color-fees)' },
+  { name: 'Other', value: 278, fill: 'var(--color-other)' },
+];
+
 const chartConfig = {
-  income: {
-    label: "Income",
-    color: "hsl(var(--chart-2))",
-  },
-  expenses: {
-    label: "Expenses",
-    color: "hsl(var(--chart-5))",
-  },
+  income: { label: "Income", color: "hsl(var(--chart-2))" },
+  expenses: { label: "Expenses", color: "hsl(var(--destructive))" },
+  productCosts: { label: "Product Costs", color: "hsl(var(--chart-1))" },
+  marketing: { label: "Marketing", color: "hsl(var(--chart-2))" },
+  fees: { label: "Fees", color: "hsl(var(--chart-3))" },
+  other: { label: "Other", color: "hsl(var(--chart-5))" },
 } satisfies ChartConfig;
 
-const topChannels = [
-    { name: 'Shopee', value: '₱45,231', icon: ShoppingCart },
-    { name: 'Lazada', value: '₱31,842', icon: ShoppingCart },
-    { name: 'Client Project Alpha', value: '₱25,000', icon: Briefcase },
+const topPerformers = [
+    { name: 'Gadget Pro Stand', value: '₱25,120', icon: Package },
+    { name: 'Digital Art Commission', value: '₱15,500', icon: Briefcase },
+    { name: 'Vintage T-Shirt', value: '₱8,942', icon: ShoppingCart },
 ];
 
 const containerVariants = {
@@ -146,15 +154,47 @@ export default function ReportsPage() {
 
                 <TabsContent value="insights" className="space-y-6">
                     <motion.div variants={itemVariants}>
+                      <h2 className="text-lg font-semibold mb-2">Performance for {dateRange}</h2>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Total Income</CardTitle>
+                            <DollarSign className="h-4 w-4 text-muted-foreground" />
+                          </CardHeader>
+                          <CardContent>
+                            <div className="text-2xl font-bold">₱45,231</div>
+                          </CardContent>
+                        </Card>
+                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
+                            <DollarSign className="h-4 w-4 text-muted-foreground" />
+                          </CardHeader>
+                          <CardContent>
+                            <div className="text-2xl font-bold">₱21,894</div>
+                          </CardContent>
+                        </Card>
+                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Net Profit</CardTitle>
+                            <DollarSign className="h-4 w-4 text-muted-foreground" />
+                          </CardHeader>
+                          <CardContent>
+                            <div className="text-2xl font-bold text-emerald-500">₱23,337</div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </motion.div>
+                    <motion.div variants={itemVariants}>
                         <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
                             <CardHeader>
-                                <CardTitle>Income vs Expenses</CardTitle>
+                                <CardTitle>Cash Flow Trend</CardTitle>
                                 <CardDescription>{dateRange}</CardDescription>
                             </CardHeader>
                             <CardContent className="h-[250px] -ml-2">
                                 <ChartContainer config={chartConfig} className="w-full h-full">
                                     <ResponsiveContainer>
-                                        <BarChart data={chartData} margin={{ top: 20, right: 20, bottom: 0, left: -20 }}>
+                                        <LineChart data={lineChartData} margin={{ top: 20, right: 20, bottom: 0, left: -20 }}>
                                             <CartesianGrid vertical={false} strokeDasharray="3 3" />
                                             <XAxis
                                                 dataKey="month"
@@ -171,12 +211,50 @@ export default function ReportsPage() {
                                                 tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
                                             />
                                             <ChartTooltip
-                                                cursor={false}
-                                                content={<ChartTooltipContent indicator="dot" />}
+                                                cursor={true}
+                                                content={<ChartTooltipContent indicator="line" />}
                                             />
-                                            <Bar dataKey="income" fill="var(--color-income)" radius={4} />
-                                            <Bar dataKey="expenses" fill="var(--color-expenses)" radius={4} />
-                                        </BarChart>
+                                            <Legend content={<ChartLegendContent />} />
+                                            <Line type="monotone" dataKey="income" stroke="var(--color-income)" strokeWidth={2.5} dot={false} />
+                                            <Line type="monotone" dataKey="expenses" stroke="var(--color-expenses)" strokeWidth={2.5} dot={false} />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </ChartContainer>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                     <motion.div variants={itemVariants}>
+                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                            <CardHeader>
+                                <CardTitle>Where Your Money Went</CardTitle>
+                                <CardDescription>{dateRange}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="h-[250px] flex items-center justify-center">
+                                <ChartContainer config={chartConfig} className="w-full h-full">
+                                    <ResponsiveContainer>
+                                        <PieChart>
+                                            <ChartTooltip
+                                                content={<ChartTooltipContent nameKey="name" hideLabel />}
+                                            />
+                                            <Pie
+                                                data={donutData}
+                                                dataKey="value"
+                                                nameKey="name"
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius={60}
+                                                outerRadius={90}
+                                                paddingAngle={2}
+                                                strokeWidth={5}
+                                            >
+                                            {donutData.map((entry) => (
+                                                    <Cell key={entry.name} fill={entry.fill} />
+                                            ))}
+                                            </Pie>
+                                            <Legend
+                                                content={<ChartLegendContent nameKey="name" className="flex-wrap" />}
+                                            />
+                                        </PieChart>
                                     </ResponsiveContainer>
                                 </ChartContainer>
                             </CardContent>
@@ -185,19 +263,19 @@ export default function ReportsPage() {
                     <motion.div variants={itemVariants}>
                         <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
                             <CardHeader>
-                                <CardTitle>Top Earning Channels</CardTitle>
+                                <CardTitle>Top Performers</CardTitle>
                                 <CardDescription>{dateRange}</CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                               {topChannels.map((channel, index) => (
+                               {topPerformers.map((item, index) => (
                                     <div key={index} className="flex items-center gap-3">
                                         <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
-                                            <channel.icon className="w-5 h-5 text-primary-foreground" />
+                                            <item.icon className="w-5 h-5 text-primary-foreground" />
                                         </div>
                                         <div className="flex-grow">
-                                            <p className="font-semibold">{channel.name}</p>
+                                            <p className="font-semibold">{item.name}</p>
                                         </div>
-                                        <p className="font-semibold text-lg">{channel.value}</p>
+                                        <p className="font-semibold text-lg">{item.value}</p>
                                     </div>
                                 ))}
                             </CardContent>
@@ -239,8 +317,8 @@ export default function ReportsPage() {
           <Link href="/reports" className="flex flex-col items-center text-primary hover:text-primary/90 transition-colors">
             <FileText className="w-5 h-5" />
           </Link>
-          <Link href="/chat" className="w-12 h-12 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors">
-            <Bot className="w-6 h-6 text-primary-foreground" />
+          <Link href="/chat" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors">
+            <Bot className="w-5 h-5 text-primary-foreground" />
           </Link>
           <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
             <Gift className="w-5 h-5" />
