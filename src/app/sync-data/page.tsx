@@ -73,9 +73,11 @@ export default function SyncDataPage() {
           </motion.div>
           
           <motion.div variants={itemVariants} className="space-y-4 my-8">
-            <Button className="w-full h-14 text-lg font-semibold rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
-              <Upload className="mr-2" />
-              Upload Report (.csv/.xlsx)
+            <Button asChild className="w-full h-14 text-lg font-semibold rounded-full bg-primary text-primary-foreground hover:bg-primary/90">
+              <Link href="/processing">
+                <Upload className="mr-2" />
+                Upload Report (.csv/.xlsx)
+              </Link>
             </Button>
             <Button asChild variant="ghost" className="w-full h-14 text-lg font-semibold rounded-full text-foreground hover:bg-foreground/10">
               <Link href="/dashboard">

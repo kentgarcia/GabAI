@@ -115,8 +115,10 @@ export default function LogIncomePage() {
             transition={{ delay: 0.5, duration: 0.5 }}
        >
         <div className="space-y-3">
-             <Button className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90">
-                + Log Income
+             <Button asChild className="w-full bg-primary text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-primary/90">
+                <Link href="/processing">
+                    + Log Income
+                </Link>
              </Button>
              <Button asChild variant="ghost" className="w-full h-14 text-lg font-semibold rounded-full text-foreground hover:bg-foreground/10">
                 <Link href="/dashboard">
