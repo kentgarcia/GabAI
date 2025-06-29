@@ -135,7 +135,11 @@ export default function LearnPage() {
                 <h2 className="text-lg font-semibold">Browse by Category</h2>
                 <div className="flex flex-wrap gap-2">
                     {categories.map(cat => (
-                        <Button key={cat} variant="outline" className="rounded-full bg-background/40 backdrop-blur-lg border-border/10">{cat}</Button>
+                        <Button key={cat} asChild variant="outline" className="rounded-full bg-background/40 backdrop-blur-lg border-border/10">
+                           <Link href={`/learn/category/${cat.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`}>
+                                {cat}
+                            </Link>
+                        </Button>
                     ))}
                 </div>
             </motion.section>
