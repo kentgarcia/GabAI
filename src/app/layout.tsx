@@ -19,8 +19,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">
-        {children}
+      <body className="font-body antialiased bg-muted">
+        <div className="relative mx-auto flex min-h-screen max-w-sm flex-col border-x bg-background shadow-2xl">
+          {children}
+        </div>
         <Toaster />
       </body>
     </html>
