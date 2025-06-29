@@ -4,8 +4,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import {
-  Bot, Gift, Home, Trophy, FileText, Landmark, BarChart3, ScrollText,
-  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase, DollarSign, Package
+  Landmark, BarChart3, ScrollText,
+  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase, DollarSign, Package, FileText
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/chart";
 import { Line, LineChart, Pie, PieChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Legend, Cell } from "recharts";
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { AppFooter } from '@/components/layout/AppFooter';
 
 const reportOptions = [
   {
@@ -310,25 +310,7 @@ export default function ReportsPage() {
         </motion.div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 max-w-sm mx-auto p-4 z-20">
-        <div className="bg-black rounded-full h-14 flex justify-around items-center shadow-lg">
-          <Link href="/dashboard" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Home className="w-5 h-5" />
-          </Link>
-          <Link href="/reports" className="flex flex-col items-center text-primary hover:text-primary/90 transition-colors">
-            <FileText className="w-5 h-5" />
-          </Link>
-          <Link href="/chat" className="w-10 h-10 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors">
-            <Bot className="w-5 h-5 text-primary-foreground" />
-          </Link>
-          <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Gift className="w-5 h-5" />
-          </Link>
-          <Link href="#" className="flex flex-col items-center text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-            <Trophy className="w-5 h-5" />
-          </Link>
-        </div>
-      </footer>
+      <AppFooter />
     </div>
   );
 }
