@@ -3,9 +3,12 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
-import { ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, ArrowLeftRight, Laptop } from 'lucide-react';
+import {
+    ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, ArrowLeftRight, Laptop,
+    AlertTriangle, Lightbulb, Wallet, ChevronRight
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -93,6 +96,12 @@ const mockData: MockData = {
     ],
   },
 };
+
+const gabiInsights = [
+    { text: "Follow up with 'Innovate Corp'. Their ₱15,000 invoice is 3 days overdue.", href: '#', icon: AlertTriangle, iconColor: 'text-yellow-500' },
+    { text: "Your 'Resin Coasters' are hot! You're low on stock.", href: '#', icon: TrendingUp, iconColor: 'text-emerald-500' },
+    { text: "Your quarterly tax filing is due in 15 days. Let's make sure your books are clean.", href: '#', icon: Lightbulb, iconColor: 'text-blue-500' },
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -237,7 +246,7 @@ export default function DashboardPage() {
                         className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] cursor-pointer"
                         onClick={handleFlip}
                       >
-                        <Card className="w-full h-full bg-background/40 backdrop-blur-lg border-border/10 rounded-3xl">
+                        <Card className="w-full h-full bg-primary-dark text-primary-foreground rounded-3xl">
                             <CardContent className="p-6 flex flex-col items-center justify-center h-full relative">
                                 <div className="flex flex-col items-center text-center">
                                     <h2 className="text-lg font-bold mb-2">Your Financial Health</h2>
@@ -248,10 +257,10 @@ export default function DashboardPage() {
                                         trend="up"
                                     />
                                 </div>
-                                <Button asChild variant="outline" className="mt-4 rounded-full bg-background/50 backdrop-blur-md">
+                                <Button asChild variant="outline" className="mt-4 rounded-full bg-primary/80 border-primary-foreground/50 text-primary-foreground hover:bg-primary/90">
                                     <Link href="/growth-path" onClick={(e) => e.stopPropagation()}>View Growth Path</Link>
                                 </Button>
-                                <div className="text-muted-foreground flex items-center gap-1 text-xs absolute bottom-4 right-4">
+                                <div className="text-primary-foreground/70 flex items-center gap-1 text-xs absolute bottom-4 right-4">
                                   Flip <ArrowLeftRight className="w-3 h-3"/>
                                 </div>
                             </CardContent>
@@ -260,22 +269,36 @@ export default function DashboardPage() {
                     </motion.div>
                   </div>
                 </motion.div>
+                
+                 <motion.div variants={itemVariants}>
+                    <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                        <CardHeader>
+                            <CardTitle className="text-sm font-medium text-muted-foreground">YOUR TAKE-HOME (SAFE TO SPEND)</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex items-baseline gap-4">
+                            <Wallet className="w-8 h-8 text-primary" />
+                            <AnimatedNumber value={data.netProfit * 0.7} className="text-4xl font-bold" />
+                        </CardContent>
+                    </Card>
+                </motion.div>
 
                 <motion.div variants={itemVariants}>
-                    <Link href="https://gab-ai-fawn.vercel.app/web" target="_blank" rel="noopener noreferrer">
-                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
-                            <CardContent className="p-4 flex items-center gap-4">
-                                <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <Laptop className="w-6 h-6 text-primary-foreground" />
-                                </div>
-                                <div className="flex-grow">
-                                    <p className="font-semibold">Go Pro on Desktop</p>
-                                    <p className="text-sm text-muted-foreground">Manage invoices, view advanced reports, and more on the web.</p>
-                                </div>
-                                <ArrowRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                            </CardContent>
-                        </Card>
-                    </Link>
+                     <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                        <CardHeader>
+                            <CardTitle>Gabi's Co-Pilot Briefing ({gabiInsights.length})</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-1">
+                            {gabiInsights.map((insight, index) => (
+                                <Link href={insight.href} key={index}>
+                                    <div className="p-3 rounded-lg flex items-center gap-3 transition-colors hover:bg-muted/40">
+                                        <insight.icon className={cn("w-5 h-5 flex-shrink-0", insight.iconColor)} />
+                                        <p className="font-medium text-sm flex-grow">{insight.text}</p>
+                                        <ChevronRight className="w-5 h-5 text-muted-foreground" />
+                                    </div>
+                                </Link>
+                            ))}
+                        </CardContent>
+                    </Card>
                 </motion.div>
                 
                 <motion.div variants={itemVariants} className="space-y-4">
