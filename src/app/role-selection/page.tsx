@@ -139,7 +139,7 @@ export default function RoleSelectionPage() {
 
   return (
     <main className="flex flex-col flex-grow p-6 text-foreground">
-      <div className="flex-grow w-full max-w-sm mx-auto flex flex-col justify-center overflow-y-auto no-scrollbar">
+      <div className="flex-grow w-full max-w-sm mx-auto flex flex-col min-h-0 overflow-y-auto no-scrollbar">
         <motion.div
             className="space-y-6 py-4"
             variants={containerVariants}
