@@ -1,9 +1,8 @@
-
 'use client';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
@@ -29,7 +28,7 @@ const itemVariants = {
 
 export default function MeetGabiPage() {
   return (
-    <main className="flex flex-col flex-grow justify-between p-6 text-foreground">
+    <main className="flex flex-col flex-grow justify-between p-6 text-foreground overflow-hidden">
       <div className="flex-grow flex flex-col justify-center">
         <motion.div
           className="text-center w-full"
@@ -43,9 +42,43 @@ export default function MeetGabiPage() {
 
            <motion.div 
                 variants={itemVariants}
-                className="flex justify-center items-center my-8"
+                className="relative flex justify-center items-center my-8"
             >
-                <Image src="/onboarding/img_hi.png" width={300} height={300} alt="Gabi" data-ai-hint="robot mascot" />
+                 <motion.div
+                    animate={{ y: [-4, 4, -4] }}
+                    transition={{
+                        duration: 5,
+                        ease: "easeInOut",
+                        repeat: Infinity,
+                    }}
+                >
+                    <Image src="/onboarding/img_hi.png" width={300} height={300} alt="Gabi" data-ai-hint="robot mascot" />
+                </motion.div>
+                
+                {/* Particles */}
+                <motion.div
+                    className="absolute top-0 left-5 text-accent"
+                    animate={{ scale: [0, 1, 1.2, 1, 0], y: [0, -20, 0], opacity: [0, 1, 1, 1, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                >
+                    <Sparkles className="w-8 h-8" fill="currentColor" />
+                </motion.div>
+                
+                <motion.div
+                    className="absolute bottom-10 right-5 text-primary"
+                    animate={{ scale: [0, 1, 0], rotate: [0, 15, 0], opacity: [0, 1, 0] }}
+                    transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                >
+                    <Sparkles className="w-6 h-6" fill="currentColor" />
+                </motion.div>
+
+                <motion.div
+                    className="absolute top-1/2 -right-2 text-accent"
+                    animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
+                    transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+                >
+                    <Sparkles className="w-5 h-5" fill="currentColor" />
+                </motion.div>
             </motion.div>
           
           <motion.p variants={itemVariants} className="text-muted-foreground mb-8 max-w-sm mx-auto">
