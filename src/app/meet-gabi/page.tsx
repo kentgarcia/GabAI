@@ -39,28 +39,17 @@ export default function MeetGabiPage() {
            <motion.h1 variants={itemVariants} className="text-3xl font-bold tracking-tight mb-4">
             Meet Gabi — Your Smart <span className="text-primary">Kasangga sa Finances</span>
           </motion.h1>
-          <motion.p variants={itemVariants} className="text-muted-foreground mb-8 max-w-sm mx-auto">
-            Gabi is here to help you every step of the way — from organizing reports to computing your taxes. Gawin nating mas simple at mas klaro ang finances mo, together!
-          </motion.p>
-          
-          <div className="relative flex justify-center items-center my-10">
-            <motion.div 
+
+           <motion.div 
                 variants={itemVariants}
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1, transition: { delay: 0.2, type: 'spring' } }}
+                className="flex justify-center items-center my-8"
             >
                 <Image src="/onboarding/img_hi.png" width={300} height={300} alt="Gabi" data-ai-hint="robot mascot" />
             </motion.div>
-            
-            <motion.div 
-                variants={itemVariants}
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1, transition: { delay: 0.5, type: 'spring', stiffness: 120 } }}
-                className="absolute -top-4 -right-2 sm:right-4 bg-background/50 backdrop-blur-md py-3 px-5 rounded-2xl rounded-tr-none shadow-lg"
-            >
-                <p className="text-lg font-semibold text-foreground">Ready to make things easier for you!</p>
-            </motion.div>
-          </div>
+          
+          <motion.p variants={itemVariants} className="text-muted-foreground mb-8 max-w-sm mx-auto">
+            Gabi is here to help you every step of the way — from organizing reports to computing your taxes. Gawin nating mas simple at mas klaro ang finances mo, together!
+          </motion.p>
         </motion.div>
       </div>
 
