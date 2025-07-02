@@ -170,7 +170,7 @@ export default function RoleSelectionPage() {
                             variant="outline"
                             disabled={!!selectedRole}
                             className={cn(
-                                'h-auto w-full justify-start rounded-full p-4 text-left transition-all duration-200',
+                                'h-auto w-full justify-start rounded-full p-4 text-left transition-all duration-200 whitespace-normal',
                                 selectedRole === role.id
                                     ? 'border-transparent bg-primary text-primary-foreground ring-2 ring-offset-2 ring-primary hover:bg-primary/90'
                                     : 'border-border bg-background/30 backdrop-blur-md hover:bg-muted/50'
