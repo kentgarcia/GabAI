@@ -1,9 +1,8 @@
-
 'use client';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
@@ -37,7 +36,7 @@ export default function UploadIntroPage() {
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={itemVariants} className="flex justify-center items-center mb-8">
+          <motion.div variants={itemVariants} className="relative flex justify-center items-center mb-8">
              <Image 
                 src="/onboarding/img_gulo-gets.png"
                 width={340}
@@ -45,6 +44,38 @@ export default function UploadIntroPage() {
                 alt="Illustration showing messy papers turning into organized charts"
                 data-ai-hint="illustration chaos order"
              />
+              <motion.div
+                  className="absolute top-10 right-10 text-yellow-400"
+                  animate={{ 
+                    scale: [0, 1, 1.2, 1, 0],
+                    opacity: [0, 1, 1, 1, 0],
+                    rotate: [0, -15, 15, 0, 0]
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 0.5, ease: "easeInOut" }}
+              >
+                  <Sparkles className="w-8 h-8" fill="currentColor" />
+              </motion.div>
+              <motion.div
+                  className="absolute bottom-1/4 left-5 text-yellow-400"
+                   animate={{ 
+                    scale: [0, 1, 1.2, 1, 0],
+                    opacity: [0, 1, 1, 1, 0],
+                    rotate: [0, 15, -15, 0, 0]
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 1 }}
+              >
+                  <Sparkles className="w-6 h-6" fill="currentColor" />
+              </motion.div>
+              <motion.div
+                  className="absolute bottom-10 right-1/4 text-yellow-400"
+                   animate={{ 
+                    scale: [0, 1, 1.2, 1, 0],
+                    opacity: [0, 1, 1, 1, 0]
+                  }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: 1.5, ease: "easeInOut" }}
+              >
+                  <Sparkles className="w-5 h-5" fill="currentColor" />
+              </motion.div>
           </motion.div>
 
           <motion.h1 variants={itemVariants} className="text-3xl font-bold mb-2">
