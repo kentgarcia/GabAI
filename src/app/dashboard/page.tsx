@@ -275,8 +275,10 @@ export default function DashboardPage() {
                         <CardHeader>
                             <CardTitle className="text-sm font-medium text-muted-foreground">YOUR TAKE-HOME (SAFE TO SPEND)</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex items-baseline gap-4">
-                            <Wallet className="w-8 h-8 text-primary" />
+                        <CardContent className="flex items-center gap-4">
+                            <div className="p-3 bg-[#131313] rounded-xl">
+                                <Wallet className="w-6 h-6 text-primary" />
+                            </div>
                             <AnimatedNumber value={data.netProfit * 0.7} className="text-4xl font-bold" />
                         </CardContent>
                     </Card>
