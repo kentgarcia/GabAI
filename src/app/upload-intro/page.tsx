@@ -97,7 +97,7 @@ export default function UploadIntroPage() {
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         <Button asChild className="w-full bg-black text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-black/90">
-          <Link href="/role-selection">
+          <Link href="/auth">
             Set Up My Workspace
             <ArrowRight className="ml-2" />
           </Link>
