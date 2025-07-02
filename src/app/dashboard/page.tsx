@@ -221,11 +221,11 @@ export default function DashboardPage() {
                             <div className="grid grid-cols-2 gap-4 w-full text-center">
                               <div>
                                 <p className="text-sm text-primary-foreground/70">Income</p>
-                                <AnimatedNumber value={data.income} className="text-2xl font-semibold text-white" />
+                                <AnimatedNumber value={data.income} className="text-2xl font-semibold text-emerald-300" />
                               </div>
                               <div>
                                 <p className="text-sm text-primary-foreground/70">Expenses</p>
-                                <AnimatedNumber value={data.expenses} className="text-2xl font-semibold text-white" />
+                                <AnimatedNumber value={data.expenses} className="text-2xl font-semibold text-red-300" />
                               </div>
                             </div>
                           </CardContent>
