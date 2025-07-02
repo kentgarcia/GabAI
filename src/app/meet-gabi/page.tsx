@@ -1,3 +1,4 @@
+
 'use client';
 
 import { motion } from 'framer-motion';
@@ -60,7 +61,7 @@ export default function MeetGabiPage() {
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         <Button asChild className="w-full bg-black text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-black/90">
-          <Link href="/auth">
+          <Link href="/upload-intro">
             Let's Go with Gabi
             <ArrowRight className="ml-2" />
           </Link>

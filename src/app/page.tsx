@@ -115,7 +115,7 @@ export default function OnboardingPage() {
 
             <div>
               <Button asChild className="relative w-full h-16 bg-black text-primary-foreground rounded-full overflow-hidden text-lg" onClick={handleRipple}>
-                <Link href="/upload-intro">
+                <Link href="/meet-gabi">
                   <Ripple ripples={ripples} />
                   <span className="z-10 font-semibold">Get Started</span>
                   <ArrowUpRight className="w-5 h-5 z-10" />
