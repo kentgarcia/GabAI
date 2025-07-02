@@ -1,3 +1,4 @@
+
 'use client';
 
 import { motion } from 'framer-motion';
@@ -39,8 +40,8 @@ export default function UploadIntroPage() {
           <motion.div variants={itemVariants} className="flex justify-center items-center mb-8">
              <Image 
                 src="/onboarding/img_gulo-gets.png"
-                width={280}
-                height={280}
+                width={340}
+                height={340}
                 alt="Illustration showing messy papers turning into organized charts"
                 data-ai-hint="illustration chaos order"
              />
