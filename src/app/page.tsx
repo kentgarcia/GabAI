@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from 'framer-motion';
 import { useState } from "react";
+import Image from 'next/image';
 
 const AppleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -37,25 +39,6 @@ const Ripple = ({ ripples }: { ripples: { x: number, y: number, id: number }[] }
   );
 };
 
-const SparkleIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 50 50" fill="currentColor" {...props}>
-    <path d="M25,0 L29,21 L50,25 L29,29 L25,50 L21,29 L0,25 L21,21 Z" />
-  </svg>
-);
-
-const HollowCircleIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="none" viewBox="0 0 30 30" stroke="currentColor" {...props}>
-    <circle cx="15" cy="15" r="14" strokeWidth="2" />
-  </svg>
-);
-
-const PlusIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg fill="currentColor" viewBox="0 0 20 20" {...props}>
-    <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-  </svg>
-);
-
-
 export default function OnboardingPage() {
   const [ripples, setRipples] = useState<{ x: number, y: number, id: number }[]>([]);
 
@@ -81,49 +64,6 @@ export default function OnboardingPage() {
       transition={{ duration: 0.8 }}
     >
         <div className="absolute inset-0 -z-10 bg-white overflow-hidden">
-             {/* Decorative Elements */}
-            <motion.div
-                className="absolute top-[15%] left-[5%] text-primary/20"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1, y: [-10, 10, -10] }}
-                transition={{ delay: 0.6, duration: 5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-            >
-                <HollowCircleIcon className="w-24 h-24"/>
-            </motion.div>
-            <motion.div
-                className="absolute top-[10%] right-[10%] text-[#bad6eb]"
-                initial={{ scale: 0, opacity: 0, rotate: -30 }}
-                animate={{ scale: 1, opacity: 1, y: [-5, 5, -5], rotate: 10 }}
-                transition={{ delay: 0.8, duration: 4, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-            >
-                <SparkleIcon className="w-8 h-8"/>
-            </motion.div>
-             <motion.div
-                className="absolute top-[50%] left-[20%] text-[#bad6eb]"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1, rotate: [0, 20, 0] }}
-                transition={{ delay: 1.4, duration: 4, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-            >
-                <PlusIcon className="w-5 h-5"/>
-            </motion.div>
-            <motion.div
-                className="absolute bottom-[25%] left-[15%] text-[#bad6eb]/70"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1, y: [-8, 8, -8] }}
-                transition={{ delay: 1, duration: 3.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-            >
-                <SparkleIcon className="w-6 h-6"/>
-            </motion.div>
-            <motion.div
-                className="absolute bottom-[20%] right-[5%] text-primary/30"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1, x: [-5, 5, -5] }}
-                transition={{ delay: 1.2, duration: 4.5, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-            >
-                <div className="w-16 h-16 rounded-full bg-current"/>
-            </motion.div>
-
-
             {/* Gradient Blobs */}
             <motion.div 
                 className="absolute -top-56 -right-56 w-96 h-96 bg-gradient-to-br from-[#bad6eb] to-[#334eac] rounded-full opacity-30"
@@ -151,7 +91,79 @@ export default function OnboardingPage() {
           </div>
         </motion.header>
 
-        <div className="flex-grow"></div>
+        <div className="flex-grow flex items-center justify-center">
+            <motion.div
+              className="relative w-64 h-64"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.2, delayChildren: 0.5 } }
+              }}
+            >
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center"
+                variants={{ hidden: { scale: 0.5, opacity: 0 }, visible: { scale: 1, opacity: 1 } }}
+                transition={{ type: 'spring', stiffness: 100 }}
+              >
+                <Image
+                  src="https://placehold.co/256x256.png"
+                  width={256}
+                  height={256}
+                  alt="Gabi Illustration"
+                  data-ai-hint="robot mascot"
+                />
+              </motion.div>
+
+              <motion.div
+                className="absolute top-0 left-0"
+                variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+                animate={{ y: [-5, 5], rotate: [-3, 3] }}
+                transition={{ duration: 3, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
+              >
+                <Image
+                  src="https://placehold.co/80x80.png"
+                  width={80}
+                  height={80}
+                  alt="Calendar icon"
+                  className="bg-white/50 backdrop-blur-sm rounded-2xl shadow-lg"
+                  data-ai-hint="calendar icon"
+                />
+              </motion.div>
+
+              <motion.div
+                className="absolute top-1/4 right-0"
+                variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+                animate={{ y: [5, -5], rotate: [3, -3] }}
+                transition={{ duration: 4, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
+              >
+                <Image
+                  src="https://placehold.co/80x80.png"
+                  width={80}
+                  height={80}
+                  alt="Up arrow icon"
+                  className="bg-white/50 backdrop-blur-sm rounded-2xl shadow-lg"
+                  data-ai-hint="arrow up"
+                />
+              </motion.div>
+
+              <motion.div
+                className="absolute bottom-0 left-1/4"
+                  variants={{ hidden: { y: 20, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
+                  animate={{ y: [-5, 5], rotate: [-2, 2] }}
+                  transition={{ duration: 3.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
+              >
+                <Image
+                  src="https://placehold.co/80x80.png"
+                  width={80}
+                  height={80}
+                  alt="File icon"
+                  className="bg-white/50 backdrop-blur-sm rounded-2xl shadow-lg"
+                  data-ai-hint="file document"
+                />
+              </motion.div>
+            </motion.div>
+        </div>
 
         <motion.footer 
           className="flex flex-col gap-4"
