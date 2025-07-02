@@ -1,3 +1,4 @@
+
 'use client';
 
 import { motion } from 'framer-motion';
@@ -36,8 +37,8 @@ export default function UploadIntroPage() {
           initial="hidden"
           animate="visible"
         >
-          <motion.h1 variants={itemVariants} className="text-3xl font-bold mb-8">
-            From 'Gulo' to 'Gets'
+          <motion.h1 variants={itemVariants} className="text-3xl font-bold tracking-tight mb-4">
+            From Gulo to Gets — Gabi Makes It Easy!
           </motion.h1>
 
           <motion.div variants={itemVariants} className="relative flex justify-center items-center mb-8">
@@ -57,7 +58,7 @@ export default function UploadIntroPage() {
                   }}
                   transition={{ duration: 2.5, repeat: Infinity, delay: 0.5, ease: "easeInOut" }}
               >
-                  <Sparkles className="w-8 h-8" fill="currentColor" />
+                  <Sparkles className="w-8 h-8" fill="hsl(var(--primary))" />
               </motion.div>
               <motion.div
                   className="absolute bottom-1/4 left-5 text-primary"
@@ -68,7 +69,7 @@ export default function UploadIntroPage() {
                   }}
                   transition={{ duration: 2.5, repeat: Infinity, delay: 1 }}
               >
-                  <Sparkles className="w-6 h-6" fill="currentColor" />
+                  <Sparkles className="w-6 h-6" fill="hsl(var(--primary))" />
               </motion.div>
               <motion.div
                   className="absolute bottom-10 right-1/4 text-primary"
@@ -78,12 +79,13 @@ export default function UploadIntroPage() {
                   }}
                   transition={{ duration: 2.5, repeat: Infinity, delay: 1.5, ease: "easeInOut" }}
               >
-                  <Sparkles className="w-5 h-5" fill="currentColor" />
+                  <Sparkles className="w-5 h-5" fill="hsl(var(--primary))" />
               </motion.div>
           </motion.div>
 
           <motion.p variants={itemVariants} className="text-muted-foreground mb-8 max-w-xs mx-auto">
-            Easily upload your sales reports from Shopee, Lazada, and more. Kami na ang bahalang mag-ayos at mag-compute para sa'yo.
+            No more spreadsheets, confusion, or manual computations.
+            Just upload your Shopee or Lazada sales report — kami na ang bahala sa ayos at compute!
           </motion.p>
         </motion.div>
       </div>
@@ -95,8 +97,8 @@ export default function UploadIntroPage() {
         transition={{ delay: 0.5, duration: 0.5 }}
       >
         <Button asChild className="w-full bg-black text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-black/90">
-          <Link href="/meet-gabi">
-            Next
+          <Link href="/role-selection">
+            Set Up My Workspace
             <ArrowRight className="ml-2" />
           </Link>
         </Button>
