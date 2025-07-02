@@ -67,7 +67,7 @@ export default function OnboardingPage() {
           </div>
         </motion.header>
 
-        <div className="flex-grow flex items-center justify-center">
+        <div className="flex-grow flex items-end justify-center pb-10">
             <motion.div
               className="relative w-80 h-80"
               initial={{ scale: 0.5, opacity: 0 }}
@@ -94,33 +94,34 @@ export default function OnboardingPage() {
           initial="hidden"
           animate="visible"
           variants={{
-            hidden: { opacity: 0 },
+            hidden: { },
             visible: {
-              opacity: 1,
               transition: { staggerChildren: 0.2, delayChildren: 0.6 }
             }
           }}
         >
-          <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
-            <h1 className="text-4xl font-bold leading-tight tracking-tighter text-primary">
-              Your Financial Co-Pilot has Arrived.
-            </h1>
-            <p className="font-semibold text-primary/80 text-lg mt-2">
-              From sales tracking to tax prep, let's grow your hustle.
-            </p>
-          </motion.div>
-
-          <motion.div 
-            className="flex items-center gap-3"
-            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+           <motion.div 
+             className="bg-white/30 backdrop-blur-lg p-6 rounded-3xl border border-white/40 shadow-lg flex flex-col gap-6"
+             variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
           >
-            <Button asChild className="relative w-full h-16 bg-black text-primary-foreground rounded-full overflow-hidden text-lg" onClick={handleRipple}>
-              <Link href="/upload-intro">
-                <Ripple ripples={ripples} />
-                <span className="z-10 font-semibold">Get Started</span>
-                <ArrowUpRight className="w-5 h-5 z-10" />
-              </Link>
-            </Button>
+            <div>
+              <h1 className="text-4xl font-bold leading-tight tracking-tighter text-primary">
+                Your Financial Co-Pilot has Arrived.
+              </h1>
+              <p className="font-semibold text-primary/80 text-lg mt-2">
+                From sales tracking to tax prep, let's grow your hustle.
+              </p>
+            </div>
+
+            <div>
+              <Button asChild className="relative w-full h-16 bg-black text-primary-foreground rounded-full overflow-hidden text-lg" onClick={handleRipple}>
+                <Link href="/upload-intro">
+                  <Ripple ripples={ripples} />
+                  <span className="z-10 font-semibold">Get Started</span>
+                  <ArrowUpRight className="w-5 h-5 z-10" />
+                </Link>
+              </Button>
+            </div>
           </motion.div>
 
           <motion.p 
