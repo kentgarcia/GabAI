@@ -76,8 +76,6 @@ export default function OnboardingPage() {
             >
               <motion.div
                 className="absolute inset-0 flex items-center justify-center"
-                animate={{ y: [-10, 10] }}
-                transition={{ duration: 4, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
               >
                 <Image
                   src="/welcome/gabi_img.png"
@@ -92,7 +90,7 @@ export default function OnboardingPage() {
         </div>
 
         <motion.footer 
-          className="flex flex-col gap-4 text-center"
+          className="relative z-10 flex flex-col gap-4 text-center"
           initial="hidden"
           animate="visible"
           variants={{
