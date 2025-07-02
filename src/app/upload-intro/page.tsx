@@ -36,6 +36,10 @@ export default function UploadIntroPage() {
           initial="hidden"
           animate="visible"
         >
+          <motion.h1 variants={itemVariants} className="text-3xl font-bold mb-8">
+            From 'Gulo' to 'Gets'
+          </motion.h1>
+
           <motion.div variants={itemVariants} className="relative flex justify-center items-center mb-8">
              <Image 
                 src="/onboarding/img_gulo-gets.png"
@@ -45,7 +49,7 @@ export default function UploadIntroPage() {
                 data-ai-hint="illustration chaos order"
              />
               <motion.div
-                  className="absolute top-10 right-10 text-yellow-400"
+                  className="absolute top-10 right-10 text-primary"
                   animate={{ 
                     scale: [0, 1, 1.2, 1, 0],
                     opacity: [0, 1, 1, 1, 0],
@@ -56,7 +60,7 @@ export default function UploadIntroPage() {
                   <Sparkles className="w-8 h-8" fill="currentColor" />
               </motion.div>
               <motion.div
-                  className="absolute bottom-1/4 left-5 text-yellow-400"
+                  className="absolute bottom-1/4 left-5 text-primary"
                    animate={{ 
                     scale: [0, 1, 1.2, 1, 0],
                     opacity: [0, 1, 1, 1, 0],
@@ -67,7 +71,7 @@ export default function UploadIntroPage() {
                   <Sparkles className="w-6 h-6" fill="currentColor" />
               </motion.div>
               <motion.div
-                  className="absolute bottom-10 right-1/4 text-yellow-400"
+                  className="absolute bottom-10 right-1/4 text-primary"
                    animate={{ 
                     scale: [0, 1, 1.2, 1, 0],
                     opacity: [0, 1, 1, 1, 0]
@@ -77,10 +81,6 @@ export default function UploadIntroPage() {
                   <Sparkles className="w-5 h-5" fill="currentColor" />
               </motion.div>
           </motion.div>
-
-          <motion.h1 variants={itemVariants} className="text-3xl font-bold mb-2">
-            From 'Gulo' to 'Gets'
-          </motion.h1>
 
           <motion.p variants={itemVariants} className="text-muted-foreground mb-8 max-w-xs mx-auto">
             Easily upload your sales reports from Shopee, Lazada, and more. Kami na ang bahalang mag-ayos at mag-compute para sa'yo.
