@@ -272,14 +272,14 @@ export default function DashboardPage() {
                 
                  <motion.div variants={itemVariants}>
                     <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
-                        <CardHeader>
+                        <CardHeader className="p-4 pb-2">
                             <CardTitle className="text-sm font-medium text-muted-foreground">YOUR TAKE-HOME (SAFE TO SPEND)</CardTitle>
                         </CardHeader>
-                        <CardContent className="flex items-center gap-4">
-                            <div className="p-3 bg-[#131313] rounded-xl">
-                                <Wallet className="w-6 h-6 text-primary" />
+                        <CardContent className="p-4 pt-0 flex items-center gap-3">
+                            <div className="p-2 bg-[#131313] rounded-lg">
+                                <Wallet className="w-5 h-5 text-primary-foreground" />
                             </div>
-                            <AnimatedNumber value={data.netProfit * 0.7} className="text-4xl font-bold" />
+                            <AnimatedNumber value={data.netProfit * 0.7} className="text-3xl font-bold" />
                         </CardContent>
                     </Card>
                 </motion.div>
