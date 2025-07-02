@@ -107,7 +107,7 @@ export default function OnboardingPage() {
                 transition={{ type: 'spring', stiffness: 100 }}
               >
                 <Image
-                  src="https://placehold.co/256x256.png"
+                  src="/welcome/gabi_img.png"
                   width={256}
                   height={256}
                   alt="Gabi Illustration"
@@ -122,7 +122,7 @@ export default function OnboardingPage() {
                 transition={{ duration: 3, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
               >
                 <Image
-                  src="https://placehold.co/80x80.png"
+                  src="/welcome/img_calendar.png"
                   width={80}
                   height={80}
                   alt="Calendar icon"
@@ -138,7 +138,7 @@ export default function OnboardingPage() {
                 transition={{ duration: 4, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
               >
                 <Image
-                  src="https://placehold.co/80x80.png"
+                  src="/welcome/img_up.png"
                   width={80}
                   height={80}
                   alt="Up arrow icon"
@@ -154,7 +154,7 @@ export default function OnboardingPage() {
                   transition={{ duration: 3.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
               >
                 <Image
-                  src="https://placehold.co/80x80.png"
+                  src="/welcome/img_file.png"
                   width={80}
                   height={80}
                   alt="File icon"
