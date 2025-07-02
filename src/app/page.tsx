@@ -67,7 +67,7 @@ export default function OnboardingPage() {
           </div>
         </motion.header>
 
-        <div className="flex-grow flex items-end justify-center pb-10">
+        <div className="flex-grow flex items-end justify-center pb-0 mb-[-5rem]">
             <motion.div
               className="relative w-80 h-80"
               initial={{ scale: 0.5, opacity: 0 }}
