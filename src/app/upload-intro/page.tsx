@@ -2,8 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Sheet, BarChart3, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -35,10 +36,14 @@ export default function UploadIntroPage() {
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={itemVariants} className="flex justify-center items-center gap-4 mb-8">
-             <Sheet className="h-16 w-16 text-foreground/60" />
-             <ArrowRight className="h-8 w-8 text-foreground/80" />
-             <BarChart3 className="h-16 w-16 text-accent" />
+          <motion.div variants={itemVariants} className="flex justify-center items-center mb-8">
+             <Image 
+                src="/onboarding/img_gulo-gets.png"
+                width={280}
+                height={280}
+                alt="Illustration showing messy papers turning into organized charts"
+                data-ai-hint="illustration chaos order"
+             />
           </motion.div>
 
           <motion.h1 variants={itemVariants} className="text-3xl font-bold mb-2">
