@@ -8,11 +8,15 @@ import {
     FileText, 
     Plus, 
     BookOpen,
-    ArrowDown,
-    ArrowUp,
-    Camera,
-    Link as LinkIcon,
     Sparkles,
+    ArrowUp,
+    ArrowDown,
+    Send,
+    Link as LinkIcon,
+    Package,
+    ArrowLeftRight,
+    Repeat,
+    Bell
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -22,6 +26,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Separator } from '@/components/ui/separator';
 
 const navItems = [
   { href: '/dashboard', icon: Home, label: 'Dashboard' },
@@ -81,11 +86,19 @@ export function AppFooter() {
                     <SheetTitle>Quick Actions</SheetTitle>
                   </SheetHeader>
                   <div className="grid gap-3">
-                    <ActionItem href="/add/income" icon={ArrowUp} title="Add Income" description="Log a new payment received." iconColor="text-emerald-500" />
-                    <ActionItem href="/add/expense" icon={ArrowDown} title="Add Expense" description="Log a new business cost." iconColor="text-red-500" />
-                    <ActionItem icon={Camera} title="Scan a Receipt" description="Coming soon!" disabled iconColor="text-primary"/>
-                    <ActionItem icon={FileText} title="Create an Invoice" description="Coming soon!" disabled iconColor="text-primary" />
-                    <ActionItem icon={LinkIcon} title="Generate Payment Link" description="Coming soon!" disabled iconColor="text-primary" />
+                    <p className="text-sm font-semibold text-muted-foreground px-1">Primary Actions</p>
+                    <ActionItem href="/add/income" icon={ArrowUp} title="Add Income" description="Manually log a payment received." iconColor="text-emerald-500" />
+                    <ActionItem href="/add/expense" icon={ArrowDown} title="Add Expense" description="Record a new business cost." iconColor="text-red-500" />
+                    <ActionItem icon={Send} title="Send Invoice" description="Bill a client with a professional, trackable invoice." disabled iconColor="text-primary"/>
+                    <ActionItem icon={LinkIcon} title="Create Payment Link" description="Accept payments via GCash, Maya, and more." disabled iconColor="text-primary" />
+                    
+                    <Separator className="my-2" />
+                    
+                    <p className="text-sm font-semibold text-muted-foreground px-1">Secondary Actions</p>
+                    <ActionItem icon={Package} title="Add Inventory Entry" description="Track stock levels for your products." disabled iconColor="text-primary"/>
+                    <ActionItem icon={ArrowLeftRight} title="Record Transfer" description="Log fund movements between your accounts." disabled iconColor="text-primary"/>
+                    <ActionItem icon={Repeat} title="Add Recurring Expense" description="Automate tracking for monthly bills." disabled iconColor="text-primary"/>
+                    <ActionItem icon={Bell} title="Schedule Reminder" description="Set alerts for tax deadlines or follow-ups." disabled iconColor="text-primary"/>
                   </div>
                 </SheetContent>
               </Sheet>
