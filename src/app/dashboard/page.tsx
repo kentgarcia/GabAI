@@ -285,7 +285,7 @@ export default function DashboardPage() {
                             <Card key={index} className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
                                 <CardContent className="p-4 flex flex-col items-center text-center">
                                     <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center mb-2 p-1.5">
-                                       <Image src={item.icon} width={30} height={30} alt={`${item.name} logo`} />
+                                       <Image src={item.icon} width={30} height={30} alt={`${item.name} logo`} className="filter brightness-0 invert" />
                                     </div>
                                     <p className="font-semibold text-sm">{item.name}</p>
                                     <AnimatedNumber value={item.value} className="font-semibold text-lg" />
