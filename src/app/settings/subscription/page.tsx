@@ -197,24 +197,29 @@ export default function SubscriptionPage() {
     const currentPlans = isYearly ? plans.yearly : plans.monthly;
 
     return (
-        <main className="flex flex-col flex-grow p-6 text-foreground h-screen">
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                className="flex flex-col flex-grow"
+        <main className="flex flex-col p-6 text-foreground h-screen">
+            <motion.header 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: 'spring', stiffness: 100 }}
+                className="flex items-center gap-2 mb-4 shrink-0"
             >
-                <motion.header variants={itemVariants} className="flex items-center gap-2 mb-4">
-                    <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2">
-                        <Link href="/settings">
-                            <ArrowLeft />
-                        </Link>
-                    </Button>
-                    <h1 className="text-2xl font-bold">Subscription Plans</h1>
-                </motion.header>
+                <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2">
+                    <Link href="/settings">
+                        <ArrowLeft />
+                    </Link>
+                </Button>
+                <h1 className="text-2xl font-bold">Subscription Plans</h1>
+            </motion.header>
 
-                <div className="flex-grow overflow-y-auto no-scrollbar -mx-6 px-6 space-y-6">
-                    <motion.div variants={itemVariants} className="flex items-center justify-center space-x-3 py-4">
+            <div className="flex-1 overflow-y-auto no-scrollbar -mx-6 px-6 min-h-0">
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-6"
+                >
+                    <motion.div variants={itemVariants} className="flex items-center justify-center space-x-3 py-4 sticky top-0 bg-background/80 backdrop-blur-sm z-10">
                         <Label htmlFor="billing-cycle" className={cn(!isYearly && "text-primary font-semibold")}>
                             Monthly
                         </Label>
@@ -239,12 +244,18 @@ export default function SubscriptionPage() {
                             />
                          </motion.div>
                     ))}
-                </div>
-
-                <motion.div variants={itemVariants} className="pt-4 text-center">
-                    <Button variant="link" className="w-full mt-2 text-muted-foreground">Restore Purchases</Button>
                 </motion.div>
+            </div>
+
+            <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ type: 'spring', stiffness: 100, delay: 0.2 }}
+                className="pt-4 text-center shrink-0"
+            >
+                <Button variant="link" className="w-full mt-2 text-muted-foreground">Restore Purchases</Button>
             </motion.div>
         </main>
     );
 }
+
