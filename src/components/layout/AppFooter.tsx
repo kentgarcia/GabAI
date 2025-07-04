@@ -84,10 +84,10 @@ export function AppFooter() {
                         <ActionPill href="/add/expense" icon={ArrowDown} title="Add Expense" iconColor="text-red-500" />
                         <ActionPill href="/invoice/new" icon={Send} title="Send Invoice" iconColor="text-primary"/>
                         <ActionPill href="/payment-link/new" icon={LinkIcon} title="Payment Link" iconColor="text-primary" />
-                        <ActionPill icon={ArrowLeftRight} title="Record Transfer" disabled iconColor="text-cyan-500" />
-                        <ActionPill icon={RefreshCw} title="Recurring" disabled iconColor="text-purple-500" />
-                        <ActionPill icon={BellRing} title="Set Reminder" disabled iconColor="text-orange-500" />
-                        <ActionPill icon={Package} title="Add Inventory" disabled iconColor="text-blue-500" />
+                        <ActionPill href="/transfer/new" icon={ArrowLeftRight} title="Record Transfer" iconColor="text-cyan-500" />
+                        <ActionPill href="/recurring/new" icon={RefreshCw} title="Recurring" iconColor="text-purple-500" />
+                        <ActionPill href="/reminder/new" icon={BellRing} title="Set Reminder" iconColor="text-orange-500" />
+                        <ActionPill href="/inventory/new" icon={Package} title="Add Inventory" iconColor="text-blue-500" />
                      </div>
                   </div>
                 </PopoverContent>
