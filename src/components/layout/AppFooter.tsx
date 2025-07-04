@@ -12,7 +12,11 @@ import {
     ArrowUp,
     ArrowDown,
     Send,
-    Link as LinkIcon
+    Link as LinkIcon,
+    ArrowLeftRight,
+    RefreshCw,
+    BellRing,
+    Package
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -21,20 +25,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const navItems = [
-  { href: '/dashboard', icon: Home, label: 'Dashboard' },
-  { href: '/reports', icon: FileText, label: 'Reports' },
-  { href: '/add', icon: Plus, label: 'Actions' },
-  { href: '/chat', icon: Sparkles, label: 'Gabi' },
-  { href: '/learn', icon: BookOpen, label: 'Learn' },
-];
-
 const ActionPill = ({ href, icon: Icon, title, disabled = false, iconColor }: { href?: string, icon: React.ElementType, title: string, disabled?: boolean, iconColor?: string }) => {
     const content = (
         <div className={cn(
-            "flex flex-col items-center justify-center text-center p-3 rounded-2xl bg-muted/50 aspect-square",
-            !disabled && "hover:bg-muted/80",
-            disabled && "opacity-50 cursor-not-allowed"
+            "flex flex-col items-center justify-center text-center p-3 rounded-2xl bg-neutral-800 aspect-square transition-colors",
+            !disabled && "hover:bg-neutral-700",
+            disabled && "opacity-60 cursor-not-allowed"
         )}>
             <Icon className={cn("w-8 h-8 mb-1", iconColor)} />
             <p className="font-semibold text-xs leading-tight">{title}</p>
@@ -47,6 +43,15 @@ const ActionPill = ({ href, icon: Icon, title, disabled = false, iconColor }: { 
 
     return <Link href={href}>{content}</Link>;
 };
+
+
+const navItems = [
+  { href: '/dashboard', icon: Home, label: 'Dashboard' },
+  { href: '/reports', icon: FileText, label: 'Reports' },
+  { href: '/add', icon: Plus, label: 'Actions' },
+  { href: '/chat', icon: Sparkles, label: 'Gabi' },
+  { href: '/learn', icon: BookOpen, label: 'Learn' },
+];
 
 export function AppFooter() {
   const pathname = usePathname();
@@ -71,14 +76,18 @@ export function AppFooter() {
                     {item.icon && <item.icon className="w-6 h-6" />}
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-80 mb-2 rounded-3xl bg-background/80 backdrop-blur-lg border-border/20">
+                <PopoverContent className="w-80 mb-2 rounded-3xl bg-black border border-neutral-700 text-primary-foreground">
                   <div className="p-2 space-y-4">
-                     <p className="text-sm font-semibold text-muted-foreground px-1 text-center">Quick Actions</p>
+                     <p className="text-sm font-semibold text-primary-foreground/80 px-1 text-center">Quick Actions</p>
                      <div className="grid grid-cols-4 gap-2">
                         <ActionPill href="/add/income" icon={ArrowUp} title="Add Income" iconColor="text-emerald-500" />
                         <ActionPill href="/add/expense" icon={ArrowDown} title="Add Expense" iconColor="text-red-500" />
                         <ActionPill icon={Send} title="Send Invoice" disabled iconColor="text-primary"/>
                         <ActionPill icon={LinkIcon} title="Payment Link" disabled iconColor="text-primary" />
+                        <ActionPill icon={ArrowLeftRight} title="Record Transfer" disabled iconColor="text-cyan-500" />
+                        <ActionPill icon={RefreshCw} title="Recurring" disabled iconColor="text-purple-500" />
+                        <ActionPill icon={BellRing} title="Set Reminder" disabled iconColor="text-orange-500" />
+                        <ActionPill icon={Package} title="Add Inventory" disabled iconColor="text-blue-500" />
                      </div>
                   </div>
                 </PopoverContent>
