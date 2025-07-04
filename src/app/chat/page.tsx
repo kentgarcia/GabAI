@@ -2,6 +2,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   MessageSquare,
   Mic,
@@ -19,7 +20,6 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { AppFooter } from '@/components/layout/AppFooter';
-import { AppHeader } from '@/components/layout/AppHeader';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -60,8 +60,6 @@ const historyItems = [
 ];
 
 export default function ChatHubPage() {
-  const userName = "Juan";
-
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
       <main className="flex-1 p-6 space-y-8 overflow-y-auto no-scrollbar pb-28">
@@ -72,11 +70,23 @@ export default function ChatHubPage() {
           className="space-y-8"
         >
             <motion.div variants={itemVariants}>
-                <AppHeader userName={`${userName} dela Cruz`} />
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-                <h1 className="text-3xl font-bold tracking-tight">Magandang araw, {userName}! I'm ready to help.</h1>
+                <Card className="bg-background/40 backdrop-blur-md border-primary/20">
+                    <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+                        <Image src="/gabi-avatar.png" width={96} height={96} alt="Gabi Avatar" className="rounded-full flex-shrink-0 border-2 border-primary/50" data-ai-hint="robot assistant" />
+                        <div className="space-y-2">
+                            <Badge variant="outline" className="border-primary/50 text-primary">Built for freelancers, trained for success</Badge>
+                            <h1 className="text-2xl font-bold">Hi, I'm Gabi!</h1>
+                            <p className="text-muted-foreground text-sm">Your AI business co-pilot — here to help you track income, simplify taxes, and make smarter decisions. Think of me as your <span className="font-semibold text-foreground">gabay</span> (guide) for financial growth.</p>
+                            <div className="flex items-center justify-center sm:justify-start gap-2 pt-1">
+                                <div className="relative flex h-3 w-3">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                                </div>
+                                <p className="text-sm font-semibold text-muted-foreground">Online – Ready to assist you</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </motion.div>
 
             <motion.section variants={itemVariants}>
