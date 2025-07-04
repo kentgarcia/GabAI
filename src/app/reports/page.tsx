@@ -216,6 +216,7 @@ export default function ReportsPage() {
                           </CardHeader>
                           <CardContent>
                             <div className="text-2xl font-bold">₱45,231</div>
+                            <p className="text-xs text-emerald-500">+15.2% from last quarter</p>
                           </CardContent>
                         </Card>
                         <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
@@ -225,6 +226,7 @@ export default function ReportsPage() {
                           </CardHeader>
                           <CardContent>
                             <div className="text-2xl font-bold">₱21,894</div>
+                             <p className="text-xs text-emerald-500">-5.8% from last quarter</p>
                           </CardContent>
                         </Card>
                         <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
@@ -234,6 +236,7 @@ export default function ReportsPage() {
                           </CardHeader>
                           <CardContent>
                             <div className="text-2xl font-bold text-emerald-500">₱23,337</div>
+                             <p className="text-xs text-emerald-500">+25.4% from last quarter</p>
                           </CardContent>
                         </Card>
                       </div>
