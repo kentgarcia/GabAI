@@ -1,11 +1,12 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 import {
     ArrowRight, TrendingUp, TrendingDown, ArrowLeftRight,
-    AlertTriangle, Lightbulb, Wallet, ChevronRight
+    AlertTriangle, Lightbulb, Wallet, ChevronRight,
+    Crown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -16,9 +17,10 @@ import { FinancialHealthGauge } from '@/components/ui/financial-health-gauge';
 import { AppFooter } from '@/components/layout/AppFooter';
 import { AppHeader } from '@/components/layout/AppHeader';
 import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
 
 type Activity = { id: number; type: 'income' | 'expense'; name: string; date: string; value: number; project?: string; };
-type BreakdownItem = { name: string; value: number; };
+type BreakdownItem = { name:string; value: number; };
 type PlatformBreakdownItem = { id: string; name: string; value: number; icon: string; };
 type PeriodData = {
   netProfit: number;
@@ -179,6 +181,11 @@ export default function DashboardPage() {
   const handleFlip = () => {
     setIsFlipped(prev => !prev);
   }
+  
+  const sortedPlatforms = React.useMemo(() =>
+    [...data.platformBreakdown].sort((a, b) => b.value - a.value),
+    [data.platformBreakdown]
+  );
 
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
@@ -290,17 +297,30 @@ export default function DashboardPage() {
                     </motion.div>
                   </div>
                 </motion.div>
-
+                
                 <motion.div variants={itemVariants} className="space-y-4">
                   <h2 className="font-bold text-lg">Platform Breakdown</h2>
                     <div className="grid grid-cols-2 gap-4">
-                        {data.platformBreakdown.map((item, index) => (
+                        {sortedPlatforms.map((item, index) => (
                            <Link
-                              key={index}
+                              key={item.id}
                               href={`/platform/${item.id}?name=${encodeURIComponent(item.name)}&value=${item.value}&icon=${encodeURIComponent(item.icon)}&period=${period}`}
                            >
                               <motion.div whileTap={{ scale: 0.97 }}>
-                                <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 cursor-pointer hover:bg-muted/40 transition-colors">
+                                <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 cursor-pointer hover:bg-muted/40 transition-colors relative">
+                                  {index < 3 && (
+                                      <Badge
+                                          variant="default"
+                                          className={cn(
+                                              "absolute top-2 right-2 border-none font-semibold text-xs px-1.5 py-0.5 h-auto",
+                                              index === 0 && "bg-yellow-400 text-yellow-900 hover:bg-yellow-400/90",
+                                              index === 1 && "bg-slate-300 text-slate-800 hover:bg-slate-300/90",
+                                              index === 2 && "bg-orange-400 text-orange-900 hover:bg-orange-400/90"
+                                          )}
+                                      >
+                                          {index === 0 ? <Crown className="w-3.5 h-3.5" /> : index === 1 ? '2nd' : '3rd'}
+                                      </Badge>
+                                  )}
                                     <CardContent className="p-4 flex flex-col items-center text-center">
                                         <div className="w-10 h-10 bg-[#131313] rounded-xl flex items-center justify-center mb-2 p-1.5">
                                           <Image src={item.icon} width={30} height={30} alt={`${item.name} logo`} className="filter brightness-0 invert" />
