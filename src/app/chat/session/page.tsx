@@ -4,9 +4,10 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowLeft, Sparkles } from 'lucide-react';
+import { ArrowLeft, Sparkles, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { addDays, format } from 'date-fns';
@@ -101,24 +102,13 @@ const InvoicePreview = ({ data }: { data: any }) => (
 );
 
 
-// --- Main Page Component ---
-export default function ChatSessionPage() {
+// --- Main Chat Logic Component ---
+function ChatSession() {
   const { toast } = useToast();
+  const searchParams = useSearchParams();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-
-  // Initial Gabi Greeting
-  useEffect(() => {
-    setMessages([
-      {
-        id: 'gabi-init',
-        role: 'model',
-        content: "Hi there, I'm Gabi! How can I help you today?",
-        actions: initialActions,
-      },
-    ]);
-  }, []);
 
   // Auto-scroll on new message
   useEffect(() => {
@@ -253,6 +243,47 @@ export default function ChatSessionPage() {
             break;
     }
   };
+  
+  // Initial Gabi Greeting or handle incoming prompt
+  useEffect(() => {
+    // Prevent re-running if messages are already populated (e.g., Strict Mode double render)
+    if (messages.length > 0) return;
+
+    const initialPrompt = searchParams.get('prompt');
+
+    if (initialPrompt) {
+        const insightToAction: { [key: string]: string } = {
+            "Follow up with 'Innovate Corp'. Their ₱15,000 invoice is 3 days overdue.": 'start_receipt_flow',
+            "Your 'Resin Coasters' are hot! You're low on stock.": 'get_top_expenses',
+            "Your quarterly tax filing is due in 15 days. Let's make sure your books are clean.": 'get_tax_estimate',
+        };
+        
+        const actionId = Object.keys(insightToAction).find(key => initialPrompt.startsWith(key));
+
+        if (actionId) {
+            handleActionClick({ label: initialPrompt, actionId: insightToAction[actionId as keyof typeof insightToAction] });
+        } else {
+             setMessages([
+              {
+                id: 'gabi-init',
+                role: 'model',
+                content: `I see you tapped on: "${initialPrompt}". How can I help you with that?`,
+                actions: initialActions,
+              },
+            ]);
+        }
+    } else {
+        setMessages([
+          {
+            id: 'gabi-init',
+            role: 'model',
+            content: "Hi there, I'm Gabi! How can I help you today?",
+            actions: initialActions,
+          },
+        ]);
+    }
+  }, []); // Run only once on mount
+
 
   const lastMessage = messages[messages.length - 1];
 
@@ -376,4 +407,19 @@ export default function ChatSessionPage() {
       </div>
     </main>
   );
+}
+
+
+// --- Suspense Wrapper ---
+export default function ChatSessionPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex h-screen w-full flex-col items-center justify-center gap-4">
+                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                <p className="text-lg text-muted-foreground">Loading Chat...</p>
+            </div>
+        }>
+            <ChatSession />
+        </Suspense>
+    )
 }

@@ -121,9 +121,9 @@ const mockData: MockData = {
 };
 
 const gabiInsights = [
-    { text: "Follow up with 'Innovate Corp'. Their ₱15,000 invoice is 3 days overdue.", href: '#', icon: AlertTriangle, iconColor: 'text-yellow-500' },
-    { text: "Your 'Resin Coasters' are hot! You're low on stock.", href: '#', icon: TrendingUp, iconColor: 'text-emerald-500' },
-    { text: "Your quarterly tax filing is due in 15 days. Let's make sure your books are clean.", href: '#', icon: Lightbulb, iconColor: 'text-blue-500' },
+    { text: "Follow up with 'Innovate Corp'. Their ₱15,000 invoice is 3 days overdue.", icon: AlertTriangle, iconColor: 'text-yellow-500' },
+    { text: "Your 'Resin Coasters' are hot! You're low on stock.", icon: TrendingUp, iconColor: 'text-emerald-500' },
+    { text: "Your quarterly tax filing is due in 15 days. Let's make sure your books are clean.", icon: Lightbulb, iconColor: 'text-blue-500' },
 ];
 
 const containerVariants = {
@@ -377,7 +377,7 @@ export default function DashboardPage() {
                         </CardHeader>
                         <CardContent className="space-y-1">
                             {gabiInsights.map((insight, index) => (
-                                <Link href={insight.href} key={index}>
+                                <Link href={`/chat/session?prompt=${encodeURIComponent(insight.text)}`} key={index}>
                                     <div className="p-3 rounded-lg flex items-center gap-3 transition-colors hover:bg-muted/40">
                                         <insight.icon className={cn("w-5 h-5 flex-shrink-0", insight.iconColor)} />
                                         <p className="font-medium text-sm flex-grow">{insight.text}</p>
