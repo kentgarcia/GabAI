@@ -154,7 +154,8 @@ export default function DashboardPage() {
   const platformBreakdown = [
     { name: 'Lazada Sales', value: 11500, icon: ShoppingCart },
     { name: 'Shopee Sales', value: 9800, icon: ShoppingCart },
-    { name: 'Client Payments (Direct)', value: 8500, icon: Laptop },
+    { name: 'Client Payments', value: 8500, icon: Laptop },
+    { name: 'TikTok Shop', value: 4200, icon: ShoppingCart },
   ];
 
   useEffect(() => {
@@ -275,6 +276,23 @@ export default function DashboardPage() {
                     </motion.div>
                   </div>
                 </motion.div>
+
+                <motion.div variants={itemVariants} className="space-y-4">
+                    <h2 className="font-bold text-lg">Platform Breakdown</h2>
+                    <div className="grid grid-cols-2 gap-4">
+                        {platformBreakdown.map((item, index) => (
+                            <Card key={index} className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                                <CardContent className="p-4 flex flex-col items-center text-center">
+                                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center mb-2">
+                                       <item.icon className="w-5 h-5 text-primary-foreground" />
+                                    </div>
+                                    <p className="font-semibold text-sm">{item.name}</p>
+                                    <AnimatedNumber value={item.value} className="font-semibold text-lg" />
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </motion.div>
                 
                 <motion.div variants={itemVariants}>
                      <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
@@ -291,27 +309,6 @@ export default function DashboardPage() {
                                     </div>
                                 </Link>
                             ))}
-                        </CardContent>
-                    </Card>
-                </motion.div>
-                
-                <motion.div variants={itemVariants} className="space-y-4">
-                    <h2 className="font-bold text-lg">Platform Breakdown</h2>
-                    <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
-                        <CardContent className="p-4">
-                            <div className="space-y-4">
-                                {platformBreakdown.map((item, index) => (
-                                    <div key={index} className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
-                                           <item.icon className="w-5 h-5 text-primary-foreground" />
-                                        </div>
-                                        <div className="flex-grow">
-                                            <p className="font-semibold">{item.name}</p>
-                                        </div>
-                                        <AnimatedNumber value={item.value} className="font-semibold text-lg" />
-                                    </div>
-                                ))}
-                            </div>
                         </CardContent>
                     </Card>
                 </motion.div>
