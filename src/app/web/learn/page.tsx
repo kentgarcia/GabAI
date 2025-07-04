@@ -18,9 +18,9 @@ const learningPaths = [
 ];
 
 const recommendedCourses = [
-    { title: "BIR Basics for Freelancers", image: "https://placehold.co/600x400.png", category: "Finance", hint: "tax document"},
-    { title: "Advanced Bookkeeping", image: "https://placehold.co/600x400.png", category: "Finance", hint: "calculator charts" },
-    { title: "Social Media Marketing 101", image: "https://placehold.co/600x400.png", category: "Marketing", hint: "social media" },
+    { title: "BIR Basics for Freelancers", image: "https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg", category: "Finance", hint: "tax document"},
+    { title: "Advanced Bookkeeping", image: "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg", category: "Finance", hint: "calculator charts" },
+    { title: "Social Media Marketing 101", image: "https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg", category: "Marketing", hint: "social media" },
 ];
 
 const achievements = [
@@ -45,7 +45,7 @@ export default function WebLearnHub() {
 
             <Card className="w-full bg-primary/10 border-primary/20">
                 <div className="flex flex-col md:flex-row items-center gap-6 p-6">
-                    <Image src="https://placehold.co/600x400.png" width={200} height={120} alt="Course" className="rounded-lg object-cover" data-ai-hint="studying online" />
+                    <Image src="https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" width={200} height={120} alt="Course" className="rounded-lg object-cover" data-ai-hint="studying online" />
                     <div className="flex-1">
                         <p className="text-sm font-semibold text-primary">CONTINUE LEARNING</p>
                         <h2 className="text-2xl font-bold mt-1">Understanding Your P&L Statement</h2>

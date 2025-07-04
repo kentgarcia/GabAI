@@ -12,12 +12,12 @@ import { Search, ListFilter, Clock, BarChart2 } from 'lucide-react';
 import Image from 'next/image';
 
 const allCourses = [
-    { slug: 'bir-basics', title: 'BIR Basics for Freelancers', image: "https://placehold.co/600x400.png", category: "Finance & Tax", level: "Beginner", duration: "1.5 hours", access: "Free", hint: "tax document" },
-    { slug: 'advanced-bookkeeping', title: 'Advanced Bookkeeping', image: "https://placehold.co/600x400.png", category: "Finance & Tax", level: "Intermediate", duration: "3 hours", access: "Pro", hint: "calculator charts" },
-    { slug: 'social-media-marketing', title: 'Social Media Marketing 101', image: "https://placehold.co/600x400.png", category: "Marketing", level: "Beginner", duration: "2 hours", access: "Free", hint: "social media" },
-    { slug: 'dti-registration', title: 'DTI & Business Registration', image: "https://placehold.co/600x400.png", category: "Legal", level: "Beginner", duration: "45 mins", access: "Free", hint: "government building" },
-    { slug: 'inventory-management', title: 'Advanced Inventory Management', image: "https://placehold.co/600x400.png", category: "Business Ops", level: "Intermediate", duration: "1 hour", access: "Pro", hint: "warehouse boxes" },
-    { slug: 'pnl-deep-dive', title: 'Understanding Your P&L', image: "https://placehold.co/600x400.png", category: "Finance & Tax", level: "Beginner", duration: "30 mins", access: "Free", hint: "financial report" },
+    { slug: 'bir-basics', title: 'BIR Basics for Freelancers', image: "https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg", category: "Finance & Tax", level: "Beginner", duration: "1.5 hours", access: "Free", hint: "tax document" },
+    { slug: 'advanced-bookkeeping', title: 'Advanced Bookkeeping', image: "https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg", category: "Finance & Tax", level: "Intermediate", duration: "3 hours", access: "Pro", hint: "calculator charts" },
+    { slug: 'social-media-marketing', title: 'Social Media Marketing 101', image: "https://images.pexels.com/photos/267350/pexels-photo-267350.jpeg", category: "Marketing", level: "Beginner", duration: "2 hours", access: "Free", hint: "social media" },
+    { slug: 'dti-registration', title: 'DTI & Business Registration', image: "https://images.pexels.com/photos/161470/edersee-reservoir-water-댐-161470.jpeg", category: "Legal", level: "Beginner", duration: "45 mins", access: "Free", hint: "government building" },
+    { slug: 'inventory-management', title: 'Advanced Inventory Management', image: "https://images.pexels.com/photos/1906800/pexels-photo-1906800.jpeg", category: "Business Ops", level: "Intermediate", duration: "1 hour", access: "Pro", hint: "warehouse boxes" },
+    { slug: 'pnl-deep-dive', title: 'Understanding Your P&L', image: "https://images.pexels.com/photos/7567561/pexels-photo-7567561.jpeg", category: "Finance & Tax", level: "Beginner", duration: "30 mins", access: "Free", hint: "financial report" },
 ];
 
 const filters = {

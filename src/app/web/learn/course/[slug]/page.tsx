@@ -9,13 +9,14 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { PlayCircle, CheckCircle, Lock, FileText, Award, Star } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 const courseData = {
     title: "BIR Basics for Freelancers",
     description: "Navigate the essentials of Philippine tax compliance for freelancers. This course demystifies the Bureau of Internal Revenue (BIR), guiding you from registration to filing your first tax return, so you can focus on your work with peace of mind.",
-    bannerImage: "https://placehold.co/1200x400.png",
+    bannerImage: "https://images.pexels.com/photos/209224/pexels-photo-209224.jpeg",
     bannerHint: "tax documents",
-    instructor: { name: "JuanTax Academy", image: "https://placehold.co/100x100.png", hint: "logo" },
+    instructor: { name: "JuanTax Academy", image: "https://avatar.iran.liara.run/public/boy?username=juantax", hint: "logo" },
     stats: { duration: "1.5 hours", lessons: 6, access: "Free" },
     whatYoullLearn: [
         "Differentiate between 8% flat tax and graduated income tax.",
