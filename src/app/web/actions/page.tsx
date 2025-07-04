@@ -2,7 +2,17 @@
 
 import Link from 'next/link';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowUp, ArrowDown, Camera, FileText, Link as LinkIcon } from 'lucide-react';
+import {
+    ArrowUp,
+    ArrowDown,
+    Camera,
+    FileText,
+    Link as LinkIcon,
+    Package,
+    ArrowLeftRight,
+    RefreshCw,
+    BellRing
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const actions = [
@@ -11,6 +21,10 @@ const actions = [
   { href: "/web/actions/upload", icon: Camera, title: "Scan & Upload Receipts", description: "Upload multiple receipts or documents at once for Gabi to process." },
   { href: "/web/actions/invoice/new", icon: FileText, title: "Create an Invoice", description: "Bill a client with a professional, trackable invoice." },
   { href: "/web/actions/payment-link", icon: LinkIcon, title: "Generate a Payment Link", description: "Create a secure link to accept card payments.", isPro: true },
+  { href: "/web/actions/inventory", icon: Package, title: "Add Inventory Entry", description: "Track stock levels, costs, and suppliers for your products." },
+  { href: "/web/actions/transfer", icon: ArrowLeftRight, title: "Record a Transfer", description: "Log movements between your wallets and bank accounts." },
+  { href: "/web/actions/recurring", icon: RefreshCw, title: "Add Recurring Expense", description: "Automate logging for subscriptions and regular payments." },
+  { href: "/web/actions/reminder", icon: BellRing, title: "Schedule a Reminder", description: "Set alerts for tax deadlines, restocks, or follow-ups." },
 ];
 
 export default function ActionsHubPage() {
