@@ -18,6 +18,12 @@ import { AppFooter } from '@/components/layout/AppFooter';
 import { AppHeader } from '@/components/layout/AppHeader';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import { Line, LineChart, ResponsiveContainer, Tooltip } from "recharts";
+import {
+    ChartContainer,
+    ChartTooltipContent,
+    type ChartConfig,
+} from "@/components/ui/chart";
 
 type Activity = { id: number; type: 'income' | 'expense'; name: string; date: string; value: number; project?: string; };
 type BreakdownItem = { name:string; value: number; };
@@ -167,6 +173,15 @@ function AnimatedNumber({ value, className, prefix = '' }: { value: number; clas
 
   return <motion.p className={className}>{display}</motion.p>;
 }
+
+const microForecastData = [
+  { month: "May", income: 20900 },
+  { month: "Jun", income: 21400 },
+  { month: "Jul", income: 24000 },
+];
+const forecastChartConfig = {
+  income: { label: "Income" },
+} satisfies ChartConfig;
 
 
 export default function DashboardPage() {
@@ -385,6 +400,49 @@ export default function DashboardPage() {
                                     </div>
                                 </Link>
                             ))}
+                        </CardContent>
+                    </Card>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                    <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <TrendingUp className="w-5 h-5 text-primary" />
+                                Micro-Forecast
+                            </CardTitle>
+                            <CardDescription>Next Month's Projection</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="h-[80px] w-full -ml-4">
+                                <ChartContainer config={forecastChartConfig} className="w-full h-full">
+                                    <ResponsiveContainer>
+                                        <LineChart
+                                            data={microForecastData}
+                                            margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
+                                        >
+                                            <Tooltip
+                                                cursor={false}
+                                                content={<ChartTooltipContent
+                                                    hideLabel
+                                                    hideIndicator
+                                                    formatter={(value) => formatCurrency(value as number)}
+                                                />}
+                                            />
+                                            <Line
+                                                dataKey="income"
+                                                type="monotone"
+                                                stroke="hsl(var(--primary))"
+                                                strokeWidth={2}
+                                                dot={true}
+                                            />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </ChartContainer>
+                            </div>
+                            <p className="text-center text-sm text-muted-foreground mt-2">
+                                Based on your last 90 days, you may expect around <span className="font-bold text-foreground">{formatCurrency(24000)}</span> next month.
+                            </p>
                         </CardContent>
                     </Card>
                 </motion.div>
