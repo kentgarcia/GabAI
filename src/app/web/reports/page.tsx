@@ -7,9 +7,10 @@ import type { DateRange } from "react-day-picker";
 import { Area, Bar, BarChart, CartesianGrid, ComposedChart, Line, LineChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis, Cell } from 'recharts';
 import {
     Download, Mail as MailIcon, Printer, Sparkles, SlidersHorizontal, BarChart as BarChartIcon, FileText, Landmark, ScrollText,
-    Calendar as CalendarIcon
+    Calendar as CalendarIcon, ShoppingCart, Briefcase
 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -52,6 +53,24 @@ const cashFlowData = [
   { month: "Jun", income: 21400, expenses: 14000 },
 ];
 
+const comparisonCashFlowData = cashFlowData.map(d => ({
+    ...d,
+    prev_income: d.income * (0.8 + Math.random() * 0.3),
+    prev_expenses: d.expenses * (0.9 + Math.random() * 0.4)
+}));
+
+const platformPerformanceData = [
+    { name: 'Upwork', income: 20000.00, margin: 80.5, icon: Briefcase },
+    { name: 'Shopee', income: 1250.00, margin: 65.2, icon: ShoppingCart },
+    { name: 'Lazada', income: 899.50, margin: 55.8, icon: ShoppingCart },
+];
+
+const clientPerformanceData = [
+    { name: 'Innovate Corp.', income: 15000.00 },
+    { name: 'Creative Minds Co.', income: 5000.00 },
+    { name: 'Tech Solutions Ltd.', income: 2500.00 },
+];
+
 const forecastChartData = [
   { month: 'Jan', actual: 18600 },
   { month: 'Feb', actual: 30500 },
@@ -90,7 +109,9 @@ const inventoryData = [
 
 const chartConfig: ChartConfig = {
   income: { label: "Income", color: "hsl(var(--chart-2))" },
+  prev_income: { label: "Previous Income", color: "hsla(var(--chart-2-hsl), 0.5)" },
   expenses: { label: "Expenses", color: "hsl(var(--destructive))" },
+  prev_expenses: { label: "Previous Expenses", color: "hsla(var(--destructive-hsl), 0.5)" },
   actual: { label: "Actual", color: "hsl(var(--primary))" },
   predicted: { label: "Predicted", color: "hsl(var(--primary))" },
   confidence: { label: "Confidence", color: "hsl(var(--primary) / 0.1)" },
@@ -121,6 +142,7 @@ const formatCurrencyForChart = (value: number) => value >= 1000 ? `₱${(value /
 export default function WebReportsPage() {
     const [date, setDate] = React.useState<DateRange | undefined>({ from: new Date(2024, 5, 1), to: addDays(new Date(2024, 5, 1), 30) });
     const [selectedReport, setSelectedReport] = React.useState('Profit & Loss Statement');
+    const [compare, setCompare] = React.useState(false);
     
     // In a real app, this would come from a global context or props
     const isProUser = true; 
@@ -227,22 +249,46 @@ export default function WebReportsPage() {
                 <TabsContent value="insights" className="space-y-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Income vs. Expense Trend</CardTitle>
+                            <div className="flex justify-between items-center">
+                                <CardTitle>Income vs. Expense Trend</CardTitle>
+                                <div className="flex items-center space-x-2">
+                                    <Label htmlFor="compare-mode" className="text-sm">Compare to Previous Period</Label>
+                                    <Switch id="compare-mode" checked={compare} onCheckedChange={setCompare} />
+                                </div>
+                            </div>
                         </CardHeader>
                         <CardContent className="h-[350px] pr-6">
-                            <ChartContainer config={chartConfig} className="w-full h-full">
-                                <ResponsiveContainer>
-                                    <LineChart data={cashFlowData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                                        <CartesianGrid vertical={false} />
-                                        <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-                                        <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
-                                        <ChartTooltip content={<ChartTooltipContent />} />
-                                        <ChartLegend content={<ChartLegendContent />} />
-                                        <Line type="monotone" dataKey="income" stroke="var(--color-income)" strokeWidth={2.5} dot={false} />
-                                        <Line type="monotone" dataKey="expenses" stroke="var(--color-expenses)" strokeWidth={2.5} dot={false} />
-                                    </LineChart>
-                                </ResponsiveContainer>
-                            </ChartContainer>
+                            {compare ? (
+                                <ChartContainer config={chartConfig} className="w-full h-full">
+                                    <ResponsiveContainer>
+                                        <BarChart data={comparisonCashFlowData}>
+                                            <CartesianGrid vertical={false} />
+                                            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+                                            <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
+                                            <ChartTooltip content={<ChartTooltipContent />} />
+                                            <ChartLegend content={<ChartLegendContent />} />
+                                            <Bar dataKey="income" name="Income" fill="var(--color-income)" radius={[4, 4, 0, 0]} />
+                                            <Bar dataKey="prev_income" name="Previous Income" fill="hsla(160, 60%, 45%, 0.5)" radius={[4, 4, 0, 0]} />
+                                            <Bar dataKey="expenses" name="Expenses" fill="var(--color-expenses)" radius={[4, 4, 0, 0]} />
+                                            <Bar dataKey="prev_expenses" name="Previous Expenses" fill="hsla(0, 84.2%, 60.2%, 0.5)" radius={[4, 4, 0, 0]} />
+                                        </BarChart>
+                                    </ResponsiveContainer>
+                                </ChartContainer>
+                            ) : (
+                                <ChartContainer config={chartConfig} className="w-full h-full">
+                                    <ResponsiveContainer>
+                                        <LineChart data={cashFlowData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                                            <CartesianGrid vertical={false} />
+                                            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
+                                            <YAxis tickFormatter={formatCurrencyForChart} tickLine={false} axisLine={false} tickMargin={8} />
+                                            <ChartTooltip content={<ChartTooltipContent />} />
+                                            <ChartLegend content={<ChartLegendContent />} />
+                                            <Line type="monotone" dataKey="income" stroke="var(--color-income)" strokeWidth={2.5} dot={false} />
+                                            <Line type="monotone" dataKey="expenses" stroke="var(--color-expenses)" strokeWidth={2.5} dot={false} />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </ChartContainer>
+                            )}
                         </CardContent>
                     </Card>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -280,6 +326,72 @@ export default function WebReportsPage() {
                                         </PieChart>
                                     </ResponsiveContainer>
                                  </ChartContainer>
+                            </CardContent>
+                        </Card>
+                    </div>
+                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <Card>
+                            <CardHeader>
+                                <div className="flex justify-between items-center">
+                                    <CardTitle>Platform Performance</CardTitle>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline" size="sm">Sort by: Income</Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuItem>Income</DropdownMenuItem>
+                                            <DropdownMenuItem>Profit Margin</DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
+                                <CardDescription>Your top income sources from connected channels.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Platform</TableHead>
+                                            <TableHead className="text-right">Income</TableHead>
+                                            <TableHead className="text-right">Profit Margin</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {platformPerformanceData.map((p) => (
+                                            <TableRow key={p.name}>
+                                                <TableCell className="font-medium flex items-center gap-2">
+                                                    <div className="p-1 bg-muted rounded-md"><p.icon className="w-4 h-4 text-muted-foreground" /></div>
+                                                    {p.name}
+                                                </TableCell>
+                                                <TableCell className="text-right">{formatCurrency(p.income)}</TableCell>
+                                                <TableCell className="text-right text-emerald-600">{p.margin.toFixed(1)}%</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader>
+                                <CardTitle>Top Client Performance</CardTitle>
+                                <CardDescription>Your most valuable clients for this period.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Client Name</TableHead>
+                                            <TableHead className="text-right">Total Billed</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {clientPerformanceData.map((c) => (
+                                            <TableRow key={c.name}>
+                                                <TableCell className="font-medium">{c.name}</TableCell>
+                                                <TableCell className="text-right">{formatCurrency(c.income)}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
                             </CardContent>
                         </Card>
                     </div>
