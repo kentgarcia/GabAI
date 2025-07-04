@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -12,7 +13,8 @@ import {
   FileText,
   Shield,
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Plug
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -110,6 +112,7 @@ export default function SettingsPage() {
                     <motion.div variants={itemVariants} className="space-y-3">
                         <h2 className="text-lg font-bold px-2">App Preferences</h2>
                          <SettingsItem icon={Bell} title="Notifications" subtitle="Manage alerts for tax reminders and summaries" href="/settings/notifications" />
+                         <SettingsItem icon={Plug} title="Integrations & Connections" subtitle="Manage your synced platforms and e-wallets" href="/settings/integrations" />
                     </motion.div>
 
                     <motion.div variants={itemVariants} className="space-y-3">
