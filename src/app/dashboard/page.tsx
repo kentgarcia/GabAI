@@ -299,84 +299,83 @@ export default function DashboardPage() {
                   </div>
                 </motion.div>
 
-                <Dialog onOpenChange={(isOpen) => !isOpen && setSelectedPlatform(null)}>
-                  <motion.div variants={itemVariants} className="space-y-4">
-                      <h2 className="font-bold text-lg">Platform Breakdown</h2>
-                      <div className="grid grid-cols-2 gap-4">
-                          {data.platformBreakdown.map((item, index) => (
-                              <DialogTrigger asChild key={index} onClick={() => setSelectedPlatform(item)}>
-                                <motion.div whileTap={{ scale: 0.97 }}>
-                                  <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 cursor-pointer hover:bg-muted/40 transition-colors">
-                                      <CardContent className="p-4 flex flex-col items-center text-center">
-                                          <div className="w-10 h-10 bg-[#131313] rounded-xl flex items-center justify-center mb-2 p-1.5">
-                                            <Image src={item.icon} width={30} height={30} alt={`${item.name} logo`} className="filter brightness-0 invert" />
+                <motion.div variants={itemVariants} className="space-y-4">
+                  <h2 className="font-bold text-lg">Platform Breakdown</h2>
+                  <Dialog onOpenChange={(isOpen) => !isOpen && setSelectedPlatform(null)}>
+                    <div className="grid grid-cols-2 gap-4">
+                        {data.platformBreakdown.map((item, index) => (
+                            <DialogTrigger asChild key={index} onClick={() => setSelectedPlatform(item)}>
+                              <motion.div whileTap={{ scale: 0.97 }}>
+                                <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 cursor-pointer hover:bg-muted/40 transition-colors">
+                                    <CardContent className="p-4 flex flex-col items-center text-center">
+                                        <div className="w-10 h-10 bg-[#131313] rounded-xl flex items-center justify-center mb-2 p-1.5">
+                                          <Image src={item.icon} width={30} height={30} alt={`${item.name} logo`} className="filter brightness-0 invert" />
+                                        </div>
+                                        <p className="font-semibold text-sm">{item.name}</p>
+                                        <AnimatedNumber value={item.value} className="font-semibold text-lg" />
+                                    </CardContent>
+                                </Card>
+                              </motion.div>
+                            </DialogTrigger>
+                        ))}
+                    </div>
+                    <AnimatePresence>
+                      {selectedPlatform && (
+                        <DialogContent className="bg-background/80 backdrop-blur-md border">
+                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                              <DialogHeader>
+                                  <DialogTitle className="flex items-center gap-3 text-xl">
+                                    <Image src={selectedPlatform.icon} width={30} height={30} alt={`${selectedPlatform.name} logo`} className="p-1 bg-black rounded-md filter brightness-0 invert" />
+                                      {selectedPlatform.name} Details
+                                  </DialogTitle>
+                              </DialogHeader>
+                              <div className="py-4 space-y-4">
+                                  <div>
+                                      <h3 className="font-semibold mb-2">Performance Summary</h3>
+                                      <div className="p-4 bg-muted/50 rounded-lg space-y-2">
+                                          <div className="flex justify-between text-sm">
+                                              <span className="text-muted-foreground">Total Sales ({period})</span>
+                                              <span className="font-bold">{formatCurrency(selectedPlatform.value)}</span>
                                           </div>
-                                          <p className="font-semibold text-sm">{item.name}</p>
-                                          <AnimatedNumber value={item.value} className="font-semibold text-lg" />
-                                      </CardContent>
-                                  </Card>
-                                </motion.div>
-                              </DialogTrigger>
-                          ))}
-                      </div>
-                  </motion.div>
-                  
-                  <AnimatePresence>
-                    {selectedPlatform && (
-                      <DialogContent className="bg-background/80 backdrop-blur-md border">
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                            <DialogHeader>
-                                <DialogTitle className="flex items-center gap-3 text-xl">
-                                  <Image src={selectedPlatform.icon} width={30} height={30} alt={`${selectedPlatform.name} logo`} className="p-1 bg-black rounded-md filter brightness-0 invert" />
-                                    {selectedPlatform.name} Details
-                                </DialogTitle>
-                            </DialogHeader>
-                            <div className="py-4 space-y-4">
-                                <div>
-                                    <h3 className="font-semibold mb-2">Performance Summary</h3>
-                                    <div className="p-4 bg-muted/50 rounded-lg space-y-2">
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">Total Sales ({period})</span>
-                                            <span className="font-bold">{formatCurrency(selectedPlatform.value)}</span>
-                                        </div>
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">Number of Orders</span>
-                                            <span className="font-bold">{Math.round(selectedPlatform.value / 150)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold mb-2">Recent Activity (Simulated)</h3>
-                                    <motion.div
-                                        variants={{
-                                            hidden: { opacity: 0 },
-                                            visible: {
-                                                opacity: 1,
-                                                transition: { staggerChildren: 0.2 },
-                                            },
-                                        }}
-                                        initial="hidden"
-                                        animate="visible"
-                                        className="space-y-2"
-                                    >
-                                        {[...Array(3)].map((_, i) => (
-                                            <motion.div
-                                                key={i}
-                                                variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
-                                                className="flex justify-between items-center text-sm p-3 bg-muted/50 rounded-lg"
-                                            >
-                                                <span>Order #{12345 - (i * 10)}</span>
-                                                <span className="font-semibold">{formatCurrency((selectedPlatform.value / (10 + i * 5)) * (Math.random() + 0.5))}</span>
-                                            </motion.div>
-                                        ))}
-                                    </motion.div>
-                                </div>
-                            </div>
-                        </motion.div>
-                      </DialogContent>
-                    )}
-                  </AnimatePresence>
-                </Dialog>
+                                          <div className="flex justify-between text-sm">
+                                              <span className="text-muted-foreground">Number of Orders</span>
+                                              <span className="font-bold">{Math.round(selectedPlatform.value / 150)}</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div>
+                                      <h3 className="font-semibold mb-2">Recent Activity (Simulated)</h3>
+                                      <motion.div
+                                          variants={{
+                                              hidden: { opacity: 0 },
+                                              visible: {
+                                                  opacity: 1,
+                                                  transition: { staggerChildren: 0.2 },
+                                              },
+                                          }}
+                                          initial="hidden"
+                                          animate="visible"
+                                          className="space-y-2"
+                                      >
+                                          {[...Array(3)].map((_, i) => (
+                                              <motion.div
+                                                  key={i}
+                                                  variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
+                                                  className="flex justify-between items-center text-sm p-3 bg-muted/50 rounded-lg"
+                                              >
+                                                  <span>Order #{12345 - (i * 10)}</span>
+                                                  <span className="font-semibold">{formatCurrency((selectedPlatform.value / (10 + i * 5)) * (Math.random() + 0.5))}</span>
+                                              </motion.div>
+                                          ))}
+                                      </motion.div>
+                                  </div>
+                              </div>
+                          </motion.div>
+                        </DialogContent>
+                      )}
+                    </AnimatePresence>
+                  </Dialog>
+                </motion.div>
                 
                 <motion.div variants={itemVariants}>
                      <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
@@ -454,5 +453,4 @@ export default function DashboardPage() {
       <AppFooter />
     </div>
   );
-
-    
+}
