@@ -109,6 +109,7 @@ function ChatSession() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const initialPromptHandledRef = useRef(false);
 
   // Auto-scroll on new message
   useEffect(() => {
@@ -246,8 +247,11 @@ function ChatSession() {
   
   // Initial Gabi Greeting or handle incoming prompt
   useEffect(() => {
-    // Prevent re-running if messages are already populated (e.g., Strict Mode double render)
-    if (messages.length > 0) return;
+    // Use a ref to ensure this effect runs only once on mount, even in Strict Mode
+    if (initialPromptHandledRef.current) {
+      return;
+    }
+    initialPromptHandledRef.current = true;
 
     const initialPrompt = searchParams.get('prompt');
 
