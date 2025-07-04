@@ -151,6 +151,12 @@ export default function DashboardPage() {
   const [data, setData] = useState<PeriodData>(mockData.month);
   const [isFlipped, setIsFlipped] = useState(false);
 
+  const platformBreakdown = [
+    { name: 'Lazada Sales', value: 11500, icon: ShoppingCart },
+    { name: 'Shopee Sales', value: 9800, icon: ShoppingCart },
+    { name: 'Client Payments (Direct)', value: 8500, icon: Laptop },
+  ];
+
   useEffect(() => {
     setData(mockData[period]);
   }, [period]);
@@ -270,20 +276,6 @@ export default function DashboardPage() {
                   </div>
                 </motion.div>
                 
-                 <motion.div variants={itemVariants}>
-                    <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
-                        <CardHeader className="p-4 pb-2">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">YOUR TAKE-HOME (SAFE TO SPEND)</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-4 pt-0 flex items-center gap-3">
-                            <div className="p-2 bg-[#131313] rounded-lg">
-                                <Wallet className="w-5 h-5 text-primary-foreground" />
-                            </div>
-                            <AnimatedNumber value={data.netProfit * 0.7} className="text-3xl font-bold" />
-                        </CardContent>
-                    </Card>
-                </motion.div>
-
                 <motion.div variants={itemVariants}>
                      <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
                         <CardHeader>
@@ -304,49 +296,25 @@ export default function DashboardPage() {
                 </motion.div>
                 
                 <motion.div variants={itemVariants} className="space-y-4">
-                    <h2 className="font-bold text-lg">This Month's Breakdown</h2>
+                    <h2 className="font-bold text-lg">Platform Breakdown</h2>
                     <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
                         <CardContent className="p-4">
-                            <Tabs defaultValue="products" className="w-full">
-                                <TabsList className="grid w-full grid-cols-2 bg-muted/30 p-1.5 rounded-2xl">
-                                    <TabsTrigger value="products" className="rounded-lg">Top Products/Services</TabsTrigger>
-                                    <TabsTrigger value="expenses" className="rounded-lg">Top Expenses</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="products" className="mt-4">
-                                    <div className="space-y-4">
-                                        {data.breakdown.products.map((item, index) => (
-                                            <div key={index} className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
-                                                    {index % 2 === 0 ? <Package className="w-5 h-5 text-primary-foreground" /> : <Briefcase className="w-5 h-5 text-primary-foreground" />}
-                                                </div>
-                                                <div className="flex-grow">
-                                                    <p className="font-semibold">{item.name}</p>
-                                                </div>
-                                                <AnimatedNumber value={item.value} className="font-semibold text-lg" />
-                                            </div>
-                                        ))}
+                            <div className="space-y-4">
+                                {platformBreakdown.map((item, index) => (
+                                    <div key={index} className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
+                                           <item.icon className="w-5 h-5 text-primary-foreground" />
+                                        </div>
+                                        <div className="flex-grow">
+                                            <p className="font-semibold">{item.name}</p>
+                                        </div>
+                                        <AnimatedNumber value={item.value} className="font-semibold text-lg" />
                                     </div>
-                                </TabsContent>
-                                <TabsContent value="expenses" className="mt-4">
-                                    <div className="space-y-4">
-                                       {data.breakdown.expenses.map((item, index) => (
-                                            <div key={index} className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center">
-                                                     {index % 2 === 0 ? <ShoppingCart className="w-5 h-5 text-primary-foreground" /> : <Truck className="w-5 h-5 text-primary-foreground" />}
-                                                </div>
-                                                <div className="flex-grow">
-                                                    <p className="font-semibold">{item.name}</p>
-                                                </div>
-                                                <AnimatedNumber value={item.value} className="font-semibold text-lg" />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </TabsContent>
-                            </Tabs>
+                                ))}
+                            </div>
                         </CardContent>
                     </Card>
                 </motion.div>
-
 
                 <motion.div variants={itemVariants} className="space-y-4">
                     <div className="flex justify-between items-center">
