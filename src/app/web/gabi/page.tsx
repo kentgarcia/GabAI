@@ -261,7 +261,7 @@ export default function GabiWorkspace() {
                   ))}
                   {isLoading && (
                      <motion.div key="loading" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex items-start gap-4">
-                       <Avatar className="mt-1"><AvatarImage src='/gabi-avatar.png' /><AvatarFallback>G</AvatarFallback></Avatar>
+                       <Avatar className="mt-1"><AvatarImage src='/gabi-avatar.png' data-ai-hint="robot assistant" /><AvatarFallback>G</AvatarFallback></Avatar>
                         <div className="flex-1 rounded-lg bg-background p-4 flex items-center gap-2">
                            <Sparkles className="h-5 w-5 text-primary animate-pulse" />
                            <p className="text-muted-foreground">Gabi is thinking...</p>
