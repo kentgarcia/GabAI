@@ -112,7 +112,7 @@ function ChatSession() {
 
     const initialPrompt = searchParams.get('prompt');
     const initialMessage = initialPrompt 
-      ? `I see you tapped on: "${initialPrompt}". I can help with that. First, choose a category below so I can give you the best options.`
+      ? `I see you tapped on: "${initialPrompt}". Let's take a look. Please choose a category below so I can give you the best options.`
       : "Hi there, I'm Gabi! How can I help you today? Choose a category below to get started.";
 
     setMessages([{ id: 'gabi-init', role: 'model', content: initialMessage }]);

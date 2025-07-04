@@ -76,7 +76,7 @@ export default function ChatHubPage() {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-                <h1 className="text-3xl font-bold tracking-tight">Hi {userName}, I'm ready to help.</h1>
+                <h1 className="text-3xl font-bold tracking-tight">Magandang araw, {userName}! I'm ready to help.</h1>
             </motion.div>
 
             <motion.section variants={itemVariants}>
@@ -106,7 +106,7 @@ export default function ChatHubPage() {
                 </h2>
                 <div className="space-y-3">
                     {proactiveInsights.map((insight, index) => (
-                        <Link href={insight.href} key={index}>
+                        <Link href={`/chat/session?prompt=${encodeURIComponent(insight.text)}`} key={index}>
                             <motion.div whileTap={{ scale: 0.98 }}>
                                 <Card className="rounded-2xl mb-2 bg-background/30 transition-colors hover:bg-muted/40">
                                     <CardContent className="p-4 flex items-center gap-4">

@@ -127,9 +127,9 @@ const mockData: MockData = {
 };
 
 const gabiInsights = [
-    { text: "Follow up with 'Innovate Corp'. Their ₱15,000 invoice is 3 days overdue.", icon: AlertTriangle, iconColor: 'text-yellow-500' },
-    { text: "Your 'Resin Coasters' are hot! You're low on stock.", icon: TrendingUp, iconColor: 'text-emerald-500' },
-    { text: "Your quarterly tax filing is due in 15 days. Let's make sure your books are clean.", icon: Lightbulb, iconColor: 'text-blue-500' },
+    { text: "Your quarterly tax filing is due in 15 days. Let's make sure your books are clean.", icon: AlertTriangle, iconColor: 'text-yellow-500' },
+    { text: "Your 'Resin Coasters' are hot! You might want to restock soon.", icon: TrendingUp, iconColor: 'text-emerald-500' },
+    { text: "You haven't issued a receipt for your latest income from 'Client Payment'. Do it now?", icon: Lightbulb, iconColor: 'text-blue-500' },
 ];
 
 const containerVariants = {
