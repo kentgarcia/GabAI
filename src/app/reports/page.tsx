@@ -5,9 +5,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   Landmark, BarChart3, ScrollText,
-  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase, DollarSign, Package, FileText, Lightbulb, Sparkles, TrendingUp, AlertTriangle
+  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase, DollarSign, Package, FileText, Lightbulb, Sparkles, TrendingUp, AlertTriangle, FileDown
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +33,7 @@ import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
 
 
 const reportOptions = [
@@ -178,6 +179,7 @@ const InventoryStatusBadge = ({ status }: { status: string }) => {
 }
 
 export default function ReportsPage() {
+  const { toast } = useToast();
   const [dateRange, setDateRange] = useState('This Quarter');
   const [activeTab, setActiveTab] = useState('analyze');
   const [compare, setCompare] = useState(false);
@@ -516,26 +518,65 @@ export default function ReportsPage() {
                 </TabsContent>
 
                 <TabsContent value="generate">
-                    <motion.div variants={itemVariants} className="space-y-4">
-                      <h2 className="text-lg font-semibold mb-2">Create a Document</h2>
-                      {reportOptions.map((option) => (
-                          <Link href={option.href} key={option.title}>
-                          <motion.div whileTap={{ scale: 0.98 }}>
-                              <Card className="rounded-2xl mb-2 border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
-                              <CardContent className="p-4 flex items-center gap-4">
-                                  <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
-                                  <option.icon className="w-6 h-6 text-primary-foreground" />
-                                  </div>
-                                  <div className="flex-grow">
-                                  <p className="font-semibold">{option.title}</p>
-                                  <p className="text-sm text-muted-foreground">{option.description}</p>
-                                  </div>
-                                  <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                              </CardContent>
-                              </Card>
-                          </motion.div>
-                          </Link>
-                      ))}
+                    <motion.div variants={itemVariants} className="space-y-6">
+                      <div>
+                        <h2 className="text-lg font-semibold mb-2">Create a Document</h2>
+                        <div className="space-y-2">
+                          {reportOptions.map((option) => (
+                              <Link href={option.href} key={option.title}>
+                              <motion.div whileTap={{ scale: 0.98 }}>
+                                  <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 transition-colors hover:bg-muted/40">
+                                  <CardContent className="p-4 flex items-center gap-4">
+                                      <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center flex-shrink-0">
+                                      <option.icon className="w-6 h-6 text-primary-foreground" />
+                                      </div>
+                                      <div className="flex-grow">
+                                      <p className="font-semibold">{option.title}</p>
+                                      <p className="text-sm text-muted-foreground">{option.description}</p>
+                                      </div>
+                                      <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                                  </CardContent>
+                                  </Card>
+                              </motion.div>
+                              </Link>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                          <CardHeader>
+                            <CardTitle>Receipts at a Glance</CardTitle>
+                            <CardDescription>A summary of your recent invoice statuses.</CardDescription>
+                          </CardHeader>
+                          <CardContent className="grid grid-cols-3 gap-4 text-center">
+                            <div>
+                                <p className="text-2xl font-bold">2</p>
+                                <p className="text-sm text-muted-foreground">Sent</p>
+                            </div>
+                            <div>
+                                <p className="text-2xl font-bold text-red-500">1</p>
+                                <p className="text-sm text-muted-foreground">Overdue</p>
+                            </div>
+                             <div>
+                                <p className="text-2xl font-bold text-emerald-500">5</p>
+                                <p className="text-sm text-muted-foreground">Paid (30d)</p>
+                            </div>
+                          </CardContent>
+                          <CardFooter>
+                               <Button asChild variant="link" className="w-full">
+                                   <Link href="/reports/history/receipts">View Full History</Link>
+                               </Button>
+                          </CardFooter>
+                      </Card>
+
+                      <Button 
+                        variant="outline" 
+                        className="w-full h-14 text-base rounded-full" 
+                        onClick={() => toast({ title: 'Coming Soon!', description: 'This feature is under development.' })}
+                      >
+                         <FileDown className="mr-2" />
+                         Download All as .zip
+                      </Button>
                     </motion.div>
                 </TabsContent>
             </Tabs>
