@@ -19,6 +19,7 @@ import Image from 'next/image';
 
 type Activity = { id: number; type: 'income' | 'expense'; name: string; date: string; value: number; project?: string; };
 type BreakdownItem = { name: string; value: number; };
+type PlatformBreakdownItem = { name: string; value: number; icon: string; };
 type PeriodData = {
   netProfit: number;
   income: number;
@@ -28,6 +29,7 @@ type PeriodData = {
     expenses: BreakdownItem[];
   };
   activity: Activity[];
+  platformBreakdown: PlatformBreakdownItem[];
 };
 type MockData = {
   week: PeriodData;
@@ -40,6 +42,12 @@ const mockData: MockData = {
     netProfit: 2150.75,
     income: 3500.00,
     expenses: 1349.25,
+    platformBreakdown: [
+      { name: 'Lazada Sales', value: 1500, icon: '/logo/lazada.svg' },
+      { name: 'Shopee Sales', value: 1000, icon: '/logo/shopee.svg' },
+      { name: 'Client Payments', value: 1000, icon: '/logo/upwork.svg' },
+      { name: 'TikTok Shop', value: 0, icon: '/logo/tiktok.svg' },
+    ],
     breakdown: {
       products: [
         { name: 'Product C', value: 1500 },
@@ -60,6 +68,12 @@ const mockData: MockData = {
     netProfit: 12345.67,
     income: 20000.00,
     expenses: 7654.33,
+    platformBreakdown: [
+        { name: 'Lazada Sales', value: 8000, icon: '/logo/lazada.svg' },
+        { name: 'Shopee Sales', value: 6500, icon: '/logo/shopee.svg' },
+        { name: 'Client Payments', value: 4500, icon: '/logo/upwork.svg' },
+        { name: 'TikTok Shop', value: 1000, icon: '/logo/tiktok.svg' },
+    ],
     breakdown: {
       products: [
         { name: 'Product A', value: 8000 },
@@ -80,6 +94,12 @@ const mockData: MockData = {
     netProfit: 35820.40,
     income: 60000.00,
     expenses: 24179.60,
+    platformBreakdown: [
+        { name: 'Lazada Sales', value: 25000, icon: '/logo/lazada.svg' },
+        { name: 'Shopee Sales', value: 20000, icon: '/logo/shopee.svg' },
+        { name: 'Client Payments', value: 12000, icon: '/logo/upwork.svg' },
+        { name: 'TikTok Shop', value: 3000, icon: '/logo/tiktok.svg' },
+    ],
     breakdown: {
       products: [
         { name: 'Product A', value: 24000 },
@@ -151,13 +171,6 @@ export default function DashboardPage() {
   const [period, setPeriod] = useState<'week' | 'month' | 'quarter'>('month');
   const [data, setData] = useState<PeriodData>(mockData.month);
   const [isFlipped, setIsFlipped] = useState(false);
-
-  const platformBreakdown = [
-    { name: 'Lazada Sales', value: 11500, icon: '/logo/lazada.svg' },
-    { name: 'Shopee Sales', value: 9800, icon: '/logo/shopee.svg' },
-    { name: 'Client Payments', value: 8500, icon: '/logo/upwork.svg' },
-    { name: 'TikTok Shop', value: 4200, icon: '/logo/tiktok.svg' },
-  ];
 
   useEffect(() => {
     setData(mockData[period]);
@@ -281,7 +294,7 @@ export default function DashboardPage() {
                 <motion.div variants={itemVariants} className="space-y-4">
                     <h2 className="font-bold text-lg">Platform Breakdown</h2>
                     <div className="grid grid-cols-2 gap-4">
-                        {platformBreakdown.map((item, index) => (
+                        {data.platformBreakdown.map((item, index) => (
                             <Card key={index} className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
                                 <CardContent className="p-4 flex flex-col items-center text-center">
                                     <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center mb-2 p-1.5">
