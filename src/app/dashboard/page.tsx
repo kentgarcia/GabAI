@@ -10,13 +10,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { FinancialHealthGauge } from '@/components/ui/financial-health-gauge';
@@ -26,7 +19,7 @@ import Image from 'next/image';
 
 type Activity = { id: number; type: 'income' | 'expense'; name: string; date: string; value: number; project?: string; };
 type BreakdownItem = { name: string; value: number; };
-type PlatformBreakdownItem = { name: string; value: number; icon: string; };
+type PlatformBreakdownItem = { id: string; name: string; value: number; icon: string; };
 type PeriodData = {
   netProfit: number;
   income: number;
@@ -50,10 +43,10 @@ const mockData: MockData = {
     income: 3500.00,
     expenses: 1349.25,
     platformBreakdown: [
-      { name: 'Lazada Sales', value: 1500, icon: '/logo/lazada.svg' },
-      { name: 'Shopee Sales', value: 1000, icon: '/logo/shopee.svg' },
-      { name: 'Client Payments', value: 1000, icon: '/logo/upwork.svg' },
-      { name: 'TikTok Shop', value: 0, icon: '/logo/tiktok.svg' },
+      { id: 'lazada', name: 'Lazada Sales', value: 1500, icon: '/logo/lazada.svg' },
+      { id: 'shopee', name: 'Shopee Sales', value: 1000, icon: '/logo/shopee.svg' },
+      { id: 'upwork', name: 'Client Payments', value: 1000, icon: '/logo/upwork.svg' },
+      { id: 'tiktok', name: 'TikTok Shop', value: 0, icon: '/logo/tiktok.svg' },
     ],
     breakdown: {
       products: [
@@ -76,10 +69,10 @@ const mockData: MockData = {
     income: 20000.00,
     expenses: 7654.33,
     platformBreakdown: [
-        { name: 'Lazada Sales', value: 8000, icon: '/logo/lazada.svg' },
-        { name: 'Shopee Sales', value: 6500, icon: '/logo/shopee.svg' },
-        { name: 'Client Payments', value: 4500, icon: '/logo/upwork.svg' },
-        { name: 'TikTok Shop', value: 1000, icon: '/logo/tiktok.svg' },
+        { id: 'lazada', name: 'Lazada Sales', value: 8000, icon: '/logo/lazada.svg' },
+        { id: 'shopee', name: 'Shopee Sales', value: 6500, icon: '/logo/shopee.svg' },
+        { id: 'upwork', name: 'Client Payments', value: 4500, icon: '/logo/upwork.svg' },
+        { id: 'tiktok', name: 'TikTok Shop', value: 1000, icon: '/logo/tiktok.svg' },
     ],
     breakdown: {
       products: [
@@ -102,10 +95,10 @@ const mockData: MockData = {
     income: 60000.00,
     expenses: 24179.60,
     platformBreakdown: [
-        { name: 'Lazada Sales', value: 25000, icon: '/logo/lazada.svg' },
-        { name: 'Shopee Sales', value: 20000, icon: '/logo/shopee.svg' },
-        { name: 'Client Payments', value: 12000, icon: '/logo/upwork.svg' },
-        { name: 'TikTok Shop', value: 3000, icon: '/logo/tiktok.svg' },
+        { id: 'lazada', name: 'Lazada Sales', value: 25000, icon: '/logo/lazada.svg' },
+        { id: 'shopee', name: 'Shopee Sales', value: 20000, icon: '/logo/shopee.svg' },
+        { id: 'upwork', name: 'Client Payments', value: 12000, icon: '/logo/upwork.svg' },
+        { id: 'tiktok', name: 'TikTok Shop', value: 3000, icon: '/logo/tiktok.svg' },
     ],
     breakdown: {
       products: [
@@ -178,7 +171,6 @@ export default function DashboardPage() {
   const [period, setPeriod] = useState<'week' | 'month' | 'quarter'>('month');
   const [data, setData] = useState<PeriodData>(mockData.month);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [selectedPlatform, setSelectedPlatform] = useState<PlatformBreakdownItem | null>(null);
 
   useEffect(() => {
     setData(mockData[period]);
@@ -301,10 +293,12 @@ export default function DashboardPage() {
 
                 <motion.div variants={itemVariants} className="space-y-4">
                   <h2 className="font-bold text-lg">Platform Breakdown</h2>
-                  <Dialog onOpenChange={(isOpen) => !isOpen && setSelectedPlatform(null)}>
                     <div className="grid grid-cols-2 gap-4">
                         {data.platformBreakdown.map((item, index) => (
-                            <DialogTrigger asChild key={index} onClick={() => setSelectedPlatform(item)}>
+                           <Link
+                              key={index}
+                              href={`/platform/${item.id}?name=${encodeURIComponent(item.name)}&value=${item.value}&icon=${encodeURIComponent(item.icon)}&period=${period}`}
+                           >
                               <motion.div whileTap={{ scale: 0.97 }}>
                                 <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 cursor-pointer hover:bg-muted/40 transition-colors">
                                     <CardContent className="p-4 flex flex-col items-center text-center">
@@ -316,65 +310,9 @@ export default function DashboardPage() {
                                     </CardContent>
                                 </Card>
                               </motion.div>
-                            </DialogTrigger>
+                            </Link>
                         ))}
                     </div>
-                    <AnimatePresence>
-                      {selectedPlatform && (
-                        <DialogContent className="bg-background/80 backdrop-blur-md border">
-                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                              <DialogHeader>
-                                  <DialogTitle className="flex items-center gap-3 text-xl">
-                                    <Image src={selectedPlatform.icon} width={30} height={30} alt={`${selectedPlatform.name} logo`} className="p-1 bg-black rounded-md filter brightness-0 invert" />
-                                      {selectedPlatform.name} Details
-                                  </DialogTitle>
-                              </DialogHeader>
-                              <div className="py-4 space-y-4">
-                                  <div>
-                                      <h3 className="font-semibold mb-2">Performance Summary</h3>
-                                      <div className="p-4 bg-muted/50 rounded-lg space-y-2">
-                                          <div className="flex justify-between text-sm">
-                                              <span className="text-muted-foreground">Total Sales ({period})</span>
-                                              <span className="font-bold">{formatCurrency(selectedPlatform.value)}</span>
-                                          </div>
-                                          <div className="flex justify-between text-sm">
-                                              <span className="text-muted-foreground">Number of Orders</span>
-                                              <span className="font-bold">{Math.round(selectedPlatform.value / 150)}</span>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div>
-                                      <h3 className="font-semibold mb-2">Recent Activity (Simulated)</h3>
-                                      <motion.div
-                                          variants={{
-                                              hidden: { opacity: 0 },
-                                              visible: {
-                                                  opacity: 1,
-                                                  transition: { staggerChildren: 0.2 },
-                                              },
-                                          }}
-                                          initial="hidden"
-                                          animate="visible"
-                                          className="space-y-2"
-                                      >
-                                          {[...Array(3)].map((_, i) => (
-                                              <motion.div
-                                                  key={i}
-                                                  variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}
-                                                  className="flex justify-between items-center text-sm p-3 bg-muted/50 rounded-lg"
-                                              >
-                                                  <span>Order #{12345 - (i * 10)}</span>
-                                                  <span className="font-semibold">{formatCurrency((selectedPlatform.value / (10 + i * 5)) * (Math.random() + 0.5))}</span>
-                                              </motion.div>
-                                          ))}
-                                      </motion.div>
-                                  </div>
-                              </div>
-                          </motion.div>
-                        </DialogContent>
-                      )}
-                    </AnimatePresence>
-                  </Dialog>
                 </motion.div>
                 
                 <motion.div variants={itemVariants}>
