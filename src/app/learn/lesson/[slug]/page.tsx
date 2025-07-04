@@ -12,7 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 const mockLessonData: { [key: string]: any } = {
     'bir-basics-lesson-1': {
         title: 'Why Formalize?',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        videoUrl: 'https://www.youtube.com/embed/HacUNa9x8d0',
         transcript: 'This lesson covers the importance of formalizing your business...',
         resources: [],
         nextLesson: 'bir-basics-lesson-2',
@@ -20,7 +20,7 @@ const mockLessonData: { [key: string]: any } = {
     },
     'bir-basics-lesson-2': {
         title: 'Choosing 8% vs. Graduated Tax',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        videoUrl: 'https://www.youtube.com/embed/HacUNa9x8d0',
         transcript: 'This lesson explains the difference between 8% and graduated tax rates...',
         resources: [],
         nextLesson: 'bir-basics-lesson-3',
@@ -57,7 +57,7 @@ So, what needs to be on an official receipt to make it valid? Let's break it dow
     },
     'bir-basics-lesson-4': {
         title: 'Understanding Quarterly ITRs',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+        videoUrl: 'https://www.youtube.com/embed/HacUNa9x8d0',
         transcript: 'This lesson details how to prepare for your quarterly income tax returns...',
         resources: [],
         nextLesson: null,

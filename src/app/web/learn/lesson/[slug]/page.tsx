@@ -16,7 +16,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 const lessonData = {
     title: 'How to Issue Official Receipts',
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/embed/HacUNa9x8d0",
     transcript: `(Intro music plays)\n\nHello, freelancers and business owners! Welcome back to the Gabi Learn Hub. Today, we're tackling a super important topic: how to properly issue an official receipt, or OR.\n\nFirst things first, why is this important? An official receipt is your proof of payment. It's crucial for your own bookkeeping and for your clients' records. More importantly, it's a requirement from the BIR to ensure all sales are recorded properly for tax purposes.\n\nSo, what needs to be on an official receipt to make it valid? Let's break it down...\n\n1. Your Registered Name or Business Name.\n2. Your Taxpayer Identification Number, or TIN.\n3. Your Registered Address.\n4. The words "Official Receipt" clearly visible.\n5. A unique serial number.\n6. The date of the transaction.\n7. The name, TIN, and address of your client.\n8. A description of the service or goods sold.\n9. The total amount, broken down if there's VAT.\n\n(Video continues with more detail...)`,
     resources: [{ title: "BIR-Compliant OR Template", type: "PDF" }, { title: "Receipt Issuing Checklist", type: "PDF" }],
     comments: [
