@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import {
   Landmark, BarChart3, ScrollText,
-  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase, DollarSign, Package, FileText, Lightbulb, Sparkles, TrendingUp
+  ChevronRight, Calendar as CalendarIcon, ShoppingCart, Briefcase, DollarSign, Package, FileText, Lightbulb, Sparkles, TrendingUp, AlertTriangle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -90,6 +90,18 @@ const forecastChartData = [
   { month: 'Oct', predicted: 32000, confidence: [28000, 36000] },
 ];
 
+const cashProjectionData = [
+    { name: 'July', value: 45000 },
+    { name: 'August', value: 62000 },
+    { name: 'September', value: 25000 }, // Intentionally low for alert
+];
+
+const inventoryData = [
+    { name: 'Product A', stock: 150, avgSales: 10, status: 'Healthy' },
+    { name: 'Product B', stock: 8, avgSales: 5, status: 'Reorder Soon' },
+    { name: 'Product C', stock: 2, avgSales: 3, status: 'URGENT: Restock Now!' },
+];
+
 const donutData = [
   { name: 'Product Costs', value: 400, fill: 'var(--color-productCosts)' },
   { name: 'Marketing', value: 300, fill: 'var(--color-marketing)' },
@@ -122,13 +134,6 @@ const clientPerformanceData = [
     { name: 'Creative Minds Co.', income: 5000.00 },
     { name: 'Tech Solutions Ltd.', income: 2500.00 },
 ];
-
-const inventoryData = [
-    { name: 'Product A', stock: 150, avgSales: 10, status: 'Healthy' },
-    { name: 'Product B', stock: 8, avgSales: 5, status: 'Reorder Soon' },
-    { name: 'Product C', stock: 2, avgSales: 3, status: 'URGENT: Restock Now!' },
-];
-
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -176,6 +181,8 @@ export default function ReportsPage() {
   const [dateRange, setDateRange] = useState('This Quarter');
   const [activeTab, setActiveTab] = useState('analyze');
   const [compare, setCompare] = useState(false);
+
+  const hasLowCashProjection = cashProjectionData.some(d => d.value < 30000);
 
   return (
     <div className="flex flex-col h-screen bg-transparent text-foreground font-sans">
@@ -458,6 +465,31 @@ export default function ReportsPage() {
                             <Lightbulb className="h-5 w-5 text-yellow-400 flex-shrink-0 mt-0.5" />
                             <p><span className="font-semibold text-foreground/80">Gabi's Insight:</span> The predicted dip in July is consistent with your past two years of data. Don't worry, sales usually pick up again in August.</p>
                         </div>
+                    </motion.div>
+                    <motion.div variants={itemVariants}>
+                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
+                            <CardHeader>
+                                <CardTitle>Cash Flow Projection</CardTitle>
+                                <CardDescription>Your estimated cash balance for the next 3 months.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="h-[200px]">
+                                <ChartContainer config={{ value: {label: 'Balance'} }}>
+                                    <BarChart data={cashProjectionData} margin={{ top: 20, right: 20, left: -20, bottom: 5 }}>
+                                        <CartesianGrid vertical={false} />
+                                        <XAxis dataKey="name" />
+                                        <YAxis tickFormatter={formatCurrencyForChart} />
+                                        <ChartTooltip content={<ChartTooltipContent />} />
+                                        <Bar dataKey="value" fill="var(--color-income)" radius={4} />
+                                    </BarChart>
+                                </ChartContainer>
+                            </CardContent>
+                        </Card>
+                        {hasLowCashProjection && (
+                             <div className="flex items-start justify-center gap-3 text-sm text-yellow-600 bg-yellow-500/10 p-3 rounded-2xl mt-2">
+                                <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                                <p><span className="font-semibold text-yellow-700">Cash Buffer Alert:</span> Your cash balance is projected to fall below your ₱30,000 safety net in September. Consider moving some funds or delaying a large expense.</p>
+                            </div>
+                        )}
                     </motion.div>
                      <motion.div variants={itemVariants}>
                         <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
