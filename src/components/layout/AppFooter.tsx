@@ -82,8 +82,8 @@ export function AppFooter() {
                      <div className="grid grid-cols-4 gap-2">
                         <ActionPill href="/add/income" icon={ArrowUp} title="Add Income" iconColor="text-emerald-500" />
                         <ActionPill href="/add/expense" icon={ArrowDown} title="Add Expense" iconColor="text-red-500" />
-                        <ActionPill icon={Send} title="Send Invoice" disabled iconColor="text-primary"/>
-                        <ActionPill icon={LinkIcon} title="Payment Link" disabled iconColor="text-primary" />
+                        <ActionPill href="/invoice/new" icon={Send} title="Send Invoice" iconColor="text-primary"/>
+                        <ActionPill href="/payment-link/new" icon={LinkIcon} title="Payment Link" iconColor="text-primary" />
                         <ActionPill icon={ArrowLeftRight} title="Record Transfer" disabled iconColor="text-cyan-500" />
                         <ActionPill icon={RefreshCw} title="Recurring" disabled iconColor="text-purple-500" />
                         <ActionPill icon={BellRing} title="Set Reminder" disabled iconColor="text-orange-500" />
