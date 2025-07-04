@@ -300,39 +300,74 @@ export default function DashboardPage() {
                 
                 <motion.div variants={itemVariants} className="space-y-4">
                   <h2 className="font-bold text-lg">Platform Breakdown</h2>
-                    <div className="grid grid-cols-2 gap-4">
-                        {sortedPlatforms.map((item, index) => (
-                           <Link
-                              key={item.id}
-                              href={`/platform/${item.id}?name=${encodeURIComponent(item.name)}&value=${item.value}&icon=${encodeURIComponent(item.icon)}&period=${period}`}
-                           >
-                              <motion.div whileTap={{ scale: 0.97 }}>
-                                <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 cursor-pointer hover:bg-muted/40 transition-colors relative">
-                                  {index < 3 && (
-                                      <Badge
-                                          variant="default"
-                                          className={cn(
-                                              "absolute top-2 right-2 border-none font-semibold text-xs px-1.5 py-0.5 h-auto",
-                                              index === 0 && "bg-yellow-400 text-yellow-900 hover:bg-yellow-400/90",
-                                              index === 1 && "bg-slate-300 text-slate-800 hover:bg-slate-300/90",
-                                              index === 2 && "bg-orange-400 text-orange-900 hover:bg-orange-400/90"
-                                          )}
-                                      >
-                                          {index === 0 ? <Crown className="w-3.5 h-3.5" /> : index === 1 ? '2nd' : '3rd'}
-                                      </Badge>
-                                  )}
-                                    <CardContent className="p-4 flex flex-col items-center text-center">
-                                        <div className="w-10 h-10 bg-[#131313] rounded-xl flex items-center justify-center mb-2 p-1.5">
-                                          <Image src={item.icon} width={30} height={30} alt={`${item.name} logo`} className="filter brightness-0 invert" />
-                                        </div>
-                                        <p className="font-semibold text-sm">{item.name}</p>
-                                        <AnimatedNumber value={item.value} className="font-semibold text-lg" />
-                                    </CardContent>
-                                </Card>
-                              </motion.div>
+                    
+                    {/* Top Platform */}
+                    {sortedPlatforms.length > 0 && (
+                        <div className="flex justify-center">
+                             <Link
+                                className="w-full max-w-xs"
+                                key={sortedPlatforms[0].id}
+                                href={`/platform/${sortedPlatforms[0].id}?name=${encodeURIComponent(sortedPlatforms[0].name)}&value=${sortedPlatforms[0].value}&icon=${encodeURIComponent(sortedPlatforms[0].icon)}&period=${period}`}
+                            >
+                                <motion.div whileTap={{ scale: 0.97 }}>
+                                    <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 cursor-pointer hover:bg-muted/40 relative">
+                                        <Badge
+                                            variant="default"
+                                            className="absolute top-2 right-2 border-none font-semibold text-xs px-1.5 py-0.5 h-auto bg-yellow-400 text-yellow-900 hover:bg-yellow-400/90"
+                                        >
+                                            <Crown className="w-3.5 h-3.5" />
+                                        </Badge>
+                                        <CardContent className="p-4 flex flex-col items-center text-center">
+                                            <div className="w-10 h-10 bg-[#131313] rounded-xl flex items-center justify-center mb-2 p-1.5">
+                                            <Image src={sortedPlatforms[0].icon} width={30} height={30} alt={`${sortedPlatforms[0].name} logo`} className="filter brightness-0 invert" />
+                                            </div>
+                                            <p className="font-semibold text-sm">{sortedPlatforms[0].name}</p>
+                                            <AnimatedNumber value={sortedPlatforms[0].value} className="font-semibold text-lg" />
+                                        </CardContent>
+                                    </Card>
+                                </motion.div>
                             </Link>
-                        ))}
-                    </div>
+                        </div>
+                    )}
+                    
+                    {/* Other Platforms */}
+                    {sortedPlatforms.length > 1 && (
+                        <div className="grid grid-cols-3 gap-4">
+                             {sortedPlatforms.slice(1).map((item, index) => {
+                                const originalIndex = index + 1;
+                                return (
+                                    <Link
+                                        key={item.id}
+                                        href={`/platform/${item.id}?name=${encodeURIComponent(item.name)}&value=${item.value}&icon=${encodeURIComponent(item.icon)}&period=${period}`}
+                                    >
+                                    <motion.div whileTap={{ scale: 0.97 }}>
+                                        <Card className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10 cursor-pointer hover:bg-muted/40 relative">
+                                        {originalIndex < 3 && (
+                                            <Badge
+                                                variant="default"
+                                                className={cn(
+                                                    "absolute top-2 right-2 border-none font-semibold text-xs px-1.5 py-0.5 h-auto",
+                                                    originalIndex === 1 && "bg-slate-300 text-slate-800 hover:bg-slate-300/90",
+                                                    originalIndex === 2 && "bg-orange-400 text-orange-900 hover:bg-orange-400/90"
+                                                )}
+                                            >
+                                                {originalIndex === 1 ? '2nd' : '3rd'}
+                                            </Badge>
+                                        )}
+                                            <CardContent className="p-2 flex flex-col items-center text-center">
+                                                <div className="w-8 h-8 bg-[#131313] rounded-lg flex items-center justify-center mb-1 p-1">
+                                                <Image src={item.icon} width={24} height={24} alt={`${item.name} logo`} className="filter brightness-0 invert" />
+                                                </div>
+                                                <p className="font-semibold text-xs">{item.name}</p>
+                                                <AnimatedNumber value={item.value} className="font-semibold text-base" />
+                                            </CardContent>
+                                        </Card>
+                                    </motion.div>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                    )}
                 </motion.div>
                 
                 <motion.div variants={itemVariants}>
