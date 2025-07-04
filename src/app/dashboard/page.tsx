@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, animate } from 'framer-motion';
 import {
-    ArrowRight, Package, Briefcase, ShoppingCart, Truck, TrendingUp, TrendingDown, ArrowLeftRight, Laptop,
+    ArrowRight, TrendingUp, TrendingDown, ArrowLeftRight,
     AlertTriangle, Lightbulb, Wallet, ChevronRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { FinancialHealthGauge } from '@/components/ui/financial-health-gauge';
 import { AppFooter } from '@/components/layout/AppFooter';
 import { AppHeader } from '@/components/layout/AppHeader';
+import Image from 'next/image';
 
 type Activity = { id: number; type: 'income' | 'expense'; name: string; date: string; value: number; project?: string; };
 type BreakdownItem = { name: string; value: number; };
@@ -152,10 +153,10 @@ export default function DashboardPage() {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const platformBreakdown = [
-    { name: 'Lazada Sales', value: 11500, icon: ShoppingCart },
-    { name: 'Shopee Sales', value: 9800, icon: ShoppingCart },
-    { name: 'Client Payments', value: 8500, icon: Laptop },
-    { name: 'TikTok Shop', value: 4200, icon: ShoppingCart },
+    { name: 'Lazada Sales', value: 11500, icon: '/logo/lazada.svg' },
+    { name: 'Shopee Sales', value: 9800, icon: '/logo/shopee.svg' },
+    { name: 'Client Payments', value: 8500, icon: '/logo/upwork.svg' },
+    { name: 'TikTok Shop', value: 4200, icon: '/logo/tiktok.svg' },
   ];
 
   useEffect(() => {
@@ -283,8 +284,8 @@ export default function DashboardPage() {
                         {platformBreakdown.map((item, index) => (
                             <Card key={index} className="rounded-2xl border bg-background/40 backdrop-blur-lg border-border/10">
                                 <CardContent className="p-4 flex flex-col items-center text-center">
-                                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center mb-2">
-                                       <item.icon className="w-5 h-5 text-primary-foreground" />
+                                    <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center mb-2 p-1.5">
+                                       <Image src={item.icon} width={30} height={30} alt={`${item.name} logo`} />
                                     </div>
                                     <p className="font-semibold text-sm">{item.name}</p>
                                     <AnimatedNumber value={item.value} className="font-semibold text-lg" />
