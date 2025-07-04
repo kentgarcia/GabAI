@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -9,7 +10,6 @@ import {
     ChevronRight,
     MessageSquare,
     Mail,
-    ShieldCheck,
     Bug
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,26 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
 
@@ -60,6 +79,9 @@ const faqItems = [
 
 export default function HelpPage() {
     const { toast } = useToast();
+    const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
+    const [ticketType, setTicketType] = useState("");
+    const [ticketDescription, setTicketDescription] = useState("");
 
     const handleSupportClick = (type: 'chat' | 'email') => {
         if (type === 'chat') {
@@ -68,16 +90,37 @@ export default function HelpPage() {
             toast({ title: 'Opening Email Client', description: 'Please compose your message to support@gabai.app.' });
         }
     }
+    
+    const handleTicketSubmit = () => {
+        if (!ticketType || !ticketDescription) {
+            toast({
+                title: 'Incomplete Form',
+                description: 'Please select an issue type and provide a description.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        toast({
+            title: '✅ Ticket Submitted!',
+            description: "We've received your report and will look into it. Thank you for helping us improve!",
+        });
+
+        // Reset form and close dialog
+        setTicketType("");
+        setTicketDescription("");
+        setIsReportDialogOpen(false);
+    }
 
   return (
-    <main className="flex flex-col flex-grow p-6 text-foreground h-screen">
+    <main className="flex flex-col h-screen p-6 text-foreground">
         <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-col flex-grow"
+            className="flex flex-col flex-grow min-h-0"
         >
-            <motion.header variants={itemVariants} className="flex items-center gap-2 mb-8">
+            <motion.header variants={itemVariants} className="flex items-center gap-2 mb-8 shrink-0">
                 <Button asChild variant="ghost" size="icon" className="h-10 w-10 -ml-2">
                     <Link href="/settings">
                         <ArrowLeft />
@@ -86,7 +129,7 @@ export default function HelpPage() {
                 <h1 className="text-2xl font-bold">Help Center</h1>
             </motion.header>
 
-             <motion.div variants={itemVariants} className="relative mb-6">
+             <motion.div variants={itemVariants} className="relative mb-6 shrink-0">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                 type="search"
@@ -136,18 +179,64 @@ export default function HelpPage() {
                     </div>
                 </motion.section>
                 
-                 <motion.section variants={itemVariants} className="mt-8">
-                     <Card className="bg-background/40">
-                       <CardContent className="p-4 flex items-center gap-4">
-                            <Bug className="w-6 h-6 text-red-500" />
-                            <div className="flex-grow">
-                                <p className="font-semibold">Something not working?</p>
-                                <p className="text-sm text-muted-foreground">Help us improve by reporting a bug.</p>
+                <Dialog open={isReportDialogOpen} onOpenChange={setIsReportDialogOpen}>
+                    <DialogTrigger asChild>
+                         <motion.section variants={itemVariants} className="mt-8">
+                             <Card className="bg-background/40 hover:bg-muted/40 transition-colors cursor-pointer">
+                               <CardContent className="p-4 flex items-center gap-4">
+                                    <Bug className="w-6 h-6 text-red-500" />
+                                    <div className="flex-grow">
+                                        <p className="font-semibold">Something not working?</p>
+                                        <p className="text-sm text-muted-foreground">Help us improve by reporting a bug.</p>
+                                    </div>
+                                    <Button variant="link" size="sm" className="p-0 h-auto">Report an Issue</Button>
+                               </CardContent>
+                            </Card>
+                        </motion.section>
+                    </DialogTrigger>
+                    <DialogContent className="bg-background/80 backdrop-blur-md border">
+                        <DialogHeader>
+                            <DialogTitle>Report an Issue</DialogTitle>
+                            <DialogDescription>
+                                Tell us what went wrong. Your feedback is valuable in helping us improve GabAI.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="issue-type" className="text-right">Issue Type</Label>
+                                <Select onValueChange={setTicketType}>
+                                    <SelectTrigger id="issue-type" className="col-span-3">
+                                        <SelectValue placeholder="Select a type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="bug">Bug Report</SelectItem>
+                                        <SelectItem value="feature-request">Feature Request</SelectItem>
+                                        <SelectItem value="data-discrepancy">Data Discrepancy</SelectItem>
+                                        <SelectItem value="other">Other</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
-                            <Button variant="link" size="sm">Report an Issue</Button>
-                       </CardContent>
-                    </Card>
-                </motion.section>
+                            <div className="grid grid-cols-4 items-start gap-4">
+                                <Label htmlFor="description" className="text-right pt-2">Description</Label>
+                                <Textarea
+                                    id="description"
+                                    placeholder="Please describe the issue in detail."
+                                    className="col-span-3"
+                                    rows={5}
+                                    value={ticketDescription}
+                                    onChange={(e) => setTicketDescription(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                               <Button type="button" variant="ghost">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit" onClick={handleTicketSubmit}>Submit Ticket</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
             </div>
         </motion.div>
     </main>
