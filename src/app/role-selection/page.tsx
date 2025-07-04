@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -272,7 +271,7 @@ export default function RoleSelectionPage() {
                     asChild
                     className="w-full bg-black text-primary-foreground rounded-full h-16 text-lg font-semibold hover:bg-black/90"
                     >
-                    <Link href={selectedRole === 'seller' ? '/sync-data' : '/log-first-income'}>
+                    <Link href={selectedRole === 'seller' ? '/sync-data' : '/sync-wallets'}>
                         Next
                         <ArrowRight className="ml-2" />
                     </Link>
